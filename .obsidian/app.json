@@ -1,0 +1,16 @@
+{
+  "attachmentFolderPath": "attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "G:\\Save\\Obsidian",
+  "promptDelete": false,
+  "spellcheck": false,
+  "pdfExportSettings": {
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 80
+  },
+  "showLineNumber": true,
+  "readableLineLength": true,
+  "alwaysUpdateLinks": true
+}
