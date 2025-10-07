@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/三件套/JS/手写代码/Hot 100-2.md",
-                "mode": "preview",
+                "file": "README.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Hot 100-2"
+              "title": "README"
             }
           },
           {
@@ -199,6 +199,8 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
+    "前端/三件套/JS/手写代码/Hot 100-2.md",
+    "README.md",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
     "公共技术/Docker/基础.md",
     "前端/面试/山月.md",
@@ -230,8 +232,6 @@
     "前端/TS/TypeScript入门教程/2进阶/6类与接口.md",
     "前端/TS/TypeScript入门教程/1基础/5对象的类型——接口.md",
     "前端/三件套/JS/JS ES6/数据类型/类型简介.md",
-    "前端/三件套/JS/JS ES6/类.md",
-    "前端/三件套/CSS层叠样式表/css/权重specificty.md",
     "前端/TS/TypeScript入门教程/3工程",
     "前端/TS/TypeScript入门教程/2进阶",
     "前端/TS/TypeScript入门教程/1基础",
