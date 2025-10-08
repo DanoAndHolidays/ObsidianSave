@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "前端/构建打包工具/Vite/vite打包优化.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "vite打包优化"
             }
           },
           {
@@ -81,7 +81,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "函数表达式",
+                "query": "tag:#TS项目经验",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -199,8 +199,23 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
-    "前端/三件套/JS/手写代码/Hot 100-2.md",
+    "attachments/Pasted image 20251008235818.png",
+    "前端/构建打包工具/Vite/Rollup.md",
+    "前端/构建打包工具/Vite/Vite.md",
+    "前端/构建打包工具/Vite/vite打包优化.md",
+    "前端/构建打包工具/Vite/常见问题.md",
+    "前端/构建打包工具/Vite/esbuild.md",
+    "attachments/Pasted image 20251008190112.png",
+    "前端/前端技术栈.md",
+    "前端/TS/TS项目经验.md",
+    "attachments/Pasted image 20251008160400.png",
+    "attachments/Pasted image 20251008155941.png",
+    "attachments/Pasted image 20251008155827.png",
+    "前端/TS/TypeScript入门教程/1基础/8类型断言.md",
+    "attachments/Pasted image 20251008154738.png",
+    "前端/TS/TypeScript入门教程/0环境配置.md",
     "README.md",
+    "前端/三件套/JS/手写代码/Hot 100-2.md",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
     "公共技术/Docker/基础.md",
     "前端/面试/山月.md",
@@ -213,8 +228,6 @@
     "前端/测试/jest.md",
     "前端/测试/测试概述.md",
     "前端/三件套/CSS层叠样式表/tailwindCSS.md",
-    "前端/构建打包工具/Vite/Rollup.md",
-    "前端/前端技术栈.md",
     "前端/TS/TypeScript入门教程/1基础/0Hello TypeScript.md",
     "前端/TS/TypeScript入门教程/2进阶/9装饰器.md",
     "前端/包管理工具/monorepo",
@@ -224,14 +237,6 @@
     "前端/框架/Vue/组件库开发/render与defineComponent.md",
     "前端/框架/Vue/内置组件",
     "前端/框架/Vue/组件库开发/Card组件.md",
-    "前端/框架/Vue/组件库开发/组件开发.md",
-    "前端/TS/TypeScript入门教程/2进阶/8声明合并.md",
-    "前端/TS/TypeScript入门教程/1基础/7函数的类型.md",
-    "前端/TS/TypeScript入门教程/1基础/6数组的类型.md",
-    "前端/TS/TypeScript入门教程/2进阶/7泛型.md",
-    "前端/TS/TypeScript入门教程/2进阶/6类与接口.md",
-    "前端/TS/TypeScript入门教程/1基础/5对象的类型——接口.md",
-    "前端/三件套/JS/JS ES6/数据类型/类型简介.md",
     "前端/TS/TypeScript入门教程/3工程",
     "前端/TS/TypeScript入门教程/2进阶",
     "前端/TS/TypeScript入门教程/1基础",
@@ -239,11 +244,6 @@
     "前端/TS/TypeScript入门教程",
     "attachments/Pasted image 20251006162857.png",
     "attachments/Pasted image 20251006162726.png",
-    "attachments/Pasted image 20250922232048.png",
-    "attachments/Pasted image 20250922222036.png",
-    "attachments/530ffd791a33d4d43a07d860aa2cf84d.jpg",
-    "attachments/Pasted image 20250921234534.png",
-    "attachments/Pasted image 20250921230716.png",
-    "attachments/Pasted image 20250921230348.png"
+    "attachments/Pasted image 20250922232048.png"
   ]
 }
