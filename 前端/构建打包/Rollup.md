@@ -1,11 +1,11 @@
 # Rollup
 ---
-##### Tree Shaking
+## Tree Shaking
 ![[Pasted image 20250908225651.png]]
 ![[Pasted image 20250908225714.png]]
 仅仅打包我们用到的代码，提升应用的性能
 
-##### 通过命令行执行
+## 通过命令行执行
 由于Rollup本身设计是使用命令行来使用的：
 `rollup -i index.js --file dist.js --format es`
 
@@ -37,14 +37,14 @@ export default {
 环境变量`--environment TEST:123` 
 使用`process.env.TEST`来获取 
 
-##### 常用插件示例
+## 常用插件示例
 `plugins`插件，能够实现很丰富的功能 ：
 - @rollup/plugin-node-resolve: 解析node_modules中的第三方模块
 - @rollup/plugin-commonjs: 将CommonJS模块转换为ES6
 - @rollup/plugin-babel: 使用Babel转换代码
 - @rollup/plugin-terser: 压缩打包后的代码
 
-##### 通过配置文件执行
+## 通过配置文件执行
 ```javascript
 import { defineConfig } from 'rollup';
 import resolve from '@rollup/plugin-node-resolve';
@@ -105,7 +105,7 @@ export default [
   },
 ];
 ```
-##### 代码分割与动态导入
+## 代码分割与动态导入
 Rollup支持通过动态import()实现代码分割：
 ```javascript
 // 动态导入示例
@@ -124,7 +124,7 @@ export default {
 };
 ```
 
-##### 插件
+## 插件
 大部分的Rollup插件可以直接在vite中使用
 hook：
 - buildStart：配置
@@ -132,7 +132,6 @@ hook：
 - options：第一个执行的hook，预处理
 - transform：对代码进行处理
 
-【补充：插件工作原理】
 Rollup插件是一个返回对象的函数，该对象包含各种hook：
 ```javascript
 export default function myPlugin() {
@@ -209,7 +208,7 @@ export default {
 - @rollup/plugin-typescript: TypeScript支持
 
 【补充：插件使用示例】
-##### 完整插件配置示例
+## 完整插件配置示例
 ```javascript
 import commonjs from '@rollup/plugin-commonjs';
 import eslint from '@rollup/plugin-eslint';
@@ -239,7 +238,7 @@ export default {
 ```
 
 【补充：自定义插件示例】
-##### 自定义简单插件：添加banner
+## 自定义简单插件：添加banner
 ```javascript
 function addBannerPlugin(bannerText) {
   return {

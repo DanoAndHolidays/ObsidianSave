@@ -3,6 +3,9 @@
 ##### npm依赖于Node.js
 # 常用命令
 ---
+
+##### 锁文件
+- `echo 'package-lock=false' >> .npmrc`在包中禁用锁文件
 ##### 下载与更新
 `npm install [包名]@[版本]` `-g` 在全局安装 `install`可以简写为`i`
 `npm init -y`初始化项目 -y 或者--yes 是使用默认值，后期可以在package.json中修改

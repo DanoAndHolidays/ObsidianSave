@@ -1,4 +1,4 @@
-# esbuild
+# ESbuild
 ---
 使用go语言编写，需要使用命令行来使用
 
