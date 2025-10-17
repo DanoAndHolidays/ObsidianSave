@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/库/Babel/项目工程结构设计.md",
+                "file": "学习/推荐系统.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "项目工程结构设计"
+              "title": "推荐系统"
             }
           },
           {
@@ -199,16 +199,26 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
+    "attachments/Figure_1.png",
+    "学习/大学课程/论文.md",
+    "学习/推荐系统.md",
+    "前端/框架/React/JSX与XML.md",
+    "attachments/Pasted image 20251015175548.png",
+    "attachments/Pasted image 20251015175238.png",
+    "前端/业务场景/超大文件上传/Web Worker.md",
+    "前端/框架/React",
+    "前端/业务场景/超大文件上传/大文件上传.md",
+    "前端/库/Postcss.md",
+    "前端/库/fontawesome.md",
+    "前端/库/Babel/项目工程结构设计.md",
     "前端/库/Babel/基础概念.md",
+    "前端/库/未命名",
     "前端/包管理工具/npm/npm.md",
     "前端/命令行.md",
-    "前端/库/Babel/项目工程结构设计.md",
-    "前端/库/fontawesome.md",
     "前端/库/Babel",
     "前端/库/Bootstrap.md",
     "前端/库/Axios.md",
     "前端/业务场景/前端经典业务场景全集.md",
-    "前端/业务场景/超大文件上传/大文件上传.md",
     "前端/库/Vue Router/路由守卫.md",
     "前端/三件套/JS/JS ES6/特殊内建对象/二进制与文件读取/二进制.md",
     "前端/Web API/DOM/form和input.md",
@@ -217,17 +227,11 @@
     "前端/三件套/HTML/perload和prefetch.md",
     "前端/构建打包/打包优化.md",
     "前端/框架/Vue/虚拟DOM与diff算法.md",
-    "前端/业务场景/超大文件上传/Web Worker.md",
     "前端/业务场景/竞态问题.md",
     "前端/业务场景/超大文件上传",
     "前端/业务场景",
     "前端/框架/Vue/接口请求的生命周期.md",
     "前端/框架/Vue/Vue3新写法.md",
-    "前端/框架/Vue/Vue常见错误与总结.md",
-    "前端/框架/Vue/响应式原理.md",
-    "前端/框架/Vue/开发日志.md",
-    "前端/三件套/JS/JS ES6/Module（模块）语法.md",
-    "前端/三件套/JS/手写代码/Hot 100-2.md",
     "前端/构建打包/Webpack",
     "attachments/Pasted image 20251008235818.png",
     "attachments/Pasted image 20251008190112.png",
@@ -240,10 +244,6 @@
     "attachments/Pasted image 20251007212433.png",
     "公共技术/Docker",
     "公共技术",
-    "前端/包管理工具/monorepo",
-    "前端/框架/Vue/内置组件",
-    "前端/TS/TypeScript入门教程/3工程",
-    "attachments/Pasted image 20251006162857.png",
-    "attachments/Pasted image 20251006162726.png"
+    "前端/包管理工具/monorepo"
   ]
 }
