@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "学习/大学课程/数据结构/第二章 线性表.md",
+                "file": "学习/大学课程/数据结构/第三章 栈与队列.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "第二章 线性表"
+              "title": "第三章 栈与队列"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 257.5
+    "width": 257.5,
+    "collapsed": true
   },
   "right": {
     "id": "141ae94ee7b6a608",
@@ -171,18 +172,21 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
+    "attachments/Pasted image 20251108185019.png",
+    "attachments/Pasted image 20251108184823.png",
+    "attachments/Pasted image 20251108183552.png",
+    "attachments/Pasted image 20251108182656.png",
+    "attachments/Pasted image 20251108182037.png",
+    "attachments/Pasted image 20251108181711.png",
+    "attachments/Pasted image 20251108181424.png",
+    "attachments/Pasted image 20251108180916.png",
+    "attachments/Pasted image 20251108180616.png",
+    "attachments/Pasted image 20251108175444.png",
+    "attachments/Pasted image 20251108173710.png",
+    "学习/大学课程/数据结构/第二章 线性表.md",
+    "学习/大学课程/数据结构/第三章 栈与队列.md",
     "学习/大学课程/数据结构/第一章 绪论.md",
     "学习/大学课程/数据结构/第八章 排序.md",
-    "attachments/Pasted image 20251108163732.png",
-    "attachments/Pasted image 20251108163232.png",
-    "attachments/Pasted image 20251108162951.png",
-    "attachments/Pasted image 20251108162745.png",
-    "attachments/Pasted image 20251108162604.png",
-    "attachments/Pasted image 20251108162221.png",
-    "attachments/Pasted image 20251108162054.png",
-    "attachments/Pasted image 20251108160729.png",
-    "attachments/Pasted image 20251108160637.png",
-    "attachments/Pasted image 20251108155324.png",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
     "前端/三件套/JS/手写代码/Hot 100-2.md",
     "学习/大学课程/论文.md",
@@ -191,7 +195,6 @@
     "学习/大学课程/Bochs/常用操作.md",
     "学习/大学课程/计算机组成原理",
     "学习/大学课程/数据结构/第七章 查找.md",
-    "学习/大学课程/数据结构/第二章 线性表.md",
     "学习/大学课程/数据结构/第六章 图.md",
     "学习/PPT内容页初稿.md",
     "学习/基于标签的推荐系统（MovieLens）— 张量分解与LDA对比实验.md",
@@ -210,7 +213,6 @@
     "前端/包管理工具/npm/npm.md",
     "前端/命令行.md",
     "前端/库/Babel",
-    "前端/库/Bootstrap.md",
     "前端/业务场景/超大文件上传",
     "前端/业务场景",
     "前端/构建打包/Webpack",
