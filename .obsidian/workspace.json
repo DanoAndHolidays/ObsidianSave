@@ -68,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "docker",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,9 +78,18 @@
               "icon": "lucide-search",
               "title": "搜索"
             }
+          },
+          {
+            "id": "436c851d295625cb",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -89,7 +98,62 @@
   "right": {
     "id": "141ae94ee7b6a608",
     "type": "split",
-    "children": [],
+    "children": [
+      {
+        "id": "8e942c6c21201750",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a3f04ff7fc32e891",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "公共技术/Docker/基础.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "基础 的反向链接列表"
+            }
+          },
+          {
+            "id": "db0cb540641fe1d3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "公共技术/Docker/基础.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "基础 的出链列表"
+            }
+          },
+          {
+            "id": "2f7746139b139aa0",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          }
+        ]
+      }
+    ],
     "direction": "horizontal",
     "width": 200,
     "collapsed": true
@@ -105,22 +169,23 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "97da34ecce3544c8",
+  "active": "86a62d4d6fad8ab9",
   "lastOpenFiles": [
-    "attachments/Pasted image 20251109204300.png",
-    "attachments/Pasted image 20251109203809.png",
-    "attachments/Pasted image 20251109203009.png",
-    "attachments/Pasted image 20251109202033.png",
-    "attachments/Pasted image 20251109202007.png",
-    "attachments/Pasted image 20251109201735.png",
-    "attachments/Pasted image 20251109200220.png",
-    "attachments/Pasted image 20251109195811.png",
-    "attachments/Pasted image 20251109195748.png",
-    "attachments/Pasted image 20251109195701.png",
-    "attachments/Pasted image 20251109195252.png",
+    "attachments/Pasted image 20251111193557.png",
+    "attachments/Pasted image 20251111192819.png",
+    "attachments/Pasted image 20251111191242.png",
+    "attachments/Pasted image 20251111190638.png",
+    "attachments/Pasted image 20251111190344.png",
+    "attachments/Pasted image 20251111190140.png",
+    "attachments/Pasted image 20251111184403.png",
+    "attachments/Pasted image 20251111183351.png",
+    "attachments/Pasted image 20251111183310.png",
+    "attachments/Pasted image 20251111183102.png",
+    "attachments/Pasted image 20251111183030.png",
+    "公共技术/Docker/基础.md",
+    "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
     "学习/大学课程与考研/数据结构/第四章 串.md",
     "学习/大学课程与考研/数据结构/第七章 查找.md",
-    "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
     "学习/大学课程与考研/数据结构/第三章 栈与队列.md",
     "学习/大学课程与考研/数据结构/第二章 线性表.md",
     "学习/大学课程与考研/数据结构/第六章 图.md",
@@ -145,7 +210,6 @@
     "前端/库/Postcss.md",
     "前端/库/fontawesome.md",
     "前端/库/Babel/项目工程结构设计.md",
-    "前端/库/Babel/基础概念.md",
     "前端/库/未命名",
     "前端/库/Babel",
     "前端/业务场景/超大文件上传",
