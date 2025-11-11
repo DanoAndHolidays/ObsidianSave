@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
+                "file": "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "第五章 树与二叉树"
+              "title": "第一章 计算机系统概述"
             }
           }
         ]
@@ -53,13 +53,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
+                "file": "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "第五章 树与二叉树 的大纲"
+              "title": "第一章 计算机系统概述 的大纲"
             }
           },
           {
@@ -89,7 +89,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -169,21 +170,22 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "86a62d4d6fad8ab9",
+  "active": "97da34ecce3544c8",
   "lastOpenFiles": [
+    "attachments/Pasted image 20251111203538.png",
+    "attachments/Pasted image 20251111203206.png",
+    "attachments/Pasted image 20251111202818.png",
+    "attachments/Pasted image 20251111202431.png",
+    "attachments/Pasted image 20251111201300.png",
+    "attachments/Pasted image 20251111201153.png",
+    "attachments/Pasted image 20251111200901.png",
+    "attachments/Pasted image 20251111200219.png",
+    "attachments/Pasted image 20251111195855.png",
+    "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
+    "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
     "attachments/Pasted image 20251111193557.png",
     "attachments/Pasted image 20251111192819.png",
-    "attachments/Pasted image 20251111191242.png",
-    "attachments/Pasted image 20251111190638.png",
-    "attachments/Pasted image 20251111190344.png",
-    "attachments/Pasted image 20251111190140.png",
-    "attachments/Pasted image 20251111184403.png",
-    "attachments/Pasted image 20251111183351.png",
-    "attachments/Pasted image 20251111183310.png",
-    "attachments/Pasted image 20251111183102.png",
-    "attachments/Pasted image 20251111183030.png",
     "公共技术/Docker/基础.md",
-    "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
     "学习/大学课程与考研/数据结构/第四章 串.md",
     "学习/大学课程与考研/数据结构/第七章 查找.md",
     "学习/大学课程与考研/数据结构/第三章 栈与队列.md",
@@ -209,7 +211,6 @@
     "前端/业务场景/超大文件上传/大文件上传.md",
     "前端/库/Postcss.md",
     "前端/库/fontawesome.md",
-    "前端/库/Babel/项目工程结构设计.md",
     "前端/库/未命名",
     "前端/库/Babel",
     "前端/业务场景/超大文件上传",
