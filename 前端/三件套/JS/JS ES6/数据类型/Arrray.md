@@ -175,7 +175,7 @@
 **六、其他常用方法**
 
 1. **`slice(startIndex, endIndex)`**  
-   截取从 `startIndex` 到 `endIndex`（不包含）的元素，返回新数组（不修改原数组）。  
+   截取从 `startIndex`（包括） 到 `endIndex`（不包含）的元素，返回新数组（不修改原数组）。  
    ```javascript
    const arr = [1, 2, 3, 4];
    console.log(arr.slice(1, 3)); // [2, 3]
@@ -198,6 +198,17 @@
    console.log(ages.some(age => age > 21)); // true（有一个超过21）
    ```
 
+3. 将数组转化为逗号分隔的字符串
+```js
+// 法1
+arr = [1, 13, 4, 5]
+console.log(arr.toString())// 1,13,4,5
+
+// 法2
+const arr = ["苹果", "香蕉", "橙子"];
+const str = arr.join(','); // 结果："苹果,香蕉,橙子"
+
+```
 
 **总结**
 - 增删元素用 `push`/`pop`/`unshift`/`shift`/`splice`（注意是否修改原数组）。  

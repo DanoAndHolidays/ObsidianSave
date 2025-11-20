@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
+                "file": "前端/项目笔记/个人主页/下落代码背景.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "第一章 计算机系统概述"
+              "title": "下落代码背景"
             }
           }
         ]
@@ -53,13 +53,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
+                "file": "前端/三件套/JS/JS ES6/错误处理.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "第一章 计算机系统概述 的大纲"
+              "title": "错误处理 的大纲"
             }
           },
           {
@@ -68,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "docker",
+                "query": " ",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -89,8 +89,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -172,51 +171,51 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
-    "attachments/Pasted image 20251113194829.png",
-    "attachments/Pasted image 20251113194652.png",
-    "attachments/Pasted image 20251113194521.png",
-    "attachments/Pasted image 20251113194318.png",
-    "attachments/Pasted image 20251113193900.png",
-    "attachments/Pasted image 20251113193326.png",
-    "attachments/Pasted image 20251113193045.png",
-    "attachments/Pasted image 20251113192650.png",
-    "attachments/Pasted image 20251113191051.png",
-    "attachments/Pasted image 20251113190841.png",
-    "attachments/Pasted image 20251113190809.png",
+    "前端/项目笔记/短剧/一刻短剧.md",
+    "前端/三件套/JS/JS ES6/错误处理.md",
+    "前端/三件套/JS/JS ES6/数据类型/类型简介.md",
+    "前端/三件套/JS/优化/节流和防抖.md",
+    "前端/三件套/JS/JS ES6/数据类型/Object/对象.md",
+    "前端/面试/磐松资产.md",
+    "前端/三件套/CSS层叠样式表/常用技巧.md",
+    "前端/三件套/JS/JS ES6/数据类型/Arrray.md",
+    "前端/三件套/JS/JS ES6/数据类型/Object/对象的属性配置.md",
+    "前端/浏览器与环境/事件循环eventloop.md",
+    "前端/面试",
+    "前端/浏览器与环境/浏览器工作原理.md",
     "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
+    "前端/三件套/JS/手写代码/LeetCode Hot100.md",
+    "前端/三件套/JS/JS ES6/数据类型/Number.md",
+    "前端/三件套/JS/手写代码/Hot 100-2.md",
+    "前端/三件套/JS/手写代码/ES API.md",
+    "后端/Java/模拟题（共五套）.md",
+    "后端/Java/大题.md",
+    "后端/Java/Java可能考察的代码.md",
+    "后端/Java/IO流.md",
+    "后端/Java/Lambda表达式.md",
+    "attachments/Pasted image 20251115184546.png",
+    "attachments/Pasted image 20251115184304.png",
+    "attachments/Pasted image 20251115183843.png",
+    "attachments/Pasted image 20251115183739.png",
+    "attachments/Pasted image 20251115183723.png",
+    "后端/Java/GUI图形用户界面.md",
+    "attachments/Pasted image 20251115174617.png",
+    "attachments/Pasted image 20251115174001.png",
+    "attachments/Pasted image 20251115173822.png",
+    "attachments/Pasted image 20251115173650.png",
+    "attachments/Pasted image 20251115173549.png",
     "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
+    "后端/Java",
+    "后端",
     "公共技术/Docker/基础.md",
     "学习/大学课程与考研/数据结构/第四章 串.md",
     "学习/大学课程与考研/数据结构/第七章 查找.md",
-    "学习/大学课程与考研/数据结构/第三章 栈与队列.md",
-    "学习/大学课程与考研/数据结构/第二章 线性表.md",
-    "学习/大学课程与考研/数据结构/第六章 图.md",
-    "学习/大学课程与考研/数据结构/第一章 绪论.md",
-    "学习/大学课程与考研/数据结构/第八章 排序.md",
-    "前端/三件套/JS/手写代码/LeetCode Hot100.md",
-    "前端/三件套/JS/手写代码/Hot 100-2.md",
-    "学习/大学课程与考研/论文.md",
     "学习/大学课程/SQL/未命名",
-    "学习/大学课程与考研/SQL/数据库实验.md",
-    "学习/大学课程与考研/Bochs/常用操作.md",
     "学习/大学课程与考研/计算机组成原理",
-    "学习/PPT内容页初稿.md",
-    "学习/基于标签的推荐系统（MovieLens）— 张量分解与LDA对比实验.md",
-    "学习/推荐系统.md",
-    "README.md",
-    "前端/版本管理工具/Git.md",
-    "前端/框架/React/JSX与XML.md",
-    "前端/业务场景/超大文件上传/Web Worker.md",
     "前端/框架/React",
-    "前端/业务场景/超大文件上传/大文件上传.md",
-    "前端/库/Postcss.md",
-    "前端/库/fontawesome.md",
     "前端/库/未命名",
     "前端/库/Babel",
     "前端/业务场景/超大文件上传",
-    "前端/业务场景",
-    "前端/构建打包/Webpack",
-    "前端/三件套",
-    "公共技术/Docker"
+    "前端/业务场景"
   ]
 }
