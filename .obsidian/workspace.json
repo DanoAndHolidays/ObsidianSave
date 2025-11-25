@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/面试/百度-前端实习面试.md",
+                "file": "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "百度-前端实习面试"
+              "title": "第五章 树与二叉树"
             }
           }
         ]
@@ -53,13 +53,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/面试/字节跳动-豆包前端实习.md",
+                "file": "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "字节跳动-豆包前端实习 的大纲"
+              "title": "第五章 树与二叉树 的大纲"
             }
           },
           {
@@ -89,7 +89,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -169,19 +170,20 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "97da34ecce3544c8",
+  "active": "af655a0a722cff1e",
   "lastOpenFiles": [
+    "前端/面试/2字节跳动-豆包前端实习.md",
+    "前端/面试/1磐松资产-前端实习.md",
+    "前端/面试/0面试技巧.md",
+    "前端/面试/3百度-前端实习面试.md",
     "前端/浏览器与环境/浏览器工作原理.md",
-    "前端/面试/百度-前端实习面试.md",
     "attachments/Pasted image 20251125142805.png",
     "前端/浏览器与环境/垃圾回收机制v8.md",
-    "前端/面试/面试技巧.md",
     "前端/浏览器与环境/跨域、跨站与浏览器安全策略.md",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
     "前端/三件套/JS/手写代码/Hot 100-2.md",
     "前端/三件套/JS/优化/节流和防抖.md",
     "前端/三件套/JS/手写代码/ES API.md",
-    "前端/面试/字节跳动-豆包前端实习.md",
     "前端/Web API/网络请求/HTTP.md",
     "前端/浏览器与环境/浏览器与服务器存储.md",
     "前端/浏览器与环境/事件循环eventloop.md",
@@ -190,7 +192,6 @@
     "attachments/Pasted image 20251125123233.png",
     "attachments/Pasted image 20251125121900.png",
     "attachments/Pasted image 20251125121812.png",
-    "前端/面试/磐松资产-前端实习.md",
     "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
     "attachments/Pasted image 20251123173952.png",
     "attachments/Pasted image 20251123172857.png",
