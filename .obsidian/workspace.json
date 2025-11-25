@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/项目笔记/个人主页/下落代码背景.md",
+                "file": "前端/面试/百度-前端实习面试.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "下落代码背景"
+              "title": "百度-前端实习面试"
             }
           }
         ]
@@ -53,13 +53,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/三件套/JS/JS ES6/错误处理.md",
+                "file": "前端/面试/字节跳动-豆包前端实习.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "错误处理 的大纲"
+              "title": "字节跳动-豆包前端实习 的大纲"
             }
           },
           {
@@ -68,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": " ",
+                "query": "tag:#RestfulAPI",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -93,7 +93,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 271.5
+    "width": 286.5
   },
   "right": {
     "id": "141ae94ee7b6a608",
@@ -171,51 +171,51 @@
   },
   "active": "97da34ecce3544c8",
   "lastOpenFiles": [
-    "前端/项目笔记/短剧/一刻短剧.md",
-    "前端/三件套/JS/JS ES6/错误处理.md",
-    "前端/三件套/JS/JS ES6/数据类型/类型简介.md",
-    "前端/三件套/JS/优化/节流和防抖.md",
-    "前端/三件套/JS/JS ES6/数据类型/Object/对象.md",
-    "前端/面试/磐松资产.md",
-    "前端/三件套/CSS层叠样式表/常用技巧.md",
-    "前端/三件套/JS/JS ES6/数据类型/Arrray.md",
-    "前端/三件套/JS/JS ES6/数据类型/Object/对象的属性配置.md",
-    "前端/浏览器与环境/事件循环eventloop.md",
-    "前端/面试",
     "前端/浏览器与环境/浏览器工作原理.md",
-    "学习/大学课程与考研/数据结构/第五章 树与二叉树.md",
+    "前端/面试/百度-前端实习面试.md",
+    "attachments/Pasted image 20251125142805.png",
+    "前端/浏览器与环境/垃圾回收机制v8.md",
+    "前端/面试/面试技巧.md",
+    "前端/浏览器与环境/跨域、跨站与浏览器安全策略.md",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
-    "前端/三件套/JS/JS ES6/数据类型/Number.md",
     "前端/三件套/JS/手写代码/Hot 100-2.md",
+    "前端/三件套/JS/优化/节流和防抖.md",
     "前端/三件套/JS/手写代码/ES API.md",
-    "后端/Java/模拟题（共五套）.md",
-    "后端/Java/大题.md",
-    "后端/Java/Java可能考察的代码.md",
-    "后端/Java/IO流.md",
-    "后端/Java/Lambda表达式.md",
-    "attachments/Pasted image 20251115184546.png",
-    "attachments/Pasted image 20251115184304.png",
-    "attachments/Pasted image 20251115183843.png",
-    "attachments/Pasted image 20251115183739.png",
-    "attachments/Pasted image 20251115183723.png",
-    "后端/Java/GUI图形用户界面.md",
-    "attachments/Pasted image 20251115174617.png",
-    "attachments/Pasted image 20251115174001.png",
-    "attachments/Pasted image 20251115173822.png",
-    "attachments/Pasted image 20251115173650.png",
-    "attachments/Pasted image 20251115173549.png",
+    "前端/面试/字节跳动-豆包前端实习.md",
+    "前端/Web API/网络请求/HTTP.md",
+    "前端/浏览器与环境/浏览器与服务器存储.md",
+    "前端/浏览器与环境/事件循环eventloop.md",
+    "前端/浏览器与环境/JS底层.md",
+    "attachments/Pasted image 20251125123855.png",
+    "attachments/Pasted image 20251125123233.png",
+    "attachments/Pasted image 20251125121900.png",
+    "attachments/Pasted image 20251125121812.png",
+    "前端/面试/磐松资产-前端实习.md",
     "学习/大学课程与考研/计算机组成原理/第一章 计算机系统概述.md",
-    "后端/Java",
-    "后端",
-    "公共技术/Docker/基础.md",
-    "学习/大学课程与考研/数据结构/第四章 串.md",
-    "学习/大学课程与考研/数据结构/第七章 查找.md",
-    "学习/大学课程/SQL/未命名",
-    "学习/大学课程与考研/计算机组成原理",
-    "前端/框架/React",
-    "前端/库/未命名",
-    "前端/库/Babel",
-    "前端/业务场景/超大文件上传",
-    "前端/业务场景"
+    "attachments/Pasted image 20251123173952.png",
+    "attachments/Pasted image 20251123172857.png",
+    "attachments/Pasted image 20251123172729.png",
+    "attachments/Pasted image 20251123172354.png",
+    "attachments/Pasted image 20251123170811.png",
+    "前端/库/Vue Router/动态路由、路由嵌套.md",
+    "前端/Web API/网络请求/XHR.md",
+    "前端/库/Vue Router/核心原理.md",
+    "前端/库/Vue Router/路由守卫.md",
+    "前端/构建打包/打包优化.md",
+    "前端/库/Vue Router/路由元信息.md",
+    "前端/库/Vue Router/params与query.md",
+    "前端/库/Vue Router/RouterLink.md",
+    "前端/构建打包/Webpack/魔法注释Magic Comments.md",
+    "前端/构建打包/Vite/Vite.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/7模块",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/0基础简介",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/4原型与类",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/3错误处理",
+    "前端/三件套/JS/廖雪峰教程/8错误处理",
+    "前端/三件套/JS/廖雪峰教程/2历史背景",
+    "前端/三件套/JS/廖雪峰教程/7浏览器/7.1DOM",
+    "前端/三件套/JS/廖雪峰教程/7浏览器",
+    "前端/三件套/JS/廖雪峰教程/6对象",
+    "前端/三件套/JS/廖雪峰教程/5标准对象"
   ]
 }

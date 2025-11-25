@@ -5,7 +5,6 @@
 //使用Object.freeze方法来声明，对象和对象的属性将同时不能被修改。
 const object =Object.freeeze({});
 ```
-
 ### 顶层对象
 ---
 window或者global
@@ -20,7 +19,6 @@ let b = 1;
 window.b // undefined
 ```
 引入`globalThis`作为顶层对象。也就是说，任何环境下，`globalThis`都是存在的，都可以从它拿到顶层对象，指向全局环境下的`this`
-
 ### 暂时性死域
 ---
 在 JavaScript 中，**暂时性死域（Temporal Dead Zone，简称 TDZ）** 是 ES6 引入 `let` 和 `const` 后出现的概念，指的是变量在**声明之前无法被访问**的这段“死区”范围。

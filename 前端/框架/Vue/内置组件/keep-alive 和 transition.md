@@ -1,7 +1,5 @@
 # Vue 内置组件 keep-alive 和 transition 的实现原理
-
 ## keep-alive 组件原理
-
 ### 核心机制
 ```javascript
 // keep-alive 本质上是一个抽象组件
@@ -27,7 +25,6 @@ export default {
   },
 }
 ```
-
 ### 缓存策略
 ```javascript
 render() {
@@ -58,7 +55,6 @@ render() {
   return vnode || (slot && slot[0])
 }
 ```
-
 ### 生命周期处理
 ```javascript
 // 激活时调用 activated 钩子
@@ -71,9 +67,7 @@ function deactivated() {
   callHook(this, 'deactivated')
 }
 ```
-
 ## transition 组件原理
-
 ### 核心结构
 ```javascript
 export default {
@@ -104,7 +98,6 @@ export default {
   }
 }
 ```
-
 ### CSS 过渡实现
 ```javascript
 export function enter(vnode, toggleDisplay) {
@@ -128,7 +121,6 @@ export function enter(vnode, toggleDisplay) {
   })
 }
 ```
-
 ### JavaScript 钩子实现
 ```javascript
 function callHook(vnode, hook) {
@@ -162,7 +154,6 @@ function enter(vnode, done) {
   })
 }
 ```
-
 ### 类名管理
 ```javascript
 // 自动添加的 CSS 类名
@@ -190,9 +181,7 @@ function removeClass(el, cls) {
   }
 }
 ```
-
 ## 关键实现细节
-
 ### keep-alive 的 LRU 算法
 ```javascript
 function pruneCacheEntry(cache, key, keys) {
@@ -204,7 +193,6 @@ function pruneCacheEntry(cache, key, keys) {
   remove(keys, key)
 }
 ```
-
 ### transition 的动画帧处理
 ```javascript
 function nextFrame(fn) {
@@ -247,9 +235,7 @@ function whenTransitionEnds(el, expectedType, cb) {
   el.addEventListener(event, onEnd)
 }
 ```
-
 ## 使用示例
-
 ### keep-alive 使用
 ```vue
 <template>
@@ -258,7 +244,6 @@ function whenTransitionEnds(el, expectedType, cb) {
   </keep-alive>
 </template>
 ```
-
 ### transition 使用
 ```vue
 <template>
@@ -281,19 +266,3 @@ function whenTransitionEnds(el, expectedType, cb) {
 }
 </style>
 ```
-
-## 总结
-
-**keep-alive**：
-- 通过抽象组件实现，不渲染实际 DOM
-- 使用缓存对象存储组件实例
-- 实现 LRU 缓存淘汰策略
-- 管理组件的 activated/deactivated 生命周期
-
-**transition**：
-- 通过自动添加/移除 CSS 类名实现动画
-- 支持 JavaScript 钩子函数
-- 处理动画帧和过渡结束事件
-- 支持多种过渡模式（in-out/out-in）
-
-两者都是 Vue 响应式系统与浏览器渲染机制深度集成的优秀范例。

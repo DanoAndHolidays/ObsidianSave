@@ -1,7 +1,6 @@
+# RestfulAPI
 RESTful API（Representational State Transfer，表述性状态转移）是一种基于HTTP协议设计接口的规范，旨在通过统一的规则实现客户端与服务器之间的高效通信。它并非严格的标准，而是一组设计原则，强调**简洁、可扩展、无状态**，广泛应用于前后端分离、移动应用与服务器交互等场景。
-
-
-### **RESTful API的核心原则**
+## 1 RESTful API的核心原则
 1. **资源（Resource）为中心**  
    - 一切数据、服务或实体都被视为“资源”，并通过**URI（统一资源标识符）** 唯一标识。  
    - 示例：  
@@ -35,7 +34,7 @@ RESTful API（Representational State Transfer，表述性状态转移）是一�
      - 5xx（服务器错误）：500（Internal Server Error，服务器内部错误）  
 
 
-### **RESTful API的设计最佳实践**
+## 2 RESTful API的设计最佳实践
 1. **URI命名规范**  
    - 用**名词复数**表示资源集合（如`/users`而非`/user`），避免动词（如`/deleteUser`）。  
    - 层级结构体现资源关系（如`/articles/456/comments`表示“文章456的评论”）。  
@@ -78,7 +77,7 @@ RESTful API（Representational State Transfer，表述性状态转移）是一�
      ```
 
 
-### **RESTful API的优势与局限性**
+## 3 RESTful API的优势与局限性
 - **优势**：  
   - 基于HTTP标准，无需额外学习新协议，兼容性强。  
   - 无状态设计便于服务器集群扩展，适合分布式系统。  
@@ -87,7 +86,3 @@ RESTful API（Representational State Transfer，表述性状态转移）是一�
 - **局限性**：  
   - 不适合实时通信（如聊天、股票行情），需结合WebSocket等技术。  
   - 复杂操作（如多资源联动）难以用单一HTTP方法表达，可能需妥协设计。  
-
-
-### **总结**
-RESTful API是一种优雅的接口设计风格，核心是通过“资源+HTTP方法+状态码”实现标准化交互。遵循其原则可使API更易于理解、扩展和维护，是构建现代Web服务的主流选择。实际开发中需结合业务场景灵活调整，不必教条式遵守所有原则。

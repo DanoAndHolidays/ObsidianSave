@@ -1,5 +1,10 @@
-# 版本
----
+# HTTP
+## 0 特点
+
+![[Pasted image 20250831225347.png]]
+![[Pasted image 20250831230800.png]]
+
+## 1 版本
 HTTP协议是HyperTextTransferProtocol（超文本传输协议）的缩写，主要用于网页的传输，现在也常应用网络API的开发(RestfulAPI)。
 ##### HTTP/0.9（1991年）
 - **特点**：首个版本，极其简单，仅支持`GET`方法，且只能传输纯文本（HTML），不支持请求头、响应头或状态码。
@@ -43,38 +48,29 @@ HTTP协议是HyperTextTransferProtocol（超文本传输协议）的缩写，主
 目前，HTTP/1.1仍被广泛使用，HTTP/2在主流浏览器和服务器中已普及，HTTP/3则是未来的发展方向，逐步被各大厂商（如Google、Cloudflare）支持。
 
 HTTP是一个TCP/IP通信协议的最上层的协议之一（HTML文件，图片文件，查询结果等）。后面的s是数字证书加密
-
-![[Pasted image 20250831225347.png]]
-![[Pasted image 20250831230800.png]]
-
----
-# URL
----
+## 2 URL
 ![[Pasted image 20250831231201.png]]
 
 
 ![[Pasted image 20250831231836.png]]
-
----
-# GET与POST的不同点
----
- **幂等性不同**。幂等性是针对于理想情况下的设计结果。GET 对访问的数据没有副作用，具有幂等性，多次请求相同的资源不会导致服务器状态的改变。而当POST 用于**更新**操作时往往是有副作用的，不幂等，多次请求可能导致不同的服务器状态。
+## 3 GET与POST
+ **幂等性不同**
+ 幂等性是针对于理想情况下的设计结果。GET 对访问的数据没有副作用，具有幂等性，多次请求相同的资源不会导致服务器状态的改变。而当POST 用于**更新**操作时往往是有副作用的，不幂等，多次请求可能导致不同的服务器状态。
 - GET 产生的 URL 地址可以保存为书签，而 POST 不可以。
 - GET 请求会被浏览器主动 cache，而 POST 不会，除非手动设置；
 - GET请求参数会被完整保留在浏览器历史记录里，而POST中的参数不会被保留。
 - GET在浏览器回退时是无害的，而POST会再次提交请求。
-**携带数据的方式不同**。
+**携带数据的方式不同**
 - GET 一般将数据以参数的形式放到 URL 中，虽然 HTTP 标准并未对 URL 长度做限制，但是浏览器在实现时，一般会对 URL 的长度做限制，所以携带的数据有限；
 - POST 将数据放到 Body 中，无长度限制。
 - 对参数的数据类型，GET只接受ASCII字符，而POST没有限制。
 - GET请求只能进行url编码，而POST支持多种编码方式。
-**安全性不同**。
+**安全性不同**
 - GET 比 POST 更不安全，因为参数直接暴露在 URL 上，所以不能用来传递敏感信息。
 - GET产生一个TCP数据包；POST有时产生两个TCP数据包，有浏览器会将post请求的header和data分为两次发送。【补充说明：这是某些浏览器的旧版本行为，现代浏览器通常会优化为单个数据包】
 -  get：数据通过 URL 传递，容易被缓存、记录、拦截或篡改，不适合传输敏感数据 post: 数据通过请求主体传递，相对不容易被缓存或直接记录
 - get： 请求的所有数据都显示在 URL 中，适合用于书签、URL 共享等场景 post: 数据隐藏在请求主体中，用户无法直接看到或修改，不适合用于书签或直接分享
-
-用途不同
+**用途不同**
 - get: 用于请求从服务器获取资源或数据
 - post: 用于向服务器提交数据，通常是表单数据 
 
@@ -82,10 +78,10 @@ HTTP是一个TCP/IP通信协议的最上层的协议之一（HTML文件，图片
 编码类型 
 - get: application/x-www-form-urlencoded 
 - post: 支持多种编码类型，如multipart/form-data、application/json等
-##### GET
+### GET
 ![[Pasted image 20250831232320.png]]
 ![[Pasted image 20250831232832.png]]
-##### POST
+### POST
 请求报文：
 1. 请求行：<方法><请求目标><http协议版本>
 2. 请求头：<头部字段名>: <值>
@@ -117,16 +113,16 @@ Content-Length: 60
 
 {"id":123,"name":"John Doe","email":"john@example.com"}
 ```
-##### 消息头
+#### 消息头
 - 请求头
 - 响应头
 【补充：常见HTTP头部分类与示例】
-##### 请求头常见字段
+#### 请求头常见字段
 - **通用头**：Cache-Control、Connection、Date、Pragma、Trailer、Transfer-Encoding、Upgrade、Via、Warning
 - **请求头**：Accept、Accept-Charset、Accept-Encoding、Accept-Language、Authorization、Expect、From、Host、If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since、Max-Forwards、Proxy-Authorization、Range、Referer、TE、User-Agent
 - **实体头**：Allow、Content-Encoding、Content-Language、Content-Length、Content-Location、Content-MD5、Content-Range、Content-Type、Expires、Last-Modified
 
-##### 响应头常见字段
+#### 响应头常见字段
 - **通用头**：同上
 - **响应头**：Accept-Ranges、Age、ETag、Location、Proxy-Authenticate、Retry-After、Server、Vary、WWW-Authenticate
 - **实体头**：同上
@@ -137,9 +133,7 @@ Content-Length: 60
 - `Cache-Control`: 指定缓存机制（如no-cache、max-age=3600）
 - `User-Agent`: 标识客户端软件信息
 - `Set-Cookie`: 服务器向客户端设置cookie
----
-# 模拟报文
----
+### 模拟报文
 ```http
 $ nc www.baidu.com 80
 GET / HTTP/1.1
@@ -167,9 +161,7 @@ X-Ua-Compatible: IE=Edge,chrome=1
 <!DOCTYPE html><!--STATUS OK-->
 ........内容省略
 ```
----
-# HTTP 状态码详解
----
+## 4 HTTP 状态码详解
 ##### 1xx 信息响应
 [补充说明]：  
 - **100 Continue**：客户端应继续请求  
@@ -206,9 +198,8 @@ X-Ua-Compatible: IE=Edge,chrome=1
 - **502 Bad Gateway**：网关错误  
 - **503 Service Unavailable**：服务不可用  
 - **504 Gateway Timeout**：网关超时  
----
-# HTTP 缓存机制
----
+## 5 HTTP 缓存机制
+
 ##### 缓存控制机制
 HTTP缓存主要分为**强缓存**和**协商缓存**两种机制
 
@@ -346,11 +337,7 @@ TLS 1.3 简化握手过程，只需1-RTT：
 1. 启用 TLS 1.3：（1）TLS 1.2 通常需要两个 RTT 来完成握手；TLS 1.3 只需要一个 RTT，降低了延迟（在发送第一个“Hello”消息时，不仅提供加密套件等信息，还包括生成的密钥交换参数（使用椭圆曲线 Diffie-Hellman，ECDHE）和其他需要的信息，服务器响应，选择加密套件并发送密钥交换参数。双方立即可以计算出共享的会话密钥） （2）0-RTT 握手：TLS 1.3 支持“0-RTT”握手，这允许客户端和服务器在之前的会话基础上立即恢复连接
 2. HTTP/2 和 TLS 的结合：多路复用、头部压缩、服务器推送
 3. 启用 OCSP Stapling：允许服务器在握手过程中将最新的证书状态直接发送给客户端，避免了客户端向 CA 服务器进行额外查询，从而减少延迟
-
----
-# HTTP 请求与压缩技术
----
-
+## 6 HTTP 请求与压缩技术
 ##### 简单请求与非简单请求
 [修正术语]：  
 - **简单请求**：使用特定方法（GET、POST、HEAD）和有限头部的HTTP请求  
