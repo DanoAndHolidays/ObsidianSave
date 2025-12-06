@@ -3,7 +3,6 @@
 
 ![[Pasted image 20250831225347.png]]
 ![[Pasted image 20250831230800.png]]
-
 ## 1 版本
 HTTP协议是HyperTextTransferProtocol（超文本传输协议）的缩写，主要用于网页的传输，现在也常应用网络API的开发(RestfulAPI)。
 ##### HTTP/0.9（1991年）
@@ -199,15 +198,13 @@ X-Ua-Compatible: IE=Edge,chrome=1
 - **503 Service Unavailable**：服务不可用  
 - **504 Gateway Timeout**：网关超时  
 ## 5 HTTP 缓存机制
-
-##### 缓存控制机制
-HTTP缓存主要分为**强缓存**和**协商缓存**两种机制
-
+HTTP缓存主要分为强缓存和协商缓存两种机制
+### 强缓存
 强缓存流程，当浏览器请求资源时，会==先检查强缓存==是否有效：
 1. 检查Cache-Control的max-age或s-maxage
 2. 如果不存在，检查Expires字段
 3. 如果缓存有效，直接使用缓存资源，不发送请求到服务器
-
+### 协商缓存
 协商缓存流程，当==强缓存失效==时，进入==协商缓存==阶段：
 1. 浏览器携带If-None-Match(ETag值)和If-Modified-Since(Last-Modified值)向服务器发起请求
 2. 服务器验证资源是否修改：
