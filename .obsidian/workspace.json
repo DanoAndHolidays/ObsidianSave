@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/库/React/4Escape Hatches/6将事件从Effect中分开.md",
+                "file": "前端/库/React/4Escape Hatches/8使用自定义Hook复用逻辑.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "6将事件从Effect中分开"
+              "title": "8使用自定义Hook复用逻辑"
             }
           }
         ]
@@ -171,8 +171,10 @@
   },
   "active": "277afbee8bd2a015",
   "lastOpenFiles": [
-    "前端/库/React/4Escape Hatches/5响应式Effect的生命周期.md",
+    "前端/库/React/4Escape Hatches/7移除Effect依赖.md",
+    "前端/库/React/4Escape Hatches/8使用自定义Hook复用逻辑.md",
     "前端/库/React/4Escape Hatches/6将事件从Effect中分开.md",
+    "前端/库/React/4Escape Hatches/5响应式Effect的生命周期.md",
     "前端/库/React/4Escape Hatches/4移除Effect.md",
     "前端/库/React/4Escape Hatches/3使用Effect进行同步操作.md",
     "前端/库/React/4Escape Hatches/2使用ref操作DOM.md",
@@ -199,8 +201,6 @@
     "attachments/Pasted image 20251206150605.png",
     "前端/库/React/1Describing the UI/6纯函数.md",
     "前端/库/React/1Describing the UI/5列表渲染.md",
-    "前端/库/React/1Describing the UI/4条件渲染.md",
-    "前端/库/React/1Describing the UI/3 组件.md",
     "前端/库/React/1Describing the UI",
     "attachments/Pasted image 20251206001911.png",
     "前端/性能优化",
