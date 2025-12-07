@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/库/React/2Adding Interactivity/7更新State中的数组.md",
+                "file": "前端/库/React/4Escape Hatches/3使用Effect进行同步操作.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "7更新State中的数组"
+              "title": "3使用Effect进行同步操作"
             }
           }
         ]
@@ -169,11 +169,22 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "86a62d4d6fad8ab9",
+  "active": "277afbee8bd2a015",
   "lastOpenFiles": [
+    "前端/库/React/4Escape Hatches/2使用ref操作DOM.md",
+    "前端/库/React/4Escape Hatches/3使用Effect进行同步操作.md",
+    "前端/库/React/4Escape Hatches/1使用ref引用值.md",
+    "前端/库/React/3Managing Sate/7使用Reducer与Context拓展应用.md",
+    "前端/库/React/4Escape Hatches",
+    "前端/库/React/3Managing Sate/6使用Context深层传递参数.md",
+    "前端/库/React/3Managing Sate/5迁移转态到Reducer中.md",
+    "前端/库/React/3Managing Sate/4对State进行保留和重置.md",
+    "前端/库/React/3Managing Sate/3在组件间共享状态.md",
+    "前端/库/React/3Managing Sate/2选择State的结构.md",
+    "前端/库/React/3Managing Sate/1用State响应输入.md",
+    "前端/库/React/2Adding Interactivity/7更新State中的数组.md",
     "前端/库/React/3Managing Sate",
     "前端/库/React/未命名.md",
-    "前端/库/React/2Adding Interactivity/7更新State中的数组.md",
     "前端/库/React/2Adding Interactivity/6更新State中的对象.md",
     "前端/库/React/2Adding Interactivity/5State的批量更新.md",
     "前端/库/React/2Adding Interactivity/4渲染快照.md",
@@ -191,16 +202,7 @@
     "前端/库/React/1Describing the UI/0 Hello React.md",
     "前端/库/React/1Describing the UI",
     "前端/面试/0面试八股文.md",
-    "前端/性能优化/图片预加载与懒加载.md",
-    "前端/面试/6懂车帝-前端实习.md",
-    "前端/框架/Vue/Vue的双向绑定的原理.md",
-    "前端/基本概念/MVVM与MVC.md",
-    "前端/前端技术栈.md",
     "attachments/Pasted image 20251206001911.png",
-    "公共技术/命令行.md",
-    "前端/测试/Vitest.md",
-    "前端/测试/jest.md",
-    "前端/测试/测试概述.md",
     "前端/性能优化",
     "attachments/Pasted image 20251205233829.png",
     "attachments/Pasted image 20251205225544.png",
@@ -214,8 +216,6 @@
     "attachments/Pasted image 20251130174747.png",
     "学习/大学课程",
     "前端/三件套/JS/现代JS教程与阮一峰ES6/7模块",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/0基础简介",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/4原型与类",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/3错误处理"
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/0基础简介"
   ]
 }
