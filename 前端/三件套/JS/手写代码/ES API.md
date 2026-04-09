@@ -1,3 +1,4 @@
+[手写代码 高频面试题整理 - 前端面试路线图 – 大厂面试每日一题](https://q.shanyue.tech/roadmap/code)
 ##### sleep/delay
 基于promise实现的
 ```javascript
@@ -17,6 +18,7 @@ Promise.fakeAll = function (promises) {
     return new Promise((resolve, reject) => {
         let results = []
         for (let p of promises) {
+	        // 这里的Promise.resolve(p)是将非promise的promises的项转为直接resolve的promise，防止之后的链式调用出错
             Promise.resolve(p)
                 .then((value) => {
                     results.push(value)

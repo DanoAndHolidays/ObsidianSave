@@ -135,7 +135,7 @@ promise.then(
 )
 ```
 
-`.catch(f)` 调用是 `.then(null, f)` 的完全的模拟，它只是一个简写形式。
+`.catch(f)` 调用是 `.then(null, f)` 的完全的模拟，它只是一个==简写形式==。
 一般使用then来处理结果，使用catch来处理错误。
 
 `finally` 的功能是设置一个处理程序在前面的操作完成后，执行清理/终结。
@@ -191,7 +191,7 @@ getJSON('/post/1.json').then(function(post) {
   // 处理前面三个Promise产生的错误
 });
 ```
-跟传统的`try/catch`代码块不同的是，如果没有使用`catch()`方法指定错误处理的回调函数，Promise 对象抛出的错误不会传递到外层代码，即不会有任何反应。
+跟传统的`try/catch`代码块不同的是，如果没有使用`catch()`方法指定错误处理的回调函数，Promise 对象抛出的==错误不会传递到外层代码，即不会有任何反应。==
 ```javascript
 const someAsyncThing = function () {
     return new Promise(function (resolve, reject) {
@@ -208,7 +208,7 @@ someAsyncThing()
         console.error(err);
     })
 ```
-经过我的实验，是这样的，这样有bug了也不会报错，嘻嘻
+经过我的实验，是这样的，这样有bug了也不会报错
 一般总是建议，Promise 对象后面要跟`catch()`方法，这样可以处理 Promise 内部发生的错误。`catch()`方法返回的还是一个 Promise 对象，因此后面还可以接着调用`then()`方法。
 ```javascript
 const someAsyncThing = function() {
