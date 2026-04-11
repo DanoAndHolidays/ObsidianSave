@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "cdn",
+                "query": "事件总线",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,11 +74,12 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 349.5
+    "width": 333.5
   },
   "right": {
     "id": "141ae94ee7b6a608",
@@ -155,7 +156,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 343.5
+    "width": 310.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -170,11 +171,20 @@
   },
   "active": "914b2b5dbd562f66",
   "lastOpenFiles": [
-    "前端/面试/面经/0面试八股文.md",
+    "前端/面试/面经/1磐松资产-前端实习.md",
     "前端/三件套/JS/手写代码/常考算法、手撸题目集合.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/2函数/函数进阶.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/1数据类型与变量/Arrray.md",
+    "前端/三件套/JS/廖雪峰教程/4函数/4.5 闭包.md",
+    "前端/三件套/JS/手写代码/ES API.md",
+    "前端/三件套/JS/廖雪峰教程/7浏览器/7.5 Promise.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/6异步编程/Promise与回调.md",
+    "前端/面试/面经/0面试八股文.md",
+    "前端/面试/面经/2字节跳动-豆包前端实习.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/1数据类型与变量/Object/对象的循环引用与深克隆.md",
+    "前端/三件套/JS/优化/节流和防抖.md",
     "前端/三件套/JS/手写代码/LeetCode Hot100.md",
     "前端/三件套/JS/手写代码/Hot 100-2.md",
-    "前端/三件套/JS/手写代码/ES API.md",
     "前端/前端技术栈.md",
     "AI/skill/code-plan-first.md",
     "README.md",
@@ -187,15 +197,6 @@
     "前端/浏览器与环境/跨域、跨站与浏览器安全策略.md",
     "前端/业务场景/前端经典业务场景全集.md",
     "前端/浏览器与环境/浏览器的存储策略.md",
-    "前端/三件套/JS/手写代码/未命名.md",
-    "前端/三件套/JS/优化/节流和防抖.md",
-    "前端/三件套/JS/前端模块化.md",
-    "前端/性能优化/摇树优化.md",
-    "前端/业务场景/竞态问题.md",
-    "前端/业务场景/超大文件上传/Web Worker.md",
-    "前端/三件套/HTML/perload和prefetch.md",
-    "前端/三件套/CSS/tailwindCSS.md",
-    "前端/三件套/CSS/CSS面试题.md",
     "前端/类型检查",
     "AI/skill",
     "AI",

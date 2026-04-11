@@ -127,9 +127,16 @@
    ```
 
 3. **`reduce(callback, initialValue)`**  
-   从左到右累计处理数组元素，返回最终结果（可用于求和、扁平化等）。  
+   从左到右累计处理数组元素，返回最终结果（可用于求和、扁平化等）。  就是对每个元素做些操作，将操作最后的结果累加起来，返回最后的值
    ```javascript
-   // 求和
+   arr.reduce((pre, cur, index, array) => {
+    // pre   - 累积值
+    // cur   - 当前元素
+    // index - 当前索引
+    // array - 原始数组
+}, initialValue)
+
+	// 求和
    const sum = [1, 2, 3, 4].reduce((acc, curr) => acc + curr, 0);
    console.log(sum); // 10
    
@@ -139,7 +146,7 @@
    console.log(flat); // [1, 2, 3, 4, 5]
    ```
 
-4. **`flat(depth)`**  
+5. **`flat(depth)`**  
    扁平化数组，`depth` 指定层级（默认1，`Infinity` 表示完全扁平化）。  
    ```javascript
    const deep = [1, [2, [3, [4]]]];
