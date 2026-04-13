@@ -56,7 +56,7 @@ callback
 ---
 是（单线程并发）解决异步编程回调地狱的一种方案。是一个特殊的对象，`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）。
 
-`Promise`构造函数接受一个函数作为参数，该函数的两个参数分别是`resolve`和`reject`。它们是两个回调函数，由 JavaScript 引擎提供，不用自己部署。
+`Promise`构造函数接受一个函数`executor`作为参数，该函数的两个参数分别是`resolve`和`reject`。它们是两个回调函数，由 JavaScript 引擎提供，不用自己部署。
 ```javascript
 function timeout(ms) {
   return new Promise((resolve, reject) => {
@@ -79,9 +79,9 @@ timeout(100).then((value) => {
 其中，pending->fulfilled和pending->rejected是仅有的两种状态转换，代表着异步操作的结果。executor 只能调用一个 `resolve` 或一个 `reject`。任何状态的更改都是最终的。所有其他的再对 `resolve` 和 `reject` 的调用都会被忽略
 
 ![[Pasted image 20250628000757.png]]
-`resolve`函数的作用是，将`Promise`对象的状态从“未完成”变为“成功”（即从 pending 变为 resolved），在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；
+`resolve`函数的作用是，将`Promise`对象的状态从“未完成”变为“成功”（即从 pending 变为 resolved），在异步操作成功时调用，并==将异步操作的结果，作为参数传递出去==
 
-`reject`函数的作用是，将`Promise`对象的状态从“未完成”变为“失败”（即从 pending 变为 rejected），在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。
+`reject`函数的作用是，将`Promise`对象的状态从“未完成”变为“失败”（即从 pending 变为 rejected），在异步操作失败时调用，并==将异步操作报出的错误，作为参数传递出去==
 ```javascript
 //用于随机生成一个图片
 function Image() {

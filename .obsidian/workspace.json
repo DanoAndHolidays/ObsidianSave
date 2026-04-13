@@ -13,6 +13,20 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "前端/浏览器与环境/Web API/网络请求/RestfulAPI.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "RestfulAPI"
+            }
+          },
+          {
+            "id": "de58b540d46f6e3e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "前端/三件套/JS/手写代码/常考算法、手撸题目集合.md",
                 "mode": "source",
                 "source": false
@@ -20,8 +34,37 @@
               "icon": "lucide-file",
               "title": "常考算法、手撸题目集合"
             }
+          },
+          {
+            "id": "ee2eba394ecedde0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "前端/面试/面经/2字节跳动-豆包前端实习.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2字节跳动-豆包前端实习"
+            }
+          },
+          {
+            "id": "a23caaadcf848f09",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "前端/浏览器与环境/浏览器的存储策略.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "浏览器的存储策略"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -53,7 +96,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "事件总线",
+                "query": "原型链",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,8 +117,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -169,34 +211,40 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "914b2b5dbd562f66",
+  "active": "de58b540d46f6e3e",
   "lastOpenFiles": [
-    "前端/面试/面经/1磐松资产-前端实习.md",
-    "前端/三件套/JS/手写代码/常考算法、手撸题目集合.md",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/2函数/函数进阶.md",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/1数据类型与变量/Arrray.md",
-    "前端/三件套/JS/廖雪峰教程/4函数/4.5 闭包.md",
-    "前端/三件套/JS/手写代码/ES API.md",
-    "前端/三件套/JS/廖雪峰教程/7浏览器/7.5 Promise.md",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/6异步编程/Promise与回调.md",
-    "前端/面试/面经/0面试八股文.md",
+    "前端/面试/面经/7字节-抖音团购.md",
+    "前端/面试/面经/6懂车帝-前端实习.md",
     "前端/面试/面经/2字节跳动-豆包前端实习.md",
-    "前端/三件套/JS/现代JS教程与阮一峰ES6/1数据类型与变量/Object/对象的循环引用与深克隆.md",
+    "前端/三件套/JS/手写代码/常考算法、手撸题目集合.md",
     "前端/三件套/JS/优化/节流和防抖.md",
-    "前端/三件套/JS/手写代码/LeetCode Hot100.md",
-    "前端/三件套/JS/手写代码/Hot 100-2.md",
-    "前端/前端技术栈.md",
-    "AI/skill/code-plan-first.md",
-    "README.md",
-    "index.md",
-    "前端/浏览器与环境/获取浏览器的唯一标识.md",
-    "[异步组件.md",
-    "前端/版本管理工具/提交规范.md",
-    "前端/浏览器与环境/Web API/网络请求/WebHook.md",
+    "前端/浏览器与环境/Web API/网络请求/RestfulAPI.md",
+    "前端/浏览器与环境/Web API/网络请求/HTTP.md",
+    "前端/浏览器与环境/Web API/网络请求/Fetch.md",
     "前端/浏览器与环境/Web API/网络请求/CDN.md",
+    "前端/浏览器与环境/获取浏览器的唯一标识.md",
     "前端/浏览器与环境/跨域、跨站与浏览器安全策略.md",
-    "前端/业务场景/前端经典业务场景全集.md",
+    "前端/浏览器与环境/垃圾回收机制v8.md",
     "前端/浏览器与环境/浏览器的存储策略.md",
+    "前端/浏览器与环境/浏览器工作原理.md",
+    "前端/浏览器与环境/事件循环eventloop.md",
+    "前端/浏览器与环境/SEO 搜索引擎优化.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/6异步编程/Promise与回调.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/5特殊内建对象/Proxy与Reflect.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/5特殊内建对象/Map和Set.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/5特殊内建对象/JSON.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/5特殊内建对象/Date.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/4原型与类/原型.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/4原型与类/原型链.md",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/4原型与类/类.md",
+    "attachments/Pasted image 20260412193153.png",
+    "前端/三件套/JS/现代JS教程与阮一峰ES6/1数据类型与变量/Object/对象的属性配置.md",
+    "前端/三件套/JS/手写代码/ES API.md",
+    "attachments/Pasted image 20260412184219.png",
+    "attachments/Pasted image 20260412174320.png",
+    "attachments/Pasted image 20260412172138.png",
+    "attachments/Pasted image 20260412160952.png",
+    "attachments/Pasted image 20260412160610.png",
     "前端/类型检查",
     "AI/skill",
     "AI",
@@ -205,12 +253,6 @@
     "attachments/Pasted image 20251225150857.png",
     "attachments/Pasted image 20251225150850.png",
     "attachments/Pasted image 20251225150846.png",
-    "attachments/Pasted image 20251225150841.png",
-    "attachments/Pasted image 20251225150839.png",
-    "attachments/Pasted image 20251225150837.png",
-    "attachments/Pasted image 20251225150835.png",
-    "attachments/Pasted image 20251225150735.png",
-    "attachments/Pasted image 20251225150732.png",
     "前端/类型检查/TS/类型体操",
     "前端/类型检查/TS/官方HandBook",
     "前端/库/React/4Escape Hatches",

@@ -1,4 +1,6 @@
 # JSON
+Javascript Object Notation
+
 ---
 JavaScript 提供了如下方法：
 - `JSON.stringify` 将对象转换为 JSON。
@@ -123,4 +125,3 @@ let meetup = JSON.parse(str, function (key, value) {
 
 console.log(meetup.date.getDate());//30
 ```
-

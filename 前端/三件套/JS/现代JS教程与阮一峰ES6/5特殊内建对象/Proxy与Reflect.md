@@ -74,21 +74,3 @@ alert("This line is never reached (error in the line above)");
 `Reflect` 是一个内建对象，可简化 `Proxy` 的创建。
 前面所讲过的内部方法，例如 `[[Get]]` 和 `[[Set]]` 等，都只是规范性的，不能直接调用。
 `Reflect` 对象使调用这些内部方法成为了可能。它的方法是内部方法的最小包装。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
