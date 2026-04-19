@@ -8,21 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "914b2b5dbd562f66",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "前端/浏览器与环境/Web API/网络请求/RestfulAPI.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "RestfulAPI"
-            }
-          },
-          {
-            "id": "de58b540d46f6e3e",
+            "id": "a23caaadcf848f09",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -36,49 +22,21 @@
             }
           },
           {
-            "id": "ee2eba394ecedde0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "前端/面试/面经/2字节跳动-豆包前端实习.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2字节跳动-豆包前端实习"
-            }
-          },
-          {
-            "id": "a23caaadcf848f09",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "前端/三件套/JS/手写代码/常见面试题.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "常见面试题"
-            }
-          },
-          {
             "id": "80f4c7e7778379b5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/三件套/JS/手写代码/面试/面试-究极集合.md",
+                "file": "前端/三件套/样式/CSS/MDN文档/1 基础样式/9调试/2 测试你的技能：CSS 样式基础.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "面试-究极集合"
+              "title": "2 测试你的技能：CSS 样式基础"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -110,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "空值合并",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -151,13 +109,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/三件套/JS/手写代码/常见面试题.md",
+                "file": "前端/三件套/样式/CSS/MDN文档/1 基础样式/9调试/2 测试你的技能：CSS 样式基础.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "常见面试题 的大纲"
+              "title": "2 测试你的技能：CSS 样式基础 的大纲"
             }
           },
           {
@@ -225,52 +183,53 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "86a62d4d6fad8ab9",
+  "active": "80f4c7e7778379b5",
   "lastOpenFiles": [
-    "前端/三件套/JS/手写代码/面试/面试-常考经典.md",
-    "前端/三件套/JS/手写代码/面试/面试-究极集合.md",
-    "前端/三件套/JS/手写代码/面试/面试-数组专项.md",
-    "前端/三件套/JS/手写代码/常见面试题.md",
-    "前端/三件套/JS/手写代码/算法/算法题.md",
-    "前端/三件套/JS/手写代码/面试",
-    "前端/三件套/JS/手写代码/算法",
-    "前端/三件套/JS/手写代码/算法/LeetCode Hot100.md",
-    "前端/三件套/JS/手写代码/原生ES API实现 (这些题目 今晚就给他整理进去).md",
-    "前端/浏览器与环境/浏览器的存储策略.md",
-    "前端/面试/面经/7字节-抖音团购.md",
-    "前端/面试/面经/2字节跳动-豆包前端实习.md",
-    "前端/浏览器与环境/Web API/网络请求/RestfulAPI.md",
-    "前端/面试/面经/1磐松资产-前端实习.md",
-    "前端/类型检查/TS/TypeScript入门教程/3工程/1代码检查.md",
-    "前端/面试/面经/0面试八股文.md",
-    "前端/面试/面经/3百度-前端实习面试.md",
-    "前端/面试/面经/6懂车帝-前端实习.md",
-    "前端/三件套/JS/优化/节流和防抖.md",
-    "前端/浏览器与环境/Web API/网络请求/HTTP.md",
-    "前端/浏览器与环境/Web API/网络请求/Fetch.md",
-    "前端/浏览器与环境/Web API/网络请求/CDN.md",
-    "前端/浏览器与环境/获取浏览器的唯一标识.md",
-    "前端/浏览器与环境/跨域、跨站与浏览器安全策略.md",
-    "前端/浏览器与环境/垃圾回收机制v8.md",
-    "前端/浏览器与环境/浏览器工作原理.md",
-    "前端/浏览器与环境/事件循环eventloop.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/9调试/1 调试 CSS.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/9调试/2 测试你的技能：CSS 样式基础.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/8 图像、媒体与表单/未命名 1.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/9调试",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/8 图像、媒体与表单/2 样式化表格.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/8 图像、媒体与表单/未命名.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/8 图像、媒体与表单/1 图像、媒体和表单元素.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/7 溢出/未命名 1.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/8 图像、媒体与表单",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/7 溢出/未命名.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/7 溢出/1 溢出的内容.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/6 边框背景/2 技能测试：背景与边框.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/7 溢出",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/6 边框背景/1 背景与边框.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/5 调整大小/2 Test your skills：Sizing.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/6 边框背景",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/5 调整大小/1 在 CSS 中调整大小.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/3 盒模型/1 盒模型.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/5 调整大小",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/3 盒模型/2 Test your skills：The box model.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/4 层叠、优先级与继承/1 层叠、优先级与继承.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/4 层叠、优先级与继承/2 Test your skills：The Cascade.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/4 层叠、优先级与继承/3 Challenge：Fixing blog page styles.md",
+    "前端/三件套/样式/CSS/MDN文档/3 排版布局",
+    "前端/三件套/样式/CSS/MDN文档/2 文本样式",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式",
+    "前端/三件套/样式/tailwindCSS.md",
+    "前端/三件套/样式/CSS/常用技巧.md",
+    "前端/三件套/样式/CSS/旧的/布局.md",
+    "前端/三件套/样式/CSS/旧的/盒模型.md",
+    "前端/三件套/样式/CSS/旧的",
+    "前端/三件套/样式/CSS/旧的/定位.md",
+    "前端/三件套/样式/CSS/旧的/层叠上下文.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/4 层叠、优先级与继承",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/2 选择器/5 技能测试：选择器.md",
+    "前端/三件套/样式/CSS/MDN文档/1 基础样式/2 选择器/4 关系选择器.md",
+    "attachments/Pasted image 20260416161011.png",
     "attachments/Pasted image 20260412193153.png",
     "attachments/Pasted image 20260412184219.png",
     "attachments/Pasted image 20260412174320.png",
     "attachments/Pasted image 20260412172138.png",
     "attachments/Pasted image 20260412160952.png",
     "attachments/Pasted image 20260412160610.png",
-    "前端/类型检查",
-    "AI/skill",
-    "AI",
-    "前端/工作&实习",
     "attachments/Pasted image 20251225150904.png",
     "attachments/Pasted image 20251225150857.png",
-    "attachments/Pasted image 20251225150850.png",
-    "attachments/Pasted image 20251225150846.png",
-    "前端/类型检查/TS/类型体操",
-    "前端/类型检查/TS/官方HandBook",
-    "前端/库/React/4Escape Hatches",
-    "前端/库/React/3Managing Sate"
+    "attachments/Pasted image 20251225150850.png"
   ]
 }

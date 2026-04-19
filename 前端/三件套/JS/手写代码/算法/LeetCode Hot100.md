@@ -365,7 +365,8 @@ console.log(trap(height))
 ```
 ![[Pasted image 20250912223122.png]]
 我好不容易自己想出来的一个算法，结果倒在了最后一个测试用例上，这诗人啊？
-# 😅
+
+😅
 这个算法的问题在于重复的填入，那么我用求出“极大值”将极大值之间填满，就能极大的缩短填充的时间，可能就过了...
 
 不对，这思路不对
@@ -1123,4 +1124,331 @@ var rob = function (nums) {
     }
     return dfs(len - 1)
 }
+```
+# 146LRU 缓存
+请你设计并实现一个满足  [LRU (最近最少使用) 缓存](https://baike.baidu.com/item/LRU) 约束的数据结构。
+
+实现 `LRUCache` 类：
+- `LRUCache(int capacity)` 以 **正整数** 作为容量 `capacity` 初始化 LRU 缓存
+- `int get(int key)` 如果关键字 `key` 存在于缓存中，则返回关键字的值，否则返回 `-1` 。
+- `void put(int key, int value)` 如果关键字 `key` 已经存在，则变更其数据值 `value` ；如果不存在，则向缓存中插入该组 `key-value` 。如果插入操作导致关键字数量超过 `capacity` ，则应该 **逐出** 最久未使用的关键字。
+
+函数 `get` 和 `put` 必须以 `O(1)` 的平均时间复杂度运行。
+
+这道题的思路就是维护一个有先后顺序的哈希表，JS中的Map就有这种特性，用来实现这个简直在合适不过：
+```js
+class LRUCatch {
+    constructor(capacity, map = new Map()) {
+        this.capacity = capacity
+        this.map = map
+    }
+
+    get(key) {
+        if (this.map.has(key)) {
+            let tempValue = this.map.get(key)
+            this.map.delete(key)
+            this.map.set(key, tempValue)
+            return tempValue
+        }
+        return undefined
+    }
+
+    set(key, value) {
+        if (this.map.has(key)) {
+            this.map.delete(key)
+        } else if (this.map.size >= this.capacity) {
+            this.map.delete(this.map.keys().next().value)
+        }
+        this.map.set(key, value)
+    }
+}
+```
+# 142环形链表 II
+给定一个链表的头节点  `head` ，返回链表开始入环的第一个节点。 _如果链表无环，则返回 `null`。_
+
+如果链表中有某个节点，可以通过连续跟踪 `next` 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 `pos` 来表示链表尾连接到链表中的位置（**索引从 0 开始**）。如果 `pos` 是 `-1`，则在该链表中没有环。**注意：`pos` 不作为参数进行传递**，仅仅是为了标识链表的实际情况。
+
+**不允许修改** 链表。
+
+这道题我的思路是用哈希表将遍历过的节点存起来，next的时候检查是否有。但是这不能以O(1)的空间复杂度完成。pos只会有一个，我先遍历得到链表的长度，得不到啊。。。
+
+这道题要使用双指针，一个快一个慢，详细的解析见[把环形链表讲清楚！ 如何判断环形链表？如何找到环形链表的入口？ LeetCode：142.环形链表II_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1if4y1d7ob/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c)
+
+核心的结论就是快慢指针相遇的点距离环的入口的距离和头距离环入口的距离是一样的
+```js
+var detectCycle = function (head) {
+    if (!head) return null
+
+    let slow = head,
+        fast = head
+
+    while (fast && fast.next) {
+        slow = slow.next
+        fast = fast.next.next
+
+        if (slow === fast) break
+    }
+
+    if (!fast || !fast.next) return null
+
+    let slow2 = head
+    while (slow2 !== slow) {
+        slow = slow.next
+        slow2 = slow2.next
+    }
+    return slow
+}
+```
+# 21 合并两个有序链表
+将两个升序链表合并为一个新的 **升序** 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+
+使用两个指针，分别指向两个链表的头，将两个指针中较小的值插入新的链表中，这个较小的指针向后移动一个。
+
+当一个指针为null时，将另一个指针的剩余结点全部插入新的链表
+
+如果两个链表是null，直接返回
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var mergeTwoLists = function (list1, list2) {
+    if (!list1 && !list2) return null
+
+    let p1 = list1
+    let p2 = list2
+    let res = []
+
+    while (p1 && p2) {
+        if (p1.val >= p2.val) {
+            res.push(p2.val)
+            p2 = p2.next
+        } else {
+            res.push(p1.val)
+            p1 = p1.next
+        }
+    }
+
+    // 将非空的指针的剩余部分接上
+    let p3 = p1 || p2
+
+    while (p3) {
+        res.push(p3.val)
+        p3 = p3.next
+    }
+
+    return res
+}
+```
+数据结构不对，返回的数组，不管了
+
+# 19 删除链表的倒数第N个节点
+给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
+
+使用双指针，第一个next了n+1个节点后，第二个出发，当第一个的next为null的时候，第二个为倒数第n个节点的前一个节点，将这个节点的next设置为next的next就行了。
+
+返回最开始的链表就可了
+```js
+/**
+ * @param {ListNode} head
+ * @param {number} n
+ * @return {ListNode}
+ */
+var removeNthFromEnd = function (head, n) {
+    let p1 = head
+    let p2 = head
+
+    for (let i = 0; i < n; i++) {
+        p1 = p1.next
+    }
+
+    // 特殊的，在这种情况下，需要移除的就是第一个节点，直接返回head.next就可以了
+    if (p1 === null) {
+        return p2.next
+    }
+
+    while (p1.next) {
+        p1 = p1.next
+        p2 = p2.next
+    }
+
+    p2.next = p2.next.next
+
+    return head
+}
+```
+# 24 两两交换链表中的节点
+两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。写的意义不明，能过就行了。
+```js
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function (head) {
+    if (head === null || head.next === null) {
+        return head
+    }
+
+    let p0 = new ListNode(0, head)
+    p0.next = head
+    let p1 = head
+    let p2 = p1.next
+
+    let newHead = head
+    let haveSwapped = false
+    let tempHead = head.next
+
+    while (p1 && p1.next) {
+        p0.next = p2
+        p1.next = p2.next
+        p2.next = p1
+
+        if (!haveSwapped) {
+            newHead = tempHead
+        }
+
+        if (p1.next && p2.next.next.next) {
+            p0 = p0.next.next
+            p1 = p1.next
+            p2 = p2.next.next.next
+        } else {
+            break
+        }
+    }
+
+    return newHead
+}
+```
+# 25 K个一组翻转链表
+给你链表的头节点 `head` ，每 `k` 个节点一组进行翻转，请你返回修改后的链表。
+
+`k` 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 `k` 的整数倍，那么请将最后剩余的节点保持原有顺序。
+
+你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+
+这个实现的问题是当k=2的时候，会丢数字，这是由于我使用的算法不能再n<=2的时候正确的处理这三个指针之间的关系，所以我直接用了24题的实现，哈哈哈
+```js
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+const swap666 = (start, k) => {
+    if (!start.next || !start || k === 1) return 0
+
+    let end = start
+    let nextStart = start.next
+
+    for (let i = 0; i < k - 1; i++) {
+        if (!end.next) return 0
+        end = end.next
+    }
+
+    for (let i = 0; i < k - 1; i++) {
+        start.next = end.next
+        end.next = start
+        start = nextStart
+        nextStart = nextStart.next
+    }
+    return end
+}
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function (head) {
+    if (head === null || head.next === null) {
+        return head
+    }
+
+    let p0 = new ListNode(0, head)
+    p0.next = head
+    let p1 = head
+    let p2 = p1.next
+
+    let newHead = head
+    let haveSwapped = false
+    let tempHead = head.next
+
+    while (p1 && p1.next) {
+        p0.next = p2
+        p1.next = p2.next
+        p2.next = p1
+
+        if (!haveSwapped) {
+            newHead = tempHead
+        }
+
+        if (p1.next && p2.next.next.next) {
+            p0 = p0.next.next
+            p1 = p1.next
+            p2 = p2.next.next.next
+        } else {
+            break
+        }
+    }
+
+    return newHead
+}
+
+var reverseKGroup = function (head, k) {
+    if (k === 1) return head
+    if (k === 2) {
+        return swapPairs(head)
+    }
+    let pre = new ListNode(0, head)
+    let start = head
+
+    while (1) {
+        let end = swap666(start, k)
+        if (pre.next === head) {
+            pre.next = end
+        }
+        for (let i = 0; i < k - 1; i++) {
+            if (start.next === null) return pre.next
+            start = start.next
+        }
+    }
+
+    return pre.next
+}
+```
+
+```js
+var reverseKGroup = function(head, k) {
+    let n = 0;
+    for (let cur = head; cur; cur = cur.next) {
+        n++;
+    }
+
+    const dummy = new ListNode(0, head);
+    let p0 = dummy;
+    let pre = null;
+    let cur = head;
+
+    // k 个一组处理
+    for (; n >= k; n -= k) {
+        for (let i = 0; i < k; i++) {
+            const nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        
+        const nxt = p0.next;
+        p0.next.next = cur;
+        p0.next = pre;
+        p0 = nxt;
+    }
+    return dummy.next;
+};
 ```
