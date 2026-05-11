@@ -11,20 +11,6 @@
 |前提：|基本的电脑知识、安装了必要的软件、处理文件的基础知识、HTML 基础（学习[Introduction to HTML](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Structuring_content)）、理解 CSS 如何工作（学习 [CSS 入门](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics)）。|
 |目标：|理解在 CSS 中约束物体大小的不同方式。|
 
-## In this article
-
-- [原始尺寸，或固有尺寸](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#%E5%8E%9F%E5%A7%8B%E5%B0%BA%E5%AF%B8%EF%BC%8C%E6%88%96%E5%9B%BA%E6%9C%89%E5%B0%BA%E5%AF%B8)
-- [设置具体的尺寸](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#%E8%AE%BE%E7%BD%AE%E5%85%B7%E4%BD%93%E7%9A%84%E5%B0%BA%E5%AF%B8)
-- [min- 和 max- 尺寸](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#min-_%E5%92%8C_max-_%E5%B0%BA%E5%AF%B8)
-- [视口单位](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#%E8%A7%86%E5%8F%A3%E5%8D%95%E4%BD%8D)
-- [小结](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#%E5%B0%8F%E7%BB%93)
-
-[![Scrimba](https://developer.mozilla.org/pimg/aHR0cHM6Ly9zdGF0aWM0LmJ1eXNlbGxhZHMubmV0L3V1LzIvMTczOTc1LzE3NzU4NTg0NDYtNTAwcHgtbG9nb3Mtd29ybGRvdXRsaW5lLWJhbm5lcl8xXy5wbmc%3D.yB8rNTDy212l%2FnW2U%2FKnRLWFnqZvRVTGydwN%2FC0W%2F24%3D)
-
-**Frontend development career path by Scrimba**A structured program to help you go from beginner to job-ready.Get started
-
-](https://developer.mozilla.org/pong/click?code=aHR0cHM6Ly9zcnYuYnV5c2VsbGFkcy5jb20vYWRzL2NsaWNrL3gvR1RORDQyN1VDWUJJS0szTkY2U0xZS1FVQ0FTSTQySk1DNllJUFozSkNBU0k1SzdFQzZBRDYyN0tDNkFJNjJRN0NUQkRUSzNOQ1RTRDZLSjdDVEJJNFozSkNBU0lLMkpKQ1RBRFRLM0sySldOQUJZ.XcrCE0Ecl3r%2BOsnxRDifIzyU47ww4OGjZX3bXuoa8AA%3D&version=2)[Ad](https://developer.mozilla.org/en-US/advertising)
-
 ## [原始尺寸，或固有尺寸](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Sizing#%E5%8E%9F%E5%A7%8B%E5%B0%BA%E5%AF%B8%EF%BC%8C%E6%88%96%E5%9B%BA%E6%9C%89%E5%B0%BA%E5%AF%B8)
 
 在受 CSS 设置影响之前，HTML 元素有其原始的尺寸。一个直观的例子就是图像。一幅图像的长和宽由这个图像文件自身确定。这个尺寸就是固有尺寸。

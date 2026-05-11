@@ -1250,6 +1250,24 @@ var mergeTwoLists = function (list1, list2) {
 ```
 数据结构不对，返回的数组，不管了
 
+```js
+function mergeTwoLists(list1, list2) {
+    const dummy = new ListNode(); // 用哨兵节点简化代码逻辑
+    let cur = dummy; // cur 指向新链表的末尾
+    while (list1 && list2) {
+        if (list1.val < list2.val) {
+            cur.next = list1; // 把 list1 加到新链表中
+            list1 = list1.next;
+        } else { // 注：相等的情况加哪个节点都是可以的
+            cur.next = list2; // 把 list2 加到新链表中
+            list2 = list2.next;
+        }
+        cur = cur.next;
+    }
+    cur.next = list1 ?? list2; // 拼接剩余链表
+    return dummy.next;
+}
+```
 # 19 删除链表的倒数第N个节点
 给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
 
@@ -1451,4 +1469,287 @@ var reverseKGroup = function(head, k) {
     }
     return dummy.next;
 };
+```
+# 148 链表排序
+```js
+function getMiddleNode(head) {
+    if (!head) return
+    let fast = head
+    let slow = head
+    let pre = head
+
+    while (fast && fast.next) {
+        pre = slow
+        slow = slow.next
+        fast = fast.next.next
+    }
+
+    // 将前后两个链表断开
+    pre.next = null
+
+    return slow
+}
+
+// 21. 合并两个有序链表（双指针）
+function mergeTwoLists(list1, list2) {
+    const dummy = new ListNode(); // 用哨兵节点简化代码逻辑
+    let cur = dummy; // cur 指向新链表的末尾
+    while (list1 && list2) {
+        if (list1.val < list2.val) {
+            cur.next = list1; // 把 list1 加到新链表中
+            list1 = list1.next;
+        } else { // 注：相等的情况加哪个节点都是可以的
+            cur.next = list2; // 把 list2 加到新链表中
+            list2 = list2.next;
+        }
+        cur = cur.next;
+    }
+    cur.next = list1 ?? list2; // 拼接剩余链表
+    return dummy.next;
+}
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function (head) {
+    // 分治
+    if (head === null || head.next === null) return head
+    let middleNode = getMiddleNode(head)
+    middleNode = sortList(middleNode)
+    head = sortList(head)
+    return mergeTwoLists(middleNode, head)
+}
+
+```
+# 23 合并K有序链表
+```js
+// 21. 合并两个有序链表（双指针）
+function mergeTwoLists(list1, list2) {
+    const dummy = new ListNode() // 用哨兵节点简化代码逻辑
+    let cur = dummy // cur 指向新链表的末尾
+    while (list1 && list2) {
+        if (list1.val < list2.val) {
+            cur.next = list1 // 把 list1 加到新链表中
+            list1 = list1.next
+        } else {
+            // 注：相等的情况加哪个节点都是可以的
+            cur.next = list2 // 把 list2 加到新链表中
+            list2 = list2.next
+        }
+        cur = cur.next
+    }
+    cur.next = list1 ?? list2 // 拼接剩余链表
+    return dummy.next
+}
+
+var mergeKLists = function (lists) {
+	// 分治
+    if (lists.length === 0) return null
+    if (lists.length === 1) return lists[0]
+
+    const mid = Math.floor(lists.length / 2)
+    const left = mergeKLists(lists.slice(0, mid))
+    const right = mergeKLists(lists.slice(mid))
+
+    return mergeTwoLists(left, right)
+}
+
+```
+# 226 翻转二叉树
+```js
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var invertTree = function (root) {
+    if (!root) return root
+	
+	// 交换root的两个节点
+    let tempTreeNode = null
+    tempTreeNode = root.right
+    root.right = root.left
+    root.left = tempTreeNode
+	
+	// 递归调用
+    invertTree(root.right)
+    invertTree(root.left)
+	
+    return root
+}
+```
+# 160 相交链表
+给你两个单链表的头节点 `headA` 和 `headB` ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 `null` 。
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+var getIntersectionNode = function(headA, headB) {
+    let p = headA, q = headB;
+    while (p !== q) {
+        p = p ? p.next : headB;
+        q = q ? q.next : headA;
+    }
+    return p;
+};
+```
+
+核心的思路就是，一个指针先走A链再走B，另一个反之：
+- 设链表A长度为 `a + c`，链表B长度为 `b + c`，其中 `c` 是公共部分长度
+- 指针A走完链表A后走链表B：`a + c + b`
+- 指针B走完链表B后走链表A：`b + c + a`
+- 两者都会在第一个公共节点相遇
+# 101 对称二叉树
+给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
+
+我的思路是先根遍历，一个优先遍历左孩子，另一个是右孩子，如果这两个节点的类型是不同的（相同： 都存在，或者都不存在）
+- p.val 等于 q.val。
+- p 的左儿子与 q 的右儿子互为镜像，递归判断。
+- p 的右儿子与 q 的左儿子互为镜像，递归判断。
+
+```js
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isSymmetric = function (root) {
+    function isSameTree(l, r) {
+        if (l === null || r === null) {
+            return l === r
+        }
+        return (
+            l.val === r.val &&
+            isSameTree(l.left, r.right) &&
+            isSameTree(l.right, r.left)
+        )
+    }
+
+    return isSameTree(root.left, root.right)
+}
+```
+
+这个和灵神的思路是一样的，二叉树的题基本上就是递归了
+# 543 二叉树的直径
+给你一棵二叉树的根节点，返回该树的 **直径** 。
+二叉树的 **直径** 是指树中任意两个节点之间最长路径的 **长度** 。这条路径可能经过也可能不经过根节点 `root` 。
+两节点之间路径的 **长度** 由它们之间边数表示。
+
+我的想法是，不过根结点的可能性就是没有另一科子树，如果有另一棵子树就一定过根结点
+
+我们要将这个转化为求取子树的深度，将两个深度相加，没有子树，也就是深度为零。
+```js
+function deep(root) {
+    if (root === null) return 0
+    return Math.max(deep(root.left), deep(root.right)) + 1
+}
+
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var diameterOfBinaryTree = function (root) {
+    return deep(root.left) + deep(root.right)
+}
+// [4,-7,-3,null,null,-9,-3,9,-7,-4,null,6,null,-6,-6,null,null,0,6,5,null,9,null,null,-1,-4,null,null,null,-2]，会在这个例子中报错，原因是我只考虑了过root的情况，没过root，不代表不过子树中的root，也就是这个最大的直径产生在一个子树的内部
+```
+代码只计算了**经过根节点 `root`** 的最长路径，即 `根节点左子树的深度 + 根节点右子树的深度`。
+然而，二叉树的直径定义是**任意两个节点之间**的最长路径。这条最长路径**不一定**会经过整棵树的根节点。它可能完全位于某个子树内部。
+
+在计算每个节点深度的同时，也计算一下**经过该节点**的最长路径，并用一个全局变量来记录所有节点中这个路径长度的最大值。
+```js
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var diameterOfBinaryTree = function (root) {
+    // 1. 定义全局变量来记录最大直径
+    let maxDiameter = 0
+
+    // 2. 定义一个辅助函数来计算深度，并在过程中更新最大直径
+    function deep(node) {
+        if (node === null) return 0
+
+        // 3. 递归计算左右子树的深度
+        const leftDepth = deep(node.left)
+        const rightDepth = deep(node.right)
+
+        // 4. 【核心】更新最大直径
+        // 经过当前节点的最长路径 = 左子树深度 + 右子树深度
+        maxDiameter = Math.max(maxDiameter, leftDepth + rightDepth)
+
+        // 5. 返回当前子树的深度，供父节点使用
+        return Math.max(leftDepth, rightDepth) + 1
+    }
+
+    deep(root) // 启动递归
+    return maxDiameter
+};
+```
+
+至于我个人的实现，可以将其改造一下，将原来的必过根的算法，对每个节点都应用一下：
+```js
+function deep(root) {
+    if (root === null) return 0
+    return Math.max(deep(root.left), deep(root.right)) + 1
+}
+
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var diameterOfBinaryTree1 = function (root) {
+    return deep(root.left) + deep(root.right)
+}
+
+function diameterOfBinaryTree(root) {
+    let max = 0
+	
+    const getMax = (root) => {
+        if(root===null) return 0
+        return Math.max(
+            diameterOfBinaryTree1(root),
+            getMax(root.left),
+            getMax(root.right),
+        )
+    }
+	
+    max = Math.max(max, getMax(root))
+	
+    return max
+}
+
+```
+![[Pasted image 20260426165236.png]]
+数据不太好看
+# 102 二叉树的层序遍历
+给你二叉树的根节点 `root` ，返回其节点值的 **层序遍历** 。 （即逐层地，从左到右访问所有节点）。
+
+我的思路是，保存两个数组，一个当前层，一个是下一层，当前层的直接子节点就是下一层的内容，不断地将下一层换到当前层，直到下一层什么都没有的时候：
+```js
+const levelOrder = (root) => {
+    if (root === null) return []
+    const ans = []
+
+    let cur = [root]
+
+    while (cur.length) {
+        const nxt = []
+        const vals = []
+        
+        for (const node of cur) {
+            vals.push(node.val)
+            if (node.left) nxt.push(node.left)
+            if (node.right) nxt.push(node.right)
+        }
+        cur = nxt
+        ans.push(vals)
+    }
+    return ans
+}
 ```

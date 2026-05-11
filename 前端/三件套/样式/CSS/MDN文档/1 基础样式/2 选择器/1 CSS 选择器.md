@@ -4,17 +4,11 @@
 - [概述：CSS 构建](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics)
 - [下一页](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Attribute_selectors)
 
-[CSS](https://developer.mozilla.org/zh-CN/docs/Glossary/CSS)中，选择器用来指定网页上我们想要样式化的[HTML](https://developer.mozilla.org/zh-CN/docs/Glossary/HTML)元素。有 CSS 选择器提供了很多种方法，所以在选择要样式化的元素时，我们可以做到很精细的地步。本文和本文的子篇中，我们将会详细地讲授选择器的不同使用方式，并了解它们的工作原理。
-
-|       |                                                                                                                                                                                                                                                          |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 学习前提： | 计算机的基本知识， 安装了基础软件，处理文件的基本知识，HTML 基础（学习[HTML 介绍](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Structuring_content)）以及对 CSS 工作方式的了解（学习[CSS 初步](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics)） |
-| 目标：   | 详细学习 CSS 选择器的工作方式。                                                                                                                                                                                                                                       |
-|       |                                                                                                                                                                                                                                                          |
+[CSS](https://developer.mozilla.org/zh-CN/docs/Glossary/CSS)中，选择器用来指定网页上我们想要样式化的[HTML](https://developer.mozilla.org/zh-CN/docs/Glossary/HTML)元素。
 
 ## [选择器是什么？](https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Basic_selectors#%E9%80%89%E6%8B%A9%E5%99%A8%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)
 
-你也许已经见过选择器了。CSS 选择器是 CSS 规则的第一部分。它是元素和其他部分组合起来告诉浏览器哪个 HTML 元素应当是被选为应用规则中的 CSS 属性值的方式。选择器所选择的元素，叫做“选择器的对象”。
+它是元素和其他部分组合起来告诉浏览器哪个 HTML 元素应当是被选为应用规则中的 CSS 属性值的方式。选择器所选择的元素，叫做“选择器的对象”。
 
 ![Some code with the h1 highlighted.](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Basic_selectors/selector.png)
 
