@@ -2,5 +2,6 @@
   "theme": "moonstone",
   "accentColor": "#ffae3d",
   "monospaceFontFamily": "",
-  "textFontFamily": ""
+  "textFontFamily": "",
+  "cssTheme": "Blue Topaz"
 }
