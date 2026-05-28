@@ -1830,49 +1830,6 @@ const levelOrder = (root) => {
     return ans
 }
 ```
-# 300 连续递增最长子序列 ⌚️
- #动态规划
- `dp[i]`表示已`num[i]`结尾的递增子序列的长度
-```js
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var lengthOfLIS = function (nums) {
-    if (!nums) return
-    let dp = new Array(nums.length).fill(1)
-    let trace = new Array(nums.length).fill(-1)
-    // console.log(dp);
-
-    for (let i = 0; i < nums.length; i++) {
-        for (let j = 0; j < i; j++) {
-            if (nums[i] > nums[j]) {
-                if (dp[j] + 1 > dp[i]) {
-                    dp[i] = dp[j] + 1
-                    trace[i] = j
-                }
-            }
-        }
-    }
-    let index = dp.indexOf(Math.max(...dp))
-    let res = []
-
-    while (index !== -1) {
-        res.unshift(nums[index])
-        index = trace[index]
-    }
-
-    return { trace, dp, res }
-}
-
-let nums = [1, 4, 3, 6, 0, 7]
-console.log(lengthOfLIS(nums))
-// {
-//   trace: [ -1, 0, 0, 1, -1, 3 ],
-//   dp: [ 1, 2, 2, 3, 1, 4 ],
-//   res: [ 1, 4, 6, 7 ]
-// }
-```
 # 230 二叉树中获取第K小
 #二叉树
 描述：
@@ -2688,3 +2645,473 @@ function decodeString(s: string): string {
 # 739 每日气温
 给定一个整数数组 `temperatures` ，表示每天的温度，返回一个数组 `answer` ，其中 `answer[i]` 是指对于第 `i` 天，下一个更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 `0` 来代替。
 
+使用单调栈来实现：
+- 从左到右：栈中始终维护着当前没有找到下一个更大的值的数
+- 从右到左：维护着可以成为下一个更大值的数
+```js
+function dailyTemperatures(temperatures: number[]): number[] {
+    // ans最后一个一定是0
+
+    // 我的思路是，遍历这个temperatures，如果curIndex的值小于nxtIndex，那就ans中加入1，否则加入标记
+    // 之后遍历ans，在对应的标记处去寻找其后大于他的值，更新ans
+    // 这个思路其实就是一个双层循环暴力，时间O(n^2)，而且实现起来，起来更加麻烦
+
+    // 从左到右的实现
+    let n = temperatures.length
+    let ans = Array(n).fill(0)
+
+    // 维护着没有找到下一个更大的值的下标
+    let stack = []
+
+    for(let i = 0 ;i<n; i++){
+        const temperature = temperatures[i]
+
+        while(stack.length && temperature > temperatures[stack[stack.length - 1]]){
+            const j =  stack.pop()
+            ans[j] = i - j
+        }
+
+        stack.push(i)
+    }
+    
+    return ans
+};
+```
+
+```js
+// 还是上面👆的实现更加易懂
+function dailyTemperatures(temperatures: number[]): number[] {
+    // 从右到左的实现
+    let n = temperatures.length
+    let ans = Array(n).fill(0)
+
+    // 记录下一个更大元素的「候选项」的下标。
+    let stack = []
+
+    for (let i = n - 1; i >= 0; i--) {
+        const temperature = temperatures[i]
+
+        while (stack.length && temperature >= temperatures[stack[stack.length - 1]]) {
+            stack.pop()
+        }
+
+        if (stack.length) {
+            ans[i] = stack[stack.length - 1] - i
+        }
+
+        stack.push(i)
+    }
+
+    return ans
+};
+```
+# 84 柱状图中的最大值
+https://leetcode.cn/problems/largest-rectangle-in-histogram/description/?envType=study-plan-v2&envId=top-100-liked
+
+```js
+var largestRectangleArea = function(heights) {
+    const n = heights.length;
+    const left = Array(n).fill(-1);
+    const st = [];
+	
+    // 一个单调递增的栈，在push一个值之前，栈顶的index就是这个左侧更小的下标
+    for (let i = 0; i < n; i++) {
+        const h = heights[i];
+        while (st.length && heights[st[st.length - 1]] >= h) {
+            st.pop();
+        }
+        if (st.length) {
+            left[i] = st[st.length - 1];
+        }
+        st.push(i);
+    }
+	
+    // 反方向遍历
+    const right = Array(n).fill(n);
+    st.length = 0;
+    for (let i = n - 1; i >= 0; i--) {
+        const h = heights[i];
+        while (st.length && heights[st[st.length - 1]] >= h) {
+            st.pop();
+        }
+        if (st.length) {
+            right[i] = st[st.length - 1];
+        }
+        st.push(i);
+    }
+	
+	console.log(left, right)
+	
+    let ans = 0;
+    for (let i = 0; i < n; i++) {
+        ans = Math.max(ans, heights[i] * (right[i] - left[i] - 1));
+    }
+    return ans;
+};
+```
+# 215 数组中的第K个最大元素
+https://www.bilibili.com/video/BV1hTfBBuE4T/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c
+```js
+// 快速选择解法
+function findKthLargest(nums: number[], k: number): number {
+    // 随便选一个数，以这个数为准，将数组分为大于，小于，等于这个数的三个数组
+    let pivot = nums[Math.floor(Math.random() * (nums.length - 1))]
+    console.log(pivot)
+
+    let left = nums.reduce((acc, cur) => {
+        if (cur > pivot) {
+            acc.push(cur)
+        }
+        return acc
+    }, [])
+    console.log(left)
+
+    let mid = nums.reduce((acc, cur) => {
+        if (cur === pivot) {
+            acc.push(cur)
+        }
+        return acc
+    }, [])
+    console.log(mid)
+
+    let right = nums.reduce((acc, cur) => {
+        if (cur < pivot) {
+            acc.push(cur)
+        }
+        return acc
+    }, [])
+    console.log(right)
+
+    // left.length + 1的长度代表了pivot在数组中第k大的k
+    if (k <= left.length) {
+        // 这种情况下，答案在left中
+        return findKthLargest(left, k)
+    } else if (k <= left.length + mid.length) {
+        // 这种情况其实就是说，如果你的pivot落在mid数组中，那就是第k大
+        return pivot
+    } else {
+        // 答案在右侧，此时前面有left.length + mid.length个数，
+        // 也就是转为在right中寻找k - left.length - mid.length
+        return findKthLargest(right, k - left.length - mid.length)
+    }
+};
+```
+# 347 前K个高频元素
+给你一个整数数组 `nums` 和一个整数 `k` ，请你返回其中出现频率前 `k` 高的元素。你可以按 **任意顺序** 返回答案。
+```js
+var topKFrequent = function(nums, k) {
+    // 第一步：统计每个元素的出现次数
+    const cnt = new Map();
+    for (const x of nums) {
+        cnt.set(x, (cnt.get(x) ?? 0) + 1);
+    }
+    const maxCnt = Math.max(...cnt.values());
+    console.log(cnt)
+
+    // 第二步：把出现次数相同的元素，放到同一个桶中
+    const buckets = Array.from({ length: maxCnt + 1 }, () => []);
+    for (const [x, c] of cnt.entries()) {
+        buckets[c].push(x);
+    }
+    console.log(buckets)
+
+    // 第三步：倒序遍历 buckets，把出现次数前 k 大的元素加入答案
+    const ans = [];
+    // 注意题目保证答案唯一，一定会出现某次 push 后 ans.length 恰好等于 k 的情况
+    for (let i = maxCnt; ans.length < k; i--) {
+        ans.push(...buckets[i]);
+    }
+    return ans;
+};
+```
+# 295 数据流中的中位数
+中位数把这 6 个数均分成了左右两部分，一边是 left=[1,2,3]，另一边是 right=[4,5,6]。我们要计算的中位数，就来自 left 中的最大值，以及 right 中的最小值。
+
+随着 addNum 不断地添加数字，我们需要：
+
+保证 left 的大小和 right 的大小尽量相等。规定：在有奇数个数时，left 比 right 多 1 个数。
+保证 left 的所有元素都小于等于 right 的所有元素。
+只要时时刻刻满足以上两个要求（满足中位数的定义），我们就可以用 left 中的最大值以及 right 中的最小值计算中位数。
+
+分类讨论：
+
+如果当前 left 的大小和 right 的大小相等：
+如果添加的数字 num 比较大，比如添加 7，那么把 7 加到 right 中。现在 left 比 right 少 1 个数，不符合前文的规定，所以必须把 right 的最小值从 right 中去掉，添加到 left 中。如此操作后，可以保证 left 的所有元素都小于等于 right 的所有元素。
+如果添加的数字 num 比较小，比如添加 0，那么把 0 加到 left 中。
+这两种情况可以合并：无论 num 是大是小，都可以先把 num 加到 right 中，然后把 right 的最小值从 right 中去掉，并添加到 left 中。
+如果当前 left 比 right 多 1 个数：
+如果添加的数字 num 比较大，比如添加 7，那么把 7 加到 right 中。
+如果添加的数字 num 比较小，比如添加 0，那么把 0 加到 left 中。现在 left 比 right 多 2 个数，不符合前文的规定，所以必须把 left 的最大值从 left 中去掉，添加到 right 中。如此操作后，可以保证 left 的所有元素都小于等于 right 的所有元素。
+这两种情况可以合并：无论 num 是大是小，都可以先把 num 加到 left 中，然后把 left 的最大值从 left 中去掉，并添加到 right 中。
+最后，我们需要什么样的数据结构？这个数据结构要能高效地执行如下操作：
+
+添加元素。
+找到最大（小）值。
+删除最大（小）值。
+这个数据结构是堆。
+
+left 是最大堆，right 是最小堆。
+
+如果当前有奇数个元素，中位数是 left 的堆顶。
+如果当前有偶数个元素，中位数是 left 的堆顶和 right 的堆顶的平均值。
+
+```js
+var MedianFinder = function() {
+    this.left = new MaxPriorityQueue();
+    this.right = new MinPriorityQueue();
+};
+
+MedianFinder.prototype.addNum = function(num) {
+    if (this.left.size() === this.right.size()) {
+        this.right.enqueue(num);
+        this.left.enqueue(this.right.dequeue());
+    } else {
+        this.left.enqueue(num);
+        this.right.enqueue(this.left.dequeue());
+    }
+};
+
+MedianFinder.prototype.findMedian = function() {
+    if (this.left.size() > this.right.size()) {
+        return this.left.front();
+    }
+    return (this.left.front() + this.right.front()) / 2;
+};
+```
+# 121 买股票的最佳时机
+#贪心 
+给定一个数组 `prices` ，它的第 `i` 个元素 `prices[i]` 表示一支给定股票第 `i` 天的价格。
+
+你只能选择 **某一天** 买入这只股票，并选择在 **未来的某一个不同的日子** 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 `0` 。
+
+
+从左到右枚举卖出价格 prices[i]。要想获得最大利润，哪天买入最好？在股票价格最低的那天买入。
+
+注意，买入日期必须在卖出日期之前，所以我们求的是从 prices[0] 到 prices[i−1] 的最小值，这可以用一个变量 minPrice 维护。
+
+由于只能买卖一次，所以在遍历中，计算 prices[i]−minPrice 的最大值，就是答案。
+```js
+function maxProfit(prices: number[]): number {
+    let minPrice = prices[0]
+
+    let ans = 0
+
+    for (const p of prices) {
+        ans = Math.max(ans, p - minPrice)
+        minPrice = Math.min(minPrice, p)
+    }
+
+    return ans
+};
+```
+# 55 跳跃游戏
+
+```js
+var canJump = function(nums) {
+    let mx = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (i > mx) { // 无法到达 i
+            return false;
+        }
+        mx = Math.max(mx, i + nums[i]); // 从 i 最右可以跳到 i + nums[i]
+    }
+    return true;
+};
+```
+
+# 45 跳跃游戏II
+https://leetcode.cn/problems/jump-game-ii/?envType=study-plan-v2&envId=top-100-liked
+```js
+var jump = function(nums) {
+    let ans = 0;
+    let curEnd = 0; // 已建造的桥的右端点
+    let nextEnd = 0; // 下一座桥的右端点的最大值
+    for (let i = 0; i < nums.length - 1; i++) {
+        // 遍历的过程中，记录下一座桥的最远点
+        nextEnd = Math.max(nextEnd, i + nums[i]);
+        if (i === curEnd) { // 无路可走，必须建桥
+            curEnd = nextEnd; // 建桥后，最远可以到达 nextEnd
+            ans++;
+        }
+    }
+    return ans;
+};
+```
+# 763 字母划分
+```js
+// 遍历 s，计算字母 c 在 s 中的最后出现的下标 last[c]。
+// 初始化当前正在合并的区间左右端点 start=0, end=0。
+// 再次遍历 s，由于当前区间必须包含所有 s[i]，所以用 last[s[i]] 更新区间右端点 end 的最大值。
+// 如果发现 end=i，那么当前区间合并完毕，把区间长度 end−start+1 加入答案。然后更新 start=end+1 作为下一个区间的左端点。
+// 遍历完毕，返回答案。
+function partitionLabels(s: string): number[] {
+    // 要确定每个字母出现的范围，将重合的范围合并，最后剩余的范围就是最后的分割
+
+    // let map = new Map()
+
+    // for (let i = 0; i < s.length; i++) {
+    //     const char =s[i]
+    //     if(map.has(char)){
+    //         map.set(char, [...map.get(char),i])
+    //     }else{
+    //         map.set(char, [i])
+    //     }
+    // }
+
+    // console.log(map)
+    // return []
+
+    const n = s.length;
+    const last = Array(26);
+    for (let i = 0; i < n; i++) {
+        last[s.charCodeAt(i) - 'a'.charCodeAt(0)] = i; // 每个字母最后出现的下标
+    }
+
+    const ans = [];
+    let start = 0, end = 0;
+    for (let i = 0; i < n; i++) {
+        end = Math.max(end, last[s.charCodeAt(i) - 'a'.charCodeAt(0)]); // 更新当前区间右端点的最大值
+        if (end === i) { // 当前区间合并完毕
+            ans.push(end - start + 1); // 区间长度加入答案
+            start = end + 1; // 下一个区间的左端点
+        }
+    }
+    return ans;
+};
+```
+# 300 递增最长子序列 ⌚️
+ #动态规划
+ `dp[i]`表示已`num[i]`结尾的递增子序列的长度
+```js
+function lengthOfLIS(nums: number[]): number {
+    // dp[i] 表示长为i的数组的最长递归子序列长度
+
+    const dp = Array(nums.length).fill(1)
+    // dp[0] = 0
+
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = 0; j < i; j++) {
+            if (nums[i] > nums[j])
+                dp[i] = Math.max(dp[j] + 1, dp[i])
+        }
+    }
+
+    console.log(dp)
+    return Math.max(...dp)
+};
+```
+
+带有路径
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var lengthOfLIS = function (nums) {
+    if (!nums) return
+    let dp = new Array(nums.length).fill(1)
+    let trace = new Array(nums.length).fill(-1)
+    // console.log(dp);
+
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = 0; j < i; j++) {
+            if (nums[i] > nums[j]) {
+                if (dp[j] + 1 > dp[i]) {
+                    dp[i] = dp[j] + 1
+                    trace[i] = j
+                }
+            }
+        }
+    }
+    let index = dp.indexOf(Math.max(...dp))
+    let res = []
+
+    while (index !== -1) {
+        res.unshift(nums[index])
+        index = trace[index]
+    }
+
+    return { trace, dp, res }
+}
+
+let nums = [1, 4, 3, 6, 0, 7]
+console.log(lengthOfLIS(nums))
+// {
+//   trace: [ -1, 0, 0, 1, -1, 3 ],
+//   dp: [ 1, 2, 2, 3, 1, 4 ],
+//   res: [ 1, 4, 6, 7 ]
+// }
+```
+# 279 完全平方数
+https://leetcode.cn/problems/perfect-squares/?envType=study-plan-v2&envId=top-100-liked
+```js
+function numSquares(n: number): number {
+    // dp[i]表示组成数字i的完全平方数的最小值
+
+    // 初始值：dp[i] = i
+    const dp = Array.from({ length: n + 1 }, (_, i) => i)
+    console.log(dp)
+
+    // 递推公式：dp[i] = min(dp[i], dp[i - j * j] + 1)
+    for (let i = 0; i < n + 1; i++) {
+        for (let j = 1; j * j <= i; j++) {
+            dp[i] = Math.min(dp[i], dp[i - j * j] + 1)
+        }
+    }
+    console.log(dp)
+
+    return dp[n]
+};
+```
+# 322 找零钱
+https://leetcode.cn/problems/coin-change/?envType=study-plan-v2&envId=top-100-liked
+```js
+function coinChange(coins: number[], amount: number): number {
+    const dp = Array(amount + 1).fill(Infinity)
+    dp[0] = 0
+
+    for(let i = 1; i <= amount; i++){
+        // 遍历每一枚硬币
+        for(let j = 0; j < coins.length; j++){
+            // 只有当当前硬币的面值小于等于当前要凑的金额 i 时，才能使用
+            if (coins[j] <= i) {
+                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
+            }
+        }
+    }
+
+    console.log(dp)
+
+    return dp[amount] === Infinity ? -1 : dp[amount]
+};
+```
+# 139 单词拆分
+题解
+https://www.bilibili.com/video/BV1pd4y147Rh?spm_id_from=333.788.videopod.sections&vd_source=47c9acd507be61251cd2bb730416395c
+题目
+https://leetcode.cn/problems/word-break/description/?envType=study-plan-v2&envId=top-100-liked
+```js
+function wordBreak(s: string, wordDict: string[]): boolean {
+    const dp = Array(s.length + 1).fill(false)
+    dp[0] = true
+
+    // dp[i] 表示长为i的字符串能否被wordDict表示
+    for(let i = 1; i <= s.length; i++){
+        for(let j = 0; j < i; j++){
+            // 获取i之前的子串，如果子串之前的串为true，并且子串在字典中
+            // 哈，还是看视频吧，这不太好描述
+            const subStr = s.slice(j, i)
+            console.log(subStr)
+            if(wordDict.includes(subStr) && dp[j]){
+                dp[i] = true
+            }
+        }
+    }
+
+    console.log(dp)
+
+    return dp[s.length]
+};
+```

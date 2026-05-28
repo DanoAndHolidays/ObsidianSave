@@ -172,7 +172,7 @@ X-Ua-Compatible: IE=Edge,chrome=1
 - **200 OK**：请求成功  
 - **201 Created**：POST请求成功，资源已创建  
 - **202 Accepted**：请求已接受，但处理未完成  
-- **204 No Content**：服务器成功处理，但无返回内容（[原笔记误写为202，修正为204]）  
+- **204 No Content**：服务器成功处理，但无返回内容
 - **206 Partial Content**：范围请求成功（用于大文件分块传输）  我在请求.mp4的时候就会返回206，支持 Range Request
 ##### 3xx 重定向
 [修正说明]：  
