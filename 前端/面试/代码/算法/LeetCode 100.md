@@ -1162,7 +1162,7 @@ var rob = function (nums) {
     return dfs(len - 1)
 }
 ```
-# 146LRU 缓存
+# 146 LRU 缓存
 请你设计并实现一个满足  [LRU (最近最少使用) 缓存](https://baike.baidu.com/item/LRU) 约束的数据结构。
 
 实现 `LRUCache` 类：
@@ -1200,7 +1200,7 @@ class LRUCatch {
     }
 }
 ```
-# 142环形链表 II
+# 142 环形链表 II
 给定一个链表的头节点  `head` ，返回链表开始入环的第一个节点。 _如果链表无环，则返回 `null`。_
 
 如果链表中有某个节点，可以通过连续跟踪 `next` 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 `pos` 来表示链表尾连接到链表中的位置（**索引从 0 开始**）。如果 `pos` 是 `-1`，则在该链表中没有环。**注意：`pos` 不作为参数进行传递**，仅仅是为了标识链表的实际情况。
@@ -1211,7 +1211,7 @@ class LRUCatch {
 
 这道题要使用双指针，一个快一个慢，详细的解析见[把环形链表讲清楚！ 如何判断环形链表？如何找到环形链表的入口？ LeetCode：142.环形链表II_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1if4y1d7ob/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c)
 
-核心的结论就是快慢指针相遇的点距离环的入口的距离和头距离环入口的距离是一样的
+核心的结论就是==快慢指针相遇的点==距离==环的入口==的距离和==头距离环入口==的距离是一样的
 ```js
 var detectCycle = function (head) {
     if (!head) return null
@@ -3115,3 +3115,424 @@ function wordBreak(s: string, wordDict: string[]): boolean {
     return dp[s.length]
 };
 ```
+# 152 乘积最大子数组
+#动态规划 
+```js
+function maxProduct(nums: number[]): number {
+    // 这是一个01背包，连续的选择几个数，返回最大值
+    // dp[i] 表示长度为i的连续子数组的积
+    // 递推公式：dp[i] = max(nums[i], dp[i - 1] * nums[i])
+    const dpMax = Array(nums.length).fill(0)
+    const dpMin = Array(nums.length).fill(0)
+
+    // 然而这道题可能会出现负数* 负数的情况，导致突然出现了更大的值，这里我们要记录下最小值 
+    dpMax[0] = nums[0]
+    dpMin[0] = nums[0]
+
+    for (let i = 1; i < nums.length; i++) {
+        dpMax[i] = Math.max(nums[i], dpMax[i - 1] * nums[i], dpMin[i - 1] * nums[i])
+        dpMin[i] = Math.min(nums[i], dpMin[i - 1] * nums[i], dpMax[i - 1] * nums[i])
+    }
+
+    console.log(dpMax)
+
+    return Math.max(...dpMax)
+    // return 0
+};
+```
+# 416 分割等和子集
+https://leetcode.cn/problems/partition-equal-subset-sum/?envType=study-plan-v2&envId=top-100-liked
+
+我的实现，超时了
+```js
+function canPartition(nums: number[]): boolean {
+    // 这道题的本意是你不能能在一个数组中找到几个数，这几个数的和为数组各项和的一半，和为奇数直接返回
+
+    // 这是个01背包问题，每个数字都是选或者不选
+    // dp[i] 表示容量为i的背包的最大价值，
+
+    // dp[i] = max(dp[i], dp[i - weight[j] + value[j]])
+    // 越看越像回溯问题
+
+    let n = nums.length
+    let path = []
+    let ans = []
+
+    let numsSum = nums.reduce((arr, cur) => arr + cur, 0)
+
+    function dfs(i) {
+        if (i === n) {
+            ans.push(path.slice())
+            return
+        }
+
+        dfs(i + 1)
+
+        path.push(nums[i])
+        dfs(i + 1)
+        path.pop()
+    }
+
+    dfs(0)
+
+    console.log(ans)
+
+    for (const arr of ans) {
+        let sum = arr.reduce((acc, current) => acc + current, 0)
+        if (sum === numsSum / 2) return true
+    }
+    return false
+};
+```
+
+https://www.bilibili.com/video/BV1rt4y1N7jE/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c
+
+# 32 最长有效括号
+没做
+
+# 62 不同路径
+https://leetcode.cn/problems/unique-paths/?envType=study-plan-v2&envId=top-100-liked
+```js
+function uniquePaths(m: number, n: number): number {
+    // 记录计算结果，防止超限
+    const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
+    console.log(memo)
+
+    // dfs(i, j) 表示(0, 0)到(i, j)的路径数量
+    const dfs = (i, j) => {
+        console.log(i,j)
+        
+        if (i < 0 || j < 0) return 0
+        if (i === 0 && j === 0) return 1
+        if (memo[i][j] !== -1) return memo[i][j]
+
+        let ans = dfs(i - 1, j) + dfs(i, j - 1)
+        memo[i][j] = ans
+        return ans
+    }
+    return dfs(m - 1, n - 1)
+};
+```
+# 64 最小路径和
+https://leetcode.cn/problems/minimum-path-sum/description/?envType=study-plan-v2&envId=top-100-liked
+```js
+function minPathSum(grid: number[][]): number {
+    let m = grid.length
+    let n = grid[0].length
+
+    const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
+
+    // dfs(i, j) 表示(0, 0)到(i, j)的最小数字和
+    const dfs = (i, j) => {
+        console.log(i, j)
+        if (i < 0 || j < 0) return Infinity
+        if (i === 0 && j === 0) return grid[i][j]
+        if (memo[i][j] !== -1) return memo[i][j]
+
+        let ans = Math.min(dfs(i - 1, j), dfs(i, j - 1)) + grid[i][j]
+        memo[i][j] = ans
+        return ans
+    }
+
+    return dfs(m - 1, n - 1)
+};
+```
+# 5 最长回文子串
+https://leetcode.cn/problems/longest-palindromic-substring/?envType=study-plan-v2&envId=top-100-liked
+```js
+// 比如子串 abcba，最左边和最右边的字母都是 a，如果中间的 bcb 是回文串，那么我们就能 O(1) 地知道 abcba 是回文串。对于子串 bcb 来说，最左边和最右边的字母都是 b，如果中间的 c 是回文串，那么我们就能 O(1) 地知道 bcb 是回文串。显然 c 是回文串，所以 bcb 是回文串，所以 abcba 是回文串。
+
+// 既然如此，为什么不直接从 c 开始向外扩展呢？
+
+// c 是回文串。
+// 看看 c 左右两边的字母是不是一样的，一样，那么 bcb 是回文串。
+// 继续，看看 bcb 左右两边的字母是不是一样的，一样，那么 abcba 是回文串。我们 O(1) 地判断出了一个子串是不是回文串！
+// 这些子串的长度都是奇数，我们称其为奇回文串。
+
+// 回文串还可以是偶数长度，我们称其为偶回文串。
+
+// 比如子串 abccba，我们可以从中间的 cc 开始：
+
+// cc 是回文串。
+// 看看 cc 左右两边的字母是不是一样的，一样，那么 bccb 是回文串。
+// 继续，看看 bccb 左右两边的字母是不是一样的，一样，那么 abccba 是回文串。
+// 一般地，枚举 i=0,1,2,…,n−1 作为奇回文串的中心，向左右两侧扩展：
+
+// 初始化 l=r=i。
+// 如果 s[l]=s[r]，那么向左右两侧扩展，把 l 减一，把 r 加一，继续判断更长的子串是不是回文串。直到下标出界或者 s[l]
+// 
+// =s[r]。
+// 循环结束时，最后一轮循环的子串 s[l+1] 到 s[r−1] 是回文串，若其长度 r−l−1 大于答案的长度，那么更新答案的左右端点为 l+1 和 r−1，方便输出具体子串。
+// 同理，枚举 i 和 i+1 作为偶回文串的中心，也就是初始化 l=i，r=i+1，其余做法同上。
+
+function longestPalindrome(s: string): string {
+    let n = s.length
+
+    let ansLeft = 0
+    let ansRight = 0
+
+    for (let i = 0; i < n; i++) {
+        let l = i
+        let r = i
+
+        while (l >= 0 && r < n && s[l] === s[r]) {
+            l--
+            r++
+        }
+
+        if (r - l > ansRight - ansLeft) {
+            ansLeft = l
+            ansRight = r
+        }
+    }
+
+    for (let i = 0; i < n; i++) {
+        let l = i
+        let r = i + 1
+
+        while (l >= 0 && r < n && s[l] === s[r]) {
+            l--
+            r++
+        }
+
+        if (r - l > ansRight - ansLeft) {
+            ansLeft = l
+            ansRight = r
+        }
+    }
+
+    console.log(ansLeft, ansRight)
+    return s.slice(ansLeft + 1,ansRight)
+};
+
+```
+# 1143 最长公共子序列
+https://leetcode.cn/problems/longest-common-subsequence/?envType=study-plan-v2&envId=top-100-liked
+```js
+function longestCommonSubsequence(text1: string, text2: string): number {
+    let m = text1.length
+    let n = text2.length
+
+    // dfs(i, j)表示以text1[i]与text2[j]结尾的两个子串的最长公共子序列
+    const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
+
+    const dfs = (i, j) => {
+        if (i < 0 || j < 0) return 0
+
+        if (memo[i][j] !== -1) return memo[i][j]
+        if (text1[i] === text2[j]) {
+            memo[i][j] = dfs(i - 1, j - 1) + 1
+            return memo[i][j]
+        }
+
+        memo[i][j] = Math.max(dfs(i - 1, j), dfs(i, j - 1))
+
+        return memo[i][j]
+    }
+
+    return dfs(m - 1, n - 1)
+};
+```
+# 72 编辑距离
+没看
+
+# 136 只出现一次的数字
+https://leetcode.cn/problems/single-number/?envType=study-plan-v2&envId=top-100-liked
+
+给你一个 **非空** 整数数组 `nums` ，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+使用异或的性质，一样的数异或为0，0与其他数异或为其他数
+```js
+var singleNumber = function(nums) {
+    let ans = 0;
+    for (const x of nums) {
+        ans ^= x;
+    }
+    return ans;
+};
+```
+# 169 绝对众数
+https://leetcode.cn/problems/majority-element/solutions/3744717/on-mo-er-tou-piao-fa-yan-jin-zheng-ming-ww1zv/?envType=study-plan-v2&envId=top-100-liked
+
+```js
+var majorityElement = function(nums) {
+    let ans = 0, hp = 0;
+    for (const x of nums) {
+        if (hp === 0) { // x 是初始擂主，生命值为 1
+            ans = x;
+            hp = 1;
+        } else { // 比武，同门加血，否则扣血
+            hp += x === ans ? 1 : -1;
+        }
+    }
+    return ans;
+};
+```
+# 75 颜色分类 ⌚️（荷兰国旗）
+https://leetcode.cn/problems/sort-colors/description/?envType=study-plan-v2&envId=top-100-liked
+https://www.bilibili.com/video/BV1wxqsBAEmA/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c
+使用三个指针，两个维护数组的分界线：
+```js
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function sortColors(nums: number[]): void {
+    // p0指向0的最后一个元素的下一个位置（也就是1的头），p1同样
+    let p0 = 0
+    let p1 = 0
+
+    for(let i =0 ;i<nums.length;i++){
+        const x = nums[i]
+
+        console.log(`当前元素为${x} p0是${p0} p1是${p1}`)
+
+        // 这里的其实是一种覆盖，不管最后一位是啥，都覆盖为2，
+        // 因为后面还有操作，可能会覆盖掉2，由于数组中除了0、1就是2，所以当前面的0、1覆盖完了之后，剩下的2肯定是与原数组一样的
+        nums[i] = 2
+
+        if(x<=1){
+            nums[p1] = 1
+            p1++
+        }
+
+        if(x===0) {
+            nums[p0] = 0
+            p0++
+        }
+
+        console.log(`当前元素为${x} p0是${p0} p1是${p1}，交换后${nums}`)
+    }
+};
+```
+灵神这个有点难以理解
+
+我重写（便于理解）的：
+```js
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function sortColors(nums: number[]): void {
+    // p0指向0的最后一个元素的下一个位置（也就是1的头），p1同样
+    let p0 = 0
+    let p1 = 0
+
+    for (let i = 0; i < nums.length; i++) {
+        const x = nums[i]
+
+        console.log(`当前元素为${x} p0是${p0} p1是${p1}`)
+
+        // 这里的其实是一种覆盖，不管最后一位是啥，都覆盖为2，
+        // 因为后面还有操作，可能会覆盖掉2，由于数组中除了0、1就是2，所以当前面的0、1覆盖完了之后，剩下的2肯定是与原数组一样的
+        nums[i] = 2
+        
+        // 如果是1那么p1（指向1的下一个位置，2的开头）覆盖2为1
+        if (x === 1) {
+            nums[p1] = 1
+            p1++
+        }
+        // 如果是0那么先移动p1
+        // 再p0（指向0的下一个位置，1的开头）覆盖1为0
+        if (x === 0) {
+            nums[p1] = 1
+            p1++
+
+            nums[p0] = 0
+            p0++
+        }
+
+        console.log(`当前元素为${x} p0是${p0} p1是${p1}，交换后${nums}`)
+    }
+};
+```
+
+这是另一种解法，本质思路差不多，也是三指针
+![[Pasted image 20260602201325.png]]
+
+```js
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function sortColors(nums: number[]): void {
+    // 当前元素
+    let cur = 0
+    // 指向0的结尾
+    let low = 0
+    // 指向2的开始
+    let high = nums.length - 1
+
+    while (cur <= high) {
+        if (nums[cur] === 0) {
+            let temp = nums[cur]
+            nums[cur] = nums[low]
+            nums[low] = temp
+
+            cur++
+            low++
+        } else if (nums[cur] === 2) {
+            // [nums[cur], nums[high]] = [nums[high], nums[cur]]
+            let temp = nums[cur]
+            nums[cur] = nums[high]
+            nums[high] = temp
+            high--
+            // cur++
+        }
+        else {
+            cur++
+        }
+    }
+    console.log(nums)
+};
+```
+# 31 下一个排列
+没做
+# 287 寻找重复数
+https://leetcode.cn/problems/find-the-duplicate-number/?envType=study-plan-v2&envId=top-100-liked
+
+暴力
+```js
+function findDuplicate(nums: number[]): number {
+    for (let i = 0; i < nums.length; i++) {
+        const num = nums[i]
+
+        if(nums.slice(i + 1).indexOf(num) !== -1) return num
+        // 超出时间限制
+    }
+};
+```
+
+这道理的特点：
+- 有且只有一个数重复，出现>=2次
+- 其余的数全部是不同的
+
+这个要使用判圈法
+
+https://leetcode.cn/problems/find-the-duplicate-number/solutions/3797843/yong-ji-huan-shu-li-jie-zuo-fa-tong-142-tkoc2/?envType=study-plan-v2&envId=top-100-liked
+
+```js
+function findDuplicate(nums: number[]): number {
+    let slow = 0
+    let fast = 0
+
+    while (true) {
+        // 走一步 
+        slow = nums[slow]
+
+        // 走两步
+        fast = nums[fast]
+        fast = nums[fast]
+
+        if(slow===fast) break
+    }
+
+    let head = 0
+    // 142 的核心结论快慢指针相遇的点距离环的入口的距离和头距离环入口的距离是一样的
+    while(slow !== head){
+        slow = nums[slow]
+        head = nums[head]
+    }
+
+    return slow
+};
+```
+
+6/2/26 终于是完成了这100道题目
