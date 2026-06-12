@@ -1,7 +1,11 @@
 # 事件循环eventloop
-## 1 浏览器进程架构
+> Last Format Time：6/12/2026 19:55:22
+
+## 浏览器进程架构
 [[浏览器工作原理]]
-## 2 事件循环
+
+---
+## 事件循环
 ### 单线程
 由于用户交互的特性，js==只能是单线程的==，但这产生了一些问题，我们必须等待
 - 原因：避免 DOM 冲突（比如一个线程修改 DOM，另一个线程删除 DOM，会导致页面混乱）；
@@ -112,8 +116,10 @@ self.onmessage = function(event) {
     self.postMessage(result);
 };
 ```
+
 ### 性能监控实践
 [补充说明]：监控长任务和渲染性能
+
 ```javascript
 // 监控长任务（超过50ms的任务）
 const observer = new PerformanceObserver((list) => {
@@ -141,6 +147,7 @@ function checkFPS() {
 }
 checkFPS();
 ```
+
 ### 面试题
 ![[Pasted image 20250830155930.png]]
 执行顺序：（我猜 321 312
@@ -172,4 +179,5 @@ new Promise((resolve) => {
   .then((o) => console.log(o))
   .then(() => console.log(6));
 ```
+
 1,3,4,2,5,6,0
