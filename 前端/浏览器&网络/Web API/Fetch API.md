@@ -1,8 +1,9 @@
 # Fetch API
-> Last Format Time：6/12/2026 19:37:28
+> Last Format Time：6/12/2026 19:46:43
 
 [MDN文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)[MDN文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
+---
 ## 二级标题
 ```javascript
 export const createFetch = async () => {
