@@ -1,7 +1,8 @@
-# AbortController
+# AbortController ⌚️
 在 JavaScript 中，`AbortController` 是一个用于中止一个或多个异步操作（如 `fetch` 请求、事件监听器等）的控制器对象。它通过关联的 `AbortSignal` 对象来传递中止信号。
 
-### 核心使用步骤
+---
+## 核心使用步骤
 1. **创建控制器**：使用 `new AbortController()` 创建一个实例。
 2. **获取信号**：通过控制器的 `.signal` 属性获取 `AbortSignal` 对象。
 3. **传递信号**：将信号传递给支持中止的异步 API（例如 `fetch` 的 `signal` 选项）。
@@ -9,7 +10,8 @@
 
 下面通过几个常见的实际场景来具体说明：
 
-### 1. 中止 Fetch 请求
+---
+## 中止 Fetch 请求
 这是 `AbortController` 最常见的应用场景。当用户取消操作或请求超时时，可以避免不必要的网络资源浪费。
 
 ```javascript
@@ -35,8 +37,10 @@ setTimeout(() => {
 }, 5000);
 ```
 
-### 2. 自动清理事件监听器
+---
+## 自动清理事件监听器
 在传统开发中，移除事件监听器需要手动调用 `removeEventListener`。使用 `AbortController` 可以非常优雅地批量清理事件。
+
 ```javascript
 const controller = new AbortController();
 const signal = controller.signal;
@@ -52,8 +56,10 @@ input.addEventListener('input', (e) => console.log(e.target.value), { signal });
 controller.abort();
 ```
 
-### 3. 在 React 组件中防止内存泄漏
+---
+## 在 React 组件中防止内存泄漏
 在 React 的 `useEffect` 中使用 `AbortController` 是一个极佳的最佳实践。当组件在异步请求完成前被卸载时，它可以有效防止内存泄漏和“在已卸载组件上更新状态”的报错。
+
 ```jsx
 import { useEffect, useState } from 'react';
 
@@ -90,8 +96,10 @@ function MyComponent() {
 }
 ```
 
-### 4. 实现请求超时控制
+---
+## 实现请求超时控制
 你可以结合 `setTimeout` 和 `AbortController` 来为异步操作设置超时时间。
+
 ```javascript
 function fetchWithTimeout(url, timeout = 5000) {
   const controller = new AbortController();
