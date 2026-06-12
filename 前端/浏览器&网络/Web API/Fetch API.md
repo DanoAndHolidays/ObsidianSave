@@ -1,5 +1,9 @@
 # Fetch API
-https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
+> Last Format Time：6/12/2026 19:37:28
+
+[MDN文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)[MDN文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
+
+## 二级标题
 ```javascript
 export const createFetch = async () => {
     const res = await fetch(
@@ -18,6 +22,7 @@ export const createFetch = async () => {
 }
 
 ```
+
 取消请求使用`AbortControllor()`
 
 `credentials` 指在使用 `fetch` 发送请求时是否应当发送 `cookie`
