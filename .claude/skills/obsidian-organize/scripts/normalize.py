@@ -224,8 +224,9 @@ def wrap_bare_urls_under_h1(content: str) -> tuple[str, int]:
 def ensure_h2_separators(content: str) -> tuple[str, int]:
     """
     确保每个非首个 H2 紧上方有 `---` 分隔符（一行空行 + --- + H2）。
-    首个 H2：H1 必有 `> Last Format Time` 块，H1 区域到 H2 之间**永不**加 `---`；
-    如已存在 `---` 则删除。
+    首个 H2：
+      - H1 区域到 H2 之间有外部链接 / 裸 URL → 加 `---`
+      - 无链接 → 不加 `---`（如已有则删除）
     """
     lines = content.split('\n')
 
@@ -260,13 +261,28 @@ def ensure_h2_separators(content: str) -> tuple[str, int]:
         has_sep = has_sep_direct or has_sep_with_blank
 
         if is_first_h2 and h1_idx is not None:
-            # 首个 H2：H1 区域（含 `> Last Format Time` 块）到 H2 之间不加 ---
-            if has_sep_direct:
+            # 首个 H2：取决于 H1 区域到 H2 之间是否有"链接"
+            # 链接 = 外部 markdown 链接 `[text](url)` 或裸 URL
+            has_link_area = any(
+                re.match(r'^\[.+\]\(.+\)$', l.strip()) or BARE_URL.match(l.strip())
+                for l in new_lines[h1_idx + 1:idx]
+            )
+            if not has_link_area:
+                # 不应有 ---；如存在则删除
+                if has_sep_direct:
+                    new_lines = new_lines[:idx - 1] + new_lines[idx:]
+                    n_changes += 1
+                elif has_sep_with_blank:
+                    new_lines = new_lines[:idx - 2] + [''] + new_lines[idx:]
+                    n_changes += 1
+                continue
+            # 有链接，需要 --- ；如缺失则插入
+            if has_sep_with_blank:
+                # 规范化：删除 --- 与 H2 之间的空行
                 new_lines = new_lines[:idx - 1] + new_lines[idx:]
                 n_changes += 1
-            elif has_sep_with_blank:
-                new_lines = new_lines[:idx - 2] + [''] + new_lines[idx:]
-                n_changes += 1
+            elif not has_sep_direct:
+                new_lines, n_changes = _insert_separator(new_lines, idx, n_changes)
             continue
 
         # 非首个 H2：必须 --- 紧邻
