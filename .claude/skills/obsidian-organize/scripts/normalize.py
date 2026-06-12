@@ -12,6 +12,7 @@ Obsidian 笔记机械化规范化脚本
 """
 
 import argparse
+import datetime
 import io
 import json
 import re
@@ -51,6 +52,18 @@ PUNCT_SPACE = re.compile(r'([。！？，：；])[ \t]+(?=\*\*|[一-龥])')
 H1 = re.compile(r'^#\s+\S')
 H2 = re.compile(r'^##\s+\S')
 H3 = re.compile(r'^###\s+\S')
+
+# H1 + `> Last Format Time：M/D/YYYY HH:MM:SS` 紧邻
+H1_WITH_META = re.compile(
+    r'^(# .+)\n(> Last Format Time：\d+/\d+/\d+ \d+:\d+:\d+ ?)$',
+    re.MULTILINE,
+)
+META_LINE = re.compile(
+    r'^> Last Format Time：\d+/\d+/\d+ \d+:\d+:\d+ ?$'
+)
+
+# 裸 URL（一行就是 URL）
+BARE_URL = re.compile(r'^https?://\S+$')
 
 
 def remove_number_prefixes(content: str) -> tuple[str, int]:
@@ -126,12 +139,93 @@ def h3_to_h2_if_loose(content: str) -> tuple[str, int]:
     return '\n'.join(out), count
 
 
+def update_h1_metadata(content: str, now: datetime.datetime = None) -> tuple[str, int]:
+    """
+    紧跟 H1 添加/更新 `> Last Format Time：M/D/YYYY HH:MM:SS` 块。
+    - 已存在 → 更新时间戳
+    - 不存在 → 在 H1 下一行插入
+
+    时间戳每次运行都更新到当前时间（"Last Format Time" 语义）。
+    """
+    if now is None:
+        now = datetime.datetime.now()
+    meta_line = f"> Last Format Time：{now.month}/{now.day}/{now.year} {now.hour:02d}:{now.minute:02d}:{now.second:02d}"
+
+    # 已存在则更新
+    if H1_WITH_META.search(content):
+        return H1_WITH_META.sub(rf'\1\n{meta_line}', content), 1
+
+    # 不存在则插入
+    h1_match = re.search(r'^(# .+)$', content, re.MULTILINE)
+    if not h1_match:
+        return content, 0
+    h1_end = h1_match.end()
+    return content[:h1_end] + '\n' + meta_line + '\n' + content[h1_end:], 1
+
+
+def wrap_bare_urls_under_h1(content: str) -> tuple[str, int]:
+    """
+    在 H1（和其 `> Last Format Time` 块）下方的"链接区域"内，把裸 URL 包成 `[URL](URL)`。
+    链接区域 = 紧随 H1/meta 之后的连续行，直到遇到非链接内容为止。
+    链接区域内的合法形式：
+      - 裸 URL `https://...` → 包成 `[URL](URL)`
+      - 已有 `[text](url)`  → 保留
+    其他行（标题/列表/代码/正文/空行）→ 链接区域结束
+
+    如果链接区域后面紧跟标题（非空行、非列表），补一个空行。
+    """
+    lines = content.split('\n')
+
+    h1_idx = None
+    for i, l in enumerate(lines):
+        if H1.match(l):
+            h1_idx = i
+            break
+    if h1_idx is None:
+        return content, 0
+
+    # 跳过 `> Last Format Time` 块 + 紧随的空行
+    start = h1_idx + 1
+    if start < len(lines) and META_LINE.match(lines[start].strip()):
+        start += 1
+    while start < len(lines) and lines[start].strip() == '':
+        start += 1
+
+    n_changes = 0
+    saw_link = False
+    i = start
+    while i < len(lines):
+        l = lines[i].strip()
+        if not l:
+            i += 1
+            continue
+        if BARE_URL.match(l):
+            lines[i] = f'[{l}]({l})'
+            n_changes += 1
+            saw_link = True
+            i += 1
+            continue
+        if re.match(r'^\[.+\]\(.+\)$', l):
+            saw_link = True
+            i += 1
+            continue
+        break
+
+    # 链接区域后紧跟标题则补空行
+    if saw_link and i < len(lines):
+        nxt = lines[i]
+        if nxt.strip() != '' and re.match(r'^#{1,6}\s', nxt):
+            lines.insert(i, '')
+            n_changes += 1
+
+    return '\n'.join(lines), n_changes
+
+
 def ensure_h2_separators(content: str) -> tuple[str, int]:
     """
     确保每个非首个 H2 紧上方有 `---` 分隔符（一行空行 + --- + H2）。
-    首个 H2：
-      - 若 H1 与 H2 之间有正文 → 加 `---`
-      - 若 H1 与 H2 直接相连（无正文） → 移除 `---`（如存在）
+    首个 H2：H1 必有 `> Last Format Time` 块，H1 区域到 H2 之间**永不**加 `---`；
+    如已存在 `---` 则删除。
     """
     lines = content.split('\n')
 
@@ -166,27 +260,13 @@ def ensure_h2_separators(content: str) -> tuple[str, int]:
         has_sep = has_sep_direct or has_sep_with_blank
 
         if is_first_h2 and h1_idx is not None:
-            # 首个 H2：取决于 H1 与 H2 之间是否有正文
-            has_content = any(
-                l.strip() and not H1.match(l)
-                for l in new_lines[h1_idx + 1:idx]
-            )
-            if not has_content:
-                # 不应有 ---；如存在则删除
-                if has_sep_direct:
-                    new_lines = new_lines[:idx - 1] + new_lines[idx:]
-                    n_changes += 1
-                elif has_sep_with_blank:
-                    new_lines = new_lines[:idx - 2] + [''] + new_lines[idx:]
-                    n_changes += 1
-                continue
-            # 有内容，需要 --- ；如缺失则插入
-            if has_sep_with_blank:
-                # 规范化：删除 --- 与 H2 之间的空行
+            # 首个 H2：H1 区域（含 `> Last Format Time` 块）到 H2 之间不加 ---
+            if has_sep_direct:
                 new_lines = new_lines[:idx - 1] + new_lines[idx:]
                 n_changes += 1
-            elif not has_sep_direct:
-                new_lines, n_changes = _insert_separator(new_lines, idx, n_changes)
+            elif has_sep_with_blank:
+                new_lines = new_lines[:idx - 2] + [''] + new_lines[idx:]
+                n_changes += 1
             continue
 
         # 非首个 H2：必须 --- 紧邻
@@ -291,6 +371,8 @@ def process_file(path: Path) -> dict:
     content, n_prefix = remove_number_prefixes(content)
     content, n_h4 = h4_to_h5(content)
     content, n_h3 = h3_to_h2_if_loose(content)
+    content, n_meta = update_h1_metadata(content)
+    content, n_urls = wrap_bare_urls_under_h1(content)
     content, n_sep = ensure_h2_separators(content)
     content, n_code_blanks = fix_code_block_blank_lines(content)
     content, n_punct = fix_punct_space(content)
@@ -302,6 +384,8 @@ def process_file(path: Path) -> dict:
         'number_prefixes_removed': n_prefix,
         'h4_to_h5': n_h4,
         'h3_to_h2': n_h3,
+        'h1_meta_updated': n_meta,
+        'h1_urls_wrapped': n_urls,
         'h2_separators_added': n_sep,
         'code_block_blanks_fixed': n_code_blanks,
         'punct_space_fixed': n_punct,
@@ -316,6 +400,8 @@ def _apply_writes(path: Path) -> None:
         remove_number_prefixes,
         h4_to_h5,
         h3_to_h2_if_loose,
+        update_h1_metadata,
+        wrap_bare_urls_under_h1,
         ensure_h2_separators,
         fix_code_block_blank_lines,
         fix_punct_space,
@@ -336,6 +422,8 @@ def main() -> int:
         'number_prefixes_removed': 0,
         'h4_to_h5': 0,
         'h3_to_h2': 0,
+        'h1_meta_updated': 0,
+        'h1_urls_wrapped': 0,
         'h2_separators_added': 0,
         'code_block_blanks_fixed': 0,
         'punct_space_fixed': 0,
@@ -371,6 +459,10 @@ def main() -> int:
                 print(f'  H4 → H5: {r["h4_to_h5"]}')
             if r['h3_to_h2']:
                 print(f'  H3 → H2 (无 H2 时): {r["h3_to_h2"]}')
+            if r['h1_meta_updated']:
+                print(f'  H1 元信息块: {r["h1_meta_updated"]}')
+            if r['h1_urls_wrapped']:
+                print(f'  H1 裸 URL 包裹: {r["h1_urls_wrapped"]}')
             if r['h2_separators_added']:
                 print(f'  H2 分隔符 ---: {r["h2_separators_added"]}')
             if r['code_block_blanks_fixed']:
@@ -385,6 +477,8 @@ def main() -> int:
             f'\n合计: 数字标号 {totals["number_prefixes_removed"]}, '
             f'H4→H5 {totals["h4_to_h5"]}, '
             f'H3→H2 {totals["h3_to_h2"]}, '
+            f'H1 元信息 {totals["h1_meta_updated"]}, '
+            f'H1 裸URL {totals["h1_urls_wrapped"]}, '
             f'H2 分隔符 {totals["h2_separators_added"]}, '
             f'代码块空行 {totals["code_block_blanks_fixed"]}, '
             f'标点空格 {totals["punct_space_fixed"]}, '
