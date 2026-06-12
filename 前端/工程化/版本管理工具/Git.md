@@ -90,7 +90,7 @@ git pull --rebase 远程仓库名 拉取到的本地分支名
 ## Pull requests
 当提交的内容和远程仓库的分支数量不一样的时候，就可能会触发pr
 
-## tag
+## Tag
 标签和“快照”类似，记录着打标签的所有commit
 ```shell
 git tag -a v1.0.0 -m "第一个版本"

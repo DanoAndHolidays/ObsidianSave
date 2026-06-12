@@ -3237,7 +3237,7 @@ function minPathSum(grid: number[][]): number {
     return dfs(m - 1, n - 1)
 };
 ```
-# 5 最长回文子串
+# 5 最长回文子串 ⌚️
 https://leetcode.cn/problems/longest-palindromic-substring/?envType=study-plan-v2&envId=top-100-liked
 ```js
 // 比如子串 abcba，最左边和最右边的字母都是 a，如果中间的 bcb 是回文串，那么我们就能 O(1) 地知道 abcba 是回文串。对于子串 bcb 来说，最左边和最右边的字母都是 b，如果中间的 c 是回文串，那么我们就能 O(1) 地知道 bcb 是回文串。显然 c 是回文串，所以 bcb 是回文串，所以 abcba 是回文串。
@@ -3304,7 +3304,6 @@ function longestPalindrome(s: string): string {
     console.log(ansLeft, ansRight)
     return s.slice(ansLeft + 1,ansRight)
 };
-
 ```
 # 1143 最长公共子序列
 https://leetcode.cn/problems/longest-common-subsequence/?envType=study-plan-v2&envId=top-100-liked
