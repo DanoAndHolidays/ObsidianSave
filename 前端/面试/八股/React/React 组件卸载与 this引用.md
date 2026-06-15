@@ -1,4 +1,7 @@
 # React 组件卸载与 this引用
+> Last Format Time：6/15/2026 11:46:35
+
+---
 ## 题目
 在 React 类组件中，有如下代码：
 ```jsx

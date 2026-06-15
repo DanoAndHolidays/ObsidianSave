@@ -1,5 +1,6 @@
-
 # useHandler
+> Last Format Time：6/15/2026 10:50:12
+
 先点明核心作用：
 `useHandler` 专门解决 React 里**函数频繁重新创建、useEffect/子组件不必要重复执行、闭包陷阱**问题，目标是：
 1. 返回一个永远不变引用的稳定处理函数
@@ -7,14 +8,14 @@
 
 ---
 ## 前置知识
-### 1. useRef 两大特性
+### useRef 两大特性
 - `.current` 可变，修改不会触发组件重渲染；
 - ref 对象本身在组件整个生命周期**只初始化一次**，引用永远不变。
 
-### 2. useCallback 特性
+### useCallback 特性
 依赖数组不变，返回的函数引用就永远不变；依赖变了才生成新函数。
 
-### 3. 经典闭包陷阱场景（为什么需要这个钩子）
+### 经典闭包陷阱场景（为什么需要这个钩子）
 ```jsx
 const [count, setCount] = useState(0);
 
@@ -28,6 +29,7 @@ useEffect(() => {
   return () => clearInterval(timer);
 }, []); // 依赖空数组，onClick永远是第一次创建的旧函数
 ```
+
 定时器里永远只能拿到初始 `count=0`，这就是闭包陷阱，两个 `useHandler` 都是为修复这个问题而生。
 
 ---
@@ -103,6 +105,7 @@ export default function Demo1() {
   return <div>计数：{count}</div>;
 }
 ```
+
 运行效果：每秒正常+1，控制台打印实时最新count，没有闭包卡死问题。
 
 ---
@@ -156,6 +159,7 @@ export default function Demo2() {
   return <div>计数：{count}</div>;
 }
 ```
+
 运行结果和第一个版本一模一样，定时器正常累加，无闭包陷阱。
 
 ---
@@ -194,4 +198,5 @@ export default function Parent() {
   );
 }
 ```
+
 效果：点击父组件按钮更新 `num`，父组件重渲染，但**子组件不会打印渲染日志**，因为传给子组件的函数引用始终没变；点击子按钮依然能拿到最新的 `num`。
