@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l .claude/skills/obsidian-organize/reference/*.md)",
+      "Bash(python -c ':*)",
+      "Bash(python)",
+      "Bash(PYTHONIOENCODING=utf-8 python /tmp/check.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python /tmp/check2.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python /tmp/check3.py)",
+      "Bash(python:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python:*)"
+    ]
+  }
+}

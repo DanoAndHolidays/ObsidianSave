@@ -88,7 +88,7 @@ var addTwoNumbers = function (l1, l2, carry = 0) {
 
 **输入:** strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
 
-**输出:** [["bat"],["nat","tan"],["ate","eat","tea"]]
+**输出:** [ ["bat"],["nat","tan"],["ate","eat","tea"] ]
 
 **解释：**
 
@@ -324,7 +324,7 @@ console.log(threeSum(nums))
 ```
 # 42接雨水
 ---
-#双指针 
+#双指针 #前缀
 ```javascript
 height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
 
@@ -372,7 +372,7 @@ console.log(trap(height))
 
 不对，这思路不对
 
-[idea]([盛最多水的容器 接雨水【基础算法精讲 02】_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Qg411q7ia/?vd_source=47c9acd507be61251cd2bb730416395c))
+[盛最多水的容器 接雨水【基础算法精讲 02】](https://www.bilibili.com/video/BV1Qg411q7ia/?vd_source=47c9acd507be61251cd2bb730416395c)
 ```javascript
 height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
 /**

@@ -423,12 +423,10 @@ var climbStairs = function (n) {
 ```
 # 54 螺旋矩阵
 https://leetcode.cn/problems/spiral-matrix/description/
-
-
-
-
-
-
+# 200 岛屿的数量
+https://leetcode.cn/problems/number-of-islands/description/
+# 300 最长上升子序列
+https://leetcode.cn/problems/longest-increasing-subsequence/description/
 # 56 区间合并 ⌚️
 https://leetcode.cn/problems/merge-intervals/submissions/662938365/
 给定一个表示若干个区间的集合数组intervals，每个区间由起始位置start和结束位置end组成。请合并所有重叠的区间，返回一个不重叠的区间数组，该数组需包含输入中的所有区间，并确保区间之间没有重叠。
@@ -533,4 +531,270 @@ var merge = function(intervals) {
 };
 ```
 ![[Pasted image 20260608172622.png]]
-我还做过呢，艹了。这肯定是没了啊，这题都没搞出来，你。。。
+我还做过呢，艹了。这肯定是没了啊，这题都没搞出来，你。。。这道好像是美团的，挂了已经
+
+# 704 二分查找
+https://leetcode.cn/problems/binary-search/description/
+```js
+function search(nums: number[], target: number): number {
+    const n = nums.length
+    let left = 0
+    let right = n - 1
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2)
+        if(nums[mid] === target){
+            return mid
+        }else if(nums[mid] > target){
+            right = mid - 1
+        }else{
+            left = mid + 1
+        }
+    }
+
+    return -1
+};
+```
+# 129 求根到叶子节点的路径值和
+https://leetcode.cn/problems/sum-root-to-leaf-numbers/description/
+```js
+var sumNumbers = function(root, x = 0) {
+    if (root === null) {
+        return 0;
+    }
+    x = x * 10 + root.val;
+    if (root.left === null && root.right === null) { // root 是叶子节点
+        return x;
+    }
+    return sumNumbers(root.left, x) + sumNumbers(root.right, x);
+};
+```
+
+# 93 复原IP地址
+https://leetcode.cn/problems/restore-ip-addresses/
+```js
+function restoreIpAddresses(s: string): string[] {
+    // 这题的本质是选.合理的位置
+    let n = s.length
+    let ans = []
+    let path = []
+	
+    if (n < 4 || n > 12) return ans
+	
+    // 表示从i开始进行划分的所有可能性
+    function dfs(i) {
+        if (path.length === 3) {
+            // 1. 获取最后一段字符串
+            const lastSegment = s.slice(i)
+            
+            // 2. 对最后一段进行合法性校验
+            // 长度不能超过3
+            if (lastSegment.length > 3) return 
+            // 不能有前导零（长度大于1且首位是'0'）
+            if (lastSegment.length > 1 && lastSegment[0] === '0') return 
+            // 数值不能大于255
+            if (Number(lastSegment) > 255) return 
+			
+            ans.push(`${s.slice(0, path[0])}.${s.slice(path[0], path[1])}.${s.slice(path[1], path[2])}.${s.slice(path[2])}`)
+            return
+        }
+		
+        for (const len of [1, 2, 3]) {
+            if (i + len > n) break
+            if (len > 1 && s[i] === '0') break
+            if (Number(s.slice(i, i + len)) > 255) break
+			
+            const remainingSegments = 3 - path.length;
+            const remainingChars = n - (i + len);
+            if (remainingChars < remainingSegments || remainingChars > remainingSegments * 3) {
+                continue; // 当前长度不合适，尝试下一个长度
+            }
+            path.push(i + len)
+            dfs(i + len)
+            path.pop()
+			
+        }
+    }
+    dfs(0)
+    return ans
+}
+```
+# 322 零钱兑换
+https://leetcode.cn/problems/coin-change/description/
+# 104 二叉树的最大深度
+https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/
+# 22 括号生成
+https://leetcode.cn/problems/generate-parentheses/description/
+# LCR 126 斐波那契数列
+https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/description/
+```js
+function fib(n: number): number {
+    const mod = Math.pow(10, 9) + 7
+    const map = new Map<number, number>()
+
+    const helper = (n: number): number => {
+        if (n === 0) return 0
+        if (n === 1) return 1
+
+        if (map.has(n)) return map.get(n)
+
+        // 核心改造：在相加的同时就进行取模，防止中间结果溢出
+        const ans = (helper(n - 1) + helper(n - 2)) % mod
+
+        map.set(n, ans)
+        return ans
+    };
+
+    return helper(n)
+}
+```
+# 695 岛屿的最大面积
+https://leetcode.cn/problems/max-area-of-island/
+```js
+function maxAreaOfIsland(grid: number[][]): number {
+    const n = grid.length
+    const m = grid[0].length
+
+    let ans = 0
+
+    // 这个函数的作用是将包含i, j坐标的岛屿的面积找出来
+    const dfs = (i, j) => {
+        // 如果是越界或者不是岛屿(海洋、遍历过的岛)
+        if (i >= n || i < 0 || j >= m || j < 0 || grid[i][j] !== 1) return 0
+
+        // 标记岛屿
+        grid[i][j] = 2
+
+        // 递归调用
+        return dfs(i - 1, j) + dfs(i, j - 1) + dfs(i + 1, j) + dfs(i, j + 1) + 1
+    }
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            ans = Math.max(dfs(i, j), ans)
+            console.log(i, j, dfs(i, j),ans)
+        }
+    }
+
+    console.log(grid)
+    return ans
+};
+```
+# LCR 140 训练计划 II
+#双指针
+https://leetcode.cn/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
+
+灵神的脑子怎么这么聪明啊
+```js
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+var trainingPlan = function(head, k) {
+    let left = head, right = head;
+    while (k--) right = right.next; // 右指针先向右走 k 步
+    // 然后左右指针一起走，右指针走到空节点时，左指针正好就在倒数第 k 个节点
+    while (right) {
+        left = left.next;
+        right = right.next;
+    }
+    return left;
+};
+```
+
+# 94 二叉树的中序遍历
+左跟右
+# 42 接雨水
+#双指针 
+https://leetcode.cn/problems/trapping-rain-water/description/
+
+使用前缀最大值与后缀最大值来标记：
+```js
+function trap(height: number[]): number {
+    let ans = 0
+
+    const n = height.length
+    const preMax = Array(n)  
+    const sufMax = Array(n)
+
+    preMax[0] = height[0]
+    for (let i = 1; i < n; i++) {
+        preMax[i] = Math.max(preMax[i - 1], height[i])
+    }
+
+    sufMax[n - 1] = height[n - 1]
+    for (let i = n - 2; i >= 0; i--) {
+        sufMax[i] = Math.max(sufMax[i + 1], height[i])
+    }
+
+    for (let i = 0; i < n; i++) {
+        ans += Math.min(preMax[i], sufMax[i]) - height[i]
+    }
+
+    console.log(preMax, sufMax)
+    return ans
+};
+```
+# 1143 最长公共子序列
+#动态规划
+https://leetcode.cn/problems/longest-common-subsequence/description/
+```js
+function longestCommonSubsequence(text1: string, text2: string): number {
+    let m = text1.length
+    let n = text2.length
+
+    // dfs(i, j)表示以text1[i]与text2[j]结尾的两个子串的最长公共子序列
+    const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
+
+    const dfs = (i, j) => {
+        if (i < 0 || j < 0) return 0
+
+        if (memo[i][j] !== -1) return memo[i][j]
+        if (text1[i] === text2[j]) {
+            memo[i][j] = dfs(i - 1, j - 1) + 1
+            return memo[i][j]
+        }
+
+        memo[i][j] = Math.max(dfs(i - 1, j), dfs(i, j - 1))
+
+        return memo[i][j]
+    }
+
+    return dfs(m - 1, n - 1)
+};
+```
+# 14 最长公共前缀
+
+# 226 翻转二叉树
+
+# 1556 千位分割数
+
+# 62 不同路径
+#动态规划 
+https://leetcode.cn/problems/unique-paths/submissions/728284503/
+```js
+function uniquePaths(m: number, n: number): number {
+    const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
+    console.log(memo)
+	
+    const dfs = (i, j) => {
+        console.log(i,j)
+        if (i < 0 || j < 0) return 0
+        if (i === 0 && j === 0) return 1
+        if (memo[i][j] !== -1) return memo[i][j]
+		
+        let ans = dfs(i - 1, j) + dfs(i, j - 1)
+        memo[i][j] = ans
+        return ans
+    }
+    return dfs(m - 1, n - 1)
+};
+```
