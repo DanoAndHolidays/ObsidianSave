@@ -1,4 +1,6 @@
 # 修改文档（document）
+> Last Format Time：6/21/2026 17:22:15
+
 
 ---
 ## 创建一个元素
@@ -79,7 +81,7 @@ div.innerHTML = "<strong>Hi there!</strong> You've read an important message.";
 - `"afterend"` —— 将 `html` 插入到 `elem` 之后。
 
 第二个参数是 HTML 字符串，该字符串会被“作为 HTML” 插入：
-```markup
+```html
 <div id="div"></div>
 <script>
   div.insertAdjacentHTML('beforebegin', '<p>Hello</p>');
@@ -88,11 +90,12 @@ div.innerHTML = "<strong>Hi there!</strong> You've read an important message.";
 ```
 
 ……将导致：
-```markup
+```html
 <p>Hello</p>
 <div id="div"></div>
 <p>Bye</p>
 ```
+
 ![[Pasted image 20260619222702.png]]
 
 这个方法有两个兄弟：
@@ -141,6 +144,7 @@ div.innerHTML = "<strong>Hi there!</strong> You've read an important message.";
 ---
 ## 克隆节点
 调用 `elem.cloneNode(true)` 来创建元素的一个“深”克隆 —— 具有所有特性（attribute）和子元素。如果我们调用 `elem.cloneNode(false)`，那克隆就不包括子元素。
+
 ```html
 <style>
 .alert {
@@ -230,7 +234,7 @@ ul.append(...getListContent()); // append + "..." operator = friends!
 `parentElem.appendChild(node)`
 将 `node` 附加为 `parentElem` 的最后一个子元素。
 下面这个示例在 `<ol>` 的末尾添加了一个新的 `<li>`：
-```markup
+```html
 <ol id="list">
   <li>0</li>
   <li>1</li>
@@ -248,7 +252,7 @@ ul.append(...getListContent()); // append + "..." operator = friends!
 `parentElem.insertBefore(node, nextSibling)`
 在 `parentElem` 的 `nextSibling` 前插入 `node`。
 下面这段代码在第二个 `<li>` 前插入了一个新的列表项：
-```markup
+```html
 <ol id="list">
   <li>0</li>
   <li>1</li>
@@ -273,7 +277,7 @@ list.insertBefore(newLi, list.firstChild);
 `parentElem.removeChild(node)`
 从 `parentElem` 中删除 `node`（假设 `node` 为 `parentElem` 的后代）。
 下面这个示例从 `<ol>` 中删除了 `<li>`：
-```markup
+```html
 <ol id="list">
   <li>0</li>
   <li>1</li>
@@ -291,7 +295,8 @@ list.insertBefore(newLi, list.firstChild);
 ---
 ## document.write
 还有一个非常古老的向网页添加内容的方法：`document.write`。
-```markup
+
+```html
 <p>Somewhere in the page...</p>
 <script>
   document.write('<b>Hello from JS</b>');
@@ -315,7 +320,7 @@ list.insertBefore(newLi, list.firstChild);
 
 [](https://zh.javascript.info/modifying-document# "在沙箱中打开")
 
-```markup
+```html
 <p>After one second the contents of this page will be replaced...</p>
 <script>
   // 1 秒后调用 document.write

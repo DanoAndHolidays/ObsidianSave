@@ -1,4 +1,5 @@
 # 通过导航获取DOM对象
+> Last Format Time：6/21/2026 17:22:15
 
 ---
 ## 导航属性
@@ -75,6 +76,7 @@ alert( document.head.nextSibling ); // HTMLBodyElement
 alert( document.body.previousSibling ); // HTMLHeadElement
 ```
 
+---
 ## 纯元素导航
 上面列出的导航（navigation）属性引用 **所有类型的** 节点。例如，在 `childNodes` 中我们可以看到文本节点，元素节点，甚至包括注释节点（如果它们存在的话）。
 

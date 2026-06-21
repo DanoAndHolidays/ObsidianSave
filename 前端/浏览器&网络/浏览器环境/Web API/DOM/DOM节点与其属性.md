@@ -1,4 +1,5 @@
 # DOM节点与其属性
+> Last Format Time：6/21/2026 17:22:15
 
 ---
 ## 节点的类
@@ -147,6 +148,7 @@ tagName 和 nodeName 之间有什么不同吗？
 
 在 HTML 模式下，`tagName/nodeName` 始终是大写的：它是 `BODY`，而不是 `<body>` 或 `<BoDy>`。![[Pasted image 20260619205240.png]]
 
+---
 ## innerHTML
 [innerHTML](https://w3c.github.io/DOM-Parsing/#the-innerhtml-mixin) 属性允许将元素中的 HTML 获取为字符串形式。我们也可以修改它。因此，它是更改页面最有效的方法之一：
 ```html
@@ -262,7 +264,7 @@ chatDiv.innerHTML += "How goes?";
 对于文本节点，我们可以想象读取或修改它们的原因，但是注释呢？
 
 有时，开发者会将信息或模板说明嵌入到 HTML 中的注释中，如下所示：
-```markup
+```html
 <!-- if isAdmin -->
   <div>Welcome, Admin!</div>
 <!-- /if -->
@@ -273,7 +275,8 @@ chatDiv.innerHTML += "How goes?";
 ---
 ## textContent：纯文本
 `textContent` 提供了对元素内的 **文本** 的访问权限：仅文本，去掉所有 `<tags>`。
-```markup
+
+```html
 <div id="news">
   <h1>Headline!</h1>
   <p>Martians attack people!</p>

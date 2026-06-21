@@ -1,4 +1,6 @@
 # 特性和属性（Attributes and properties）
+> Last Format Time：6/21/2026 17:22:15
+
 当浏览器加载页面时，它会“读取”（或者称之为：“解析”）HTML 并从中生成 DOM 对象。对于元素节点，大多数标准的 HTML 特性（attributes）会自动变成 DOM 对象的属性（properties）。（译注：attribute 和 property 两词意思相近，为作区分，全文将 attribute 译为“特性”，property 译为“属性”，请读者注意区分。）
 
 例如，如果标签是 `<body id="page">`，那么 DOM 对象就会有 `body.id="page"`。
@@ -49,7 +51,7 @@ document.body.sayHi(); // Hello, I'm BODY
 在 HTML 中，标签可能拥有特性（attributes）。当浏览器解析 HTML 文本，并根据标签创建 DOM 对象时，浏览器会辨别 **标准的** 特性并以此创建 DOM 属性。
 
 所以，当一个元素有 `id` 或其他 **标准的** 特性，那么就会生成对应的 DOM 属性。但是非 **标准的** 特性则不会：
-```markup
+```html
 <body id="test" something="non-standard">
   <script>
     alert(document.body.id); // test

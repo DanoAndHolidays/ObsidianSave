@@ -1,6 +1,7 @@
 # DOM文档对象模型
+> Last Format Time：6/21/2026 17:22:15
 
-https://developer.mozilla.org/zh-CN/docs/Web/API/Document
+[https://developer.mozilla.org/zh-CN/docs/Web/API/Document](https://developer.mozilla.org/zh-CN/docs/Web/API/Document)
 
 ---
 ## 标签简介
@@ -81,7 +82,7 @@ DOM 将 HTML 表示为标签的树形结构。它看起来如下所示：
 表格是一个有趣的“特殊的例子”。按照 DOM 规范，它们必须具有 `<tbody>` 标签，但 HTML 文本可能会忽略它。然后浏览器在创建 DOM 时，自动地创建了 `<tbody>`。
 
 对于 HTML：
-```markup
+```html
 <table id="table"><tr><td>1</td></tr></table>
 ```
 
