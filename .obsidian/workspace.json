@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/浏览器&网络/浏览器环境/Web API/事件/事件处理.md",
+                "file": "前端/项目笔记/代达罗斯/组件/Badge.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "事件处理"
+              "title": "Badge"
             }
           },
           {
@@ -69,12 +69,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/浏览器&网络/浏览器环境/Web API/DOM/DOM节点与其属性.md",
+                "file": "前端/浏览器&网络/浏览器环境/Web API/事件/浏览器事件简介.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DOM节点与其属性"
+              "title": "浏览器事件简介"
             }
           }
         ],
@@ -110,7 +110,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "prefetch",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -151,13 +151,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/浏览器&网络/浏览器环境/Web API/事件/事件处理.md",
+                "file": "前端/项目笔记/代达罗斯/组件/Badge.md",
                 "followCursor": true,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "事件处理 的大纲"
+              "title": "Badge 的大纲"
             }
           },
           {
@@ -227,51 +227,51 @@
   },
   "active": "7df9e0f2db984bd8",
   "lastOpenFiles": [
-    "前端/浏览器&网络/浏览器环境/Web API/事件/事件委托与冒泡.md",
-    "前端/浏览器&网络/浏览器环境/Web API/事件/EventTarget.addEventListener().md",
-    "前端/浏览器&网络/浏览器环境/Web API/Element/clientWidth.md",
-    "前端/浏览器&网络/浏览器环境/Web API/事件/事件处理.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/特性和属性（Attributes and properties）.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/通过导航获取DOM对象.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/通过搜索获取DOM元素.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/修改文档（document）.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/样式与类.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/元素大小与滚动.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/坐标.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/DOM节点与其属性.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/DOM文档对象模型.md",
-    "前端/浏览器&网络/浏览器环境/Web API/DOM/Window大小与滚动.md",
-    "attachments/Pasted image 20260619232623.png",
-    "attachments/Pasted image 20260619232417.png",
-    "attachments/Pasted image 20260619231012.png",
-    "attachments/Pasted image 20260619230900.png",
-    "attachments/Pasted image 20260619230723.png",
-    "attachments/Pasted image 20260619230628.png",
-    "attachments/Pasted image 20260619230616.png",
-    "attachments/Pasted image 20260619230503.png",
-    "attachments/Pasted image 20260619230303.png",
-    "attachments/Pasted image 20260619230223.png",
-    "前端/面试/八股/HTML/perload和prefetch.md",
-    "前端/面试/八股/HTML/HTML.md",
-    "前端/面试/八股/HTML/form和input.md",
-    "前端/面试/八股/DOM&浏览器 API.md",
-    "前端/面试/八股/mos/3高频篇.md",
-    "前端/浏览器&网络/浏览器工作原理.md",
-    "前端/面试/八股/mos/2进阶篇.md",
-    "前端/浏览器&网络/浏览器存储&身份认证/缓存的实现.md",
-    "前端/三件套/样式/CSS/MDN文档/1 基础样式/2 选择器/1 CSS 选择器.md",
-    "前端/面试/代码/面试-常考经典2.md",
-    "前端/面试/代码/面试-常考经典1.md",
-    "前端/面试/八股/JS/Iterable&Enumerable.md",
-    "前端/浏览器&网络/浏览器环境",
-    "前端/三件套/JS/现代JS教程&阮一峰ES6/Generator&Iteration",
-    "前端/三件套/JS/ECMAScript",
-    "_stage_deletions.py",
-    "前端/面试/八股/React/Hooks",
-    "前端/浏览器&网络/浏览器环境/Web API/Element",
-    "前端/面试/代码/正则表达式/正则表达式速查备忘手册.pdf",
-    "docs/superpowers/specs",
-    "docs/superpowers",
-    "docs"
+    "前端/项目笔记/代达罗斯/组件/Button.md",
+    "前端/项目笔记/代达罗斯/组件/Badge.md",
+    "attachments/Pasted image 20260625173740.png",
+    "前端/项目笔记/代达罗斯/数据流向/数据库迁移 Drizzle 迁移文件说明.md",
+    "前端/项目笔记/代达罗斯/组件",
+    "前端/项目笔记/代达罗斯/需求/COD-80/引入 Crate.md",
+    "前端/项目笔记/代达罗斯/需求/COD-86/引入Archetype.md",
+    "前端/项目笔记/代达罗斯/踩坑.md",
+    "前端/项目笔记/代达罗斯/项目待做.md",
+    "前端/项目笔记/代达罗斯/需求/COD-86/实施计划Archetype.md",
+    "前端/项目笔记/代达罗斯/数据流向/Archetype的服务层.md",
+    "前端/项目笔记/代达罗斯/数据流向/Archetype的DAO层.md",
+    "前端/项目笔记/代达罗斯/数据流向/DAO&DTO.md",
+    "前端/项目笔记/代达罗斯/Momorepo/Monorepo 设计分析.md",
+    "前端/项目笔记/代达罗斯/Momorepo/将本地的包直接使用.md",
+    "前端/项目笔记/代达罗斯/需求/COD-80",
+    "attachments/Pasted image 20260624232939.png",
+    "前端/项目笔记/代达罗斯/Momorepo",
+    "attachments/Pasted image 20260624231710.png",
+    "attachments/Pasted image 20260624230916.png",
+    "attachments/Pasted image 20260624230829.png",
+    "attachments/Pasted image 20260624224819.png",
+    "前端/项目笔记/代达罗斯/数据流向",
+    "前端/面试/八股/TS/as const.md",
+    "前端/项目笔记/代达罗斯/需求/Linear.md",
+    "前端/项目笔记/代达罗斯/模式/tRPC.md",
+    "前端/项目笔记/代达罗斯/模式/错误处理.md",
+    "attachments/Pasted image 20260624204310.png",
+    "attachments/Pasted image 20260624093938.png",
+    "前端/项目笔记/代达罗斯/模式",
+    "前端/项目笔记/代达罗斯/需求/COD-86",
+    "前端/项目笔记/代达罗斯/需求",
+    "AI/Agent/ClaudeCode.md",
+    "前端/面试/八股/HTML/表单&控件/form和input.md",
+    "前端/项目笔记/代达罗斯",
+    "前端/面试/八股/HTML/表单&控件/表单：事件和方法提交.md",
+    "attachments/Pasted image 20260622165135.png",
+    "前端/面试/八股/HTML/表单&控件/聚焦：focus blur.md",
+    "前端/浏览器&网络/浏览器环境/Web API/事件/事件：change，input，cut，copy，paste.md",
+    "attachments/Pasted image 20260622115713.png",
+    "前端/面试/八股/HTML/表单&控件/表单属性和方法.md",
+    "前端/浏览器&网络/浏览器环境/Web API/资源加载/onload、onerror.md",
+    "前端/浏览器&网络/浏览器环境/Web API/资源加载/脚本：async，defer.md",
+    "前端/浏览器&网络/浏览器环境/Web API/资源加载/页面生命周期.md",
+    "前端/浏览器&网络/浏览器环境/Web API/资源加载",
+    "前端/面试/八股/HTML/表单&控件"
   ]
 }

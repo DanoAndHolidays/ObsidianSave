@@ -1,6 +1,9 @@
 # ClaudeCode
-https://www.bilibili.com/video/BV14rzQB9EJj/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c
+> Last Format Time：6/25/2026 19:48:41
 
+[https://www.bilibili.com/video/BV14rzQB9EJj/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c](https://www.bilibili.com/video/BV14rzQB9EJj/?spm_id_from=333.337.search-card.all.click&vd_source=47c9acd507be61251cd2bb730416395c)
+---
+## 控制台
 常见的控制台命令：
 ```bash
 mkdir 文件名
@@ -21,7 +24,8 @@ claude --dangerously-skip-permissions -c
 
 ```
 
-### 上下文
+---
+## 上下文
 ```bash
 /compact 压缩需求
 /clear   全部清空
@@ -29,7 +33,6 @@ claude --dangerously-skip-permissions -c
 /init    创建文档
 
 /memory  打开对应的CLAUDE.md文档
-
 
 ```
 

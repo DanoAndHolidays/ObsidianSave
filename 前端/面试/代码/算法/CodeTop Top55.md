@@ -1,11 +1,16 @@
-# CodeTop 100
+# CodeTop Top55
+> Last Format Time：6/25/2026 19:48:41
+
 越是靠前，题目的热度越高🔥（筛选条件 岗位：前端）
 
 这里的题目的编号和LeetCode一致，与另一个文档相同的题目只有编号。
-据我统计，岗位不限中，前80道题目全部做完，基本上可以覆盖前端常考的题目，前端做前60道就可以了。
+据我统计，岗位不限中，前80道题目全部做完，基本上可以覆盖前端常考的题目，前端做前55道就可以了。
+
+---
 # 3 无重复字符的最长子串 ⌚️
 #双指针 #滑动窗口
 https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
+
 ```js
 var lengthOfLongestSubstring = function(s) {
     let ans = 0;
@@ -23,12 +28,14 @@ var lengthOfLongestSubstring = function(s) {
     return ans;
 };
 ```
+
 # 165 比较版本号 ⌚️
 #字符串
 https://leetcode.cn/problems/compare-version-numbers/description/
 给你两个 **版本号字符串** `version1` 和 `version2` ，请你比较它们。版本号由被点 `'.'` 分开的修订号组成。**修订号的值** 是它 **转换为整数** 并忽略前导零。
 
 比较版本号时，请按 **从左到右的顺序** 依次比较它们的修订号。如果其中一个版本字符串的修订号较少，则将缺失的修订号视为 `0`。
+
 ```js
 // 输入：version1 = "1.2", version2 = "1.10"
 var compareVersion = function (version1, version2) {
@@ -52,6 +59,7 @@ var compareVersion = function (version1, version2) {
     return 0;
 };
 ```
+
 # 88 合并两个有序数组
 #双指针
 https://leetcode.cn/problems/merge-sorted-array/description/
@@ -91,6 +99,7 @@ function merge(nums1: number[], m: number, nums2: number[], n: number): void {
     // 不需要返回值
 };
 ```
+
 # 20 有效括号
 #栈 #简单
 https://leetcode.cn/problems/valid-parentheses/description/
@@ -136,9 +145,11 @@ function permute(nums: number[]): number[][] {
     return ans
 };
 ```
+
 # 206 反转链表
 #链表 
 https://leetcode.cn/problems/reverse-linked-list/
+
 ```js
 /**
  * Definition for singly-linked list.
@@ -173,8 +184,10 @@ var reverseList = function (head) {
     }
 };
 ```
+
 # 102 二叉树的层序遍历
 #二叉树 
+
 ```js
 const levelOrder = (root) => {
     if (root === null) return []
@@ -197,8 +210,10 @@ const levelOrder = (root) => {
     return ans
 }
 ```
+
 # 53 最大子数组和
 #动态规划 
+
 ```js
 /**
  * @param {number[]} nums
@@ -219,9 +234,11 @@ var maxSubArray = function (nums) {
     return Math.max(...dp)
 };
 ```
+
 # 121 买卖股票的最佳时机
 #贪心 
 https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/description/
+
 ```js
 /**
  * @param {number[]} prices
@@ -241,11 +258,13 @@ var maxProfit = function (prices) {
     return ans
 };
 ```
+
 # 三数之和
 https://leetcode.cn/problems/3sum/description/
 #双指针 
 
 这里我在实现的时候是选了一个数，然后去找它后面的数。如果我选择一个数，去找它前面一个、后面一个数会怎么样呢？
+
 ```js
 function threeSum(nums: number[]): number[][] {
     // 先排序，排序后遍历每一项
@@ -285,6 +304,7 @@ function threeSum(nums: number[]): number[][] {
     return ans
 };
 ```
+
 # 146 LRU缓存机制
 https://leetcode.cn/problems/lru-cache/description/
 # 141 环形链表
@@ -292,6 +312,7 @@ https://leetcode.cn/problems/lru-cache/description/
 #链表 
 https://leetcode.cn/problems/path-sum/
 这道没做过
+
 ```js
 function hasPathSum(root: TreeNode | null, targetSum: number): boolean {
     if (root === null) return false
@@ -305,12 +326,14 @@ function hasPathSum(root: TreeNode | null, targetSum: number): boolean {
     return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum)
 };
 ```
+
 # 21 合并两个有序链表
 # 215 数组中的第K大
 https://leetcode.cn/problems/kth-largest-element-in-an-array/description/
 在数组中，随机的选一个数，以它为准，将小于的放在其左侧，大于的在右侧，如果这个数正好是第k个，那么他就是第k大，如果不是，那就在左右两侧继续找
 # 912 快排
 https://leetcode.cn/problems/sort-an-array/solutions/3799866/onlogn-kuai-su-pai-xu-fen-zhi-xie-fa-you-njpq/
+
 ```js
 // 在子数组 [left, right] 中随机选择一个基准元素 pivot
 // 根据 pivot 重新排列子数组 [left, right]
@@ -392,11 +415,13 @@ var sortArray = function(nums) {
     return nums;
 };
 ```
+
 # 5 最长回文子串 ⌚️
 https://leetcode.cn/problems/longest-palindromic-substring/
 # 70 爬楼梯
 https://leetcode.cn/problems/climbing-stairs/
 f(n) = f(n - 1) + f(n - 2)
+
 ```javascript
 /**
  * @param {number} n
@@ -421,6 +446,7 @@ var climbStairs = function (n) {
     }
 }
 ```
+
 # 54 螺旋矩阵
 https://leetcode.cn/problems/spiral-matrix/description/
 # 200 岛屿的数量
@@ -432,6 +458,7 @@ https://leetcode.cn/problems/merge-intervals/submissions/662938365/
 给定一个表示若干个区间的集合数组intervals，每个区间由起始位置start和结束位置end组成。请合并所有重叠的区间，返回一个不重叠的区间数组，该数组需包含输入中的所有区间，并确保区间之间没有重叠。
 
 **我写的一大坨：**
+
 ```js
 function fn(arr1, arr2) {
     console.log(arr1, arr2);
@@ -530,11 +557,13 @@ var merge = function(intervals) {
     return merged;
 };
 ```
+
 ![[Pasted image 20260608172622.png]]
 我还做过呢，艹了。这肯定是没了啊，这题都没搞出来，你。。。这道好像是美团的，挂了已经
 
 # 704 二分查找
 https://leetcode.cn/problems/binary-search/description/
+
 ```js
 function search(nums: number[], target: number): number {
     const n = nums.length
@@ -555,8 +584,10 @@ function search(nums: number[], target: number): number {
     return -1
 };
 ```
+
 # 129 求根到叶子节点的路径值和
 https://leetcode.cn/problems/sum-root-to-leaf-numbers/description/
+
 ```js
 var sumNumbers = function(root, x = 0) {
     if (root === null) {
@@ -572,6 +603,7 @@ var sumNumbers = function(root, x = 0) {
 
 # 93 复原IP地址
 https://leetcode.cn/problems/restore-ip-addresses/
+
 ```js
 function restoreIpAddresses(s: string): string[] {
     // 这题的本质是选.合理的位置
@@ -619,6 +651,7 @@ function restoreIpAddresses(s: string): string[] {
     return ans
 }
 ```
+
 # 322 零钱兑换
 https://leetcode.cn/problems/coin-change/description/
 # 104 二叉树的最大深度
@@ -627,6 +660,7 @@ https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/
 https://leetcode.cn/problems/generate-parentheses/description/
 # LCR 126 斐波那契数列
 https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/description/
+
 ```js
 function fib(n: number): number {
     const mod = Math.pow(10, 9) + 7
@@ -648,8 +682,10 @@ function fib(n: number): number {
     return helper(n)
 }
 ```
+
 # 695 岛屿的最大面积
 https://leetcode.cn/problems/max-area-of-island/
+
 ```js
 function maxAreaOfIsland(grid: number[][]): number {
     const n = grid.length
@@ -680,11 +716,13 @@ function maxAreaOfIsland(grid: number[][]): number {
     return ans
 };
 ```
+
 # LCR 140 训练计划 II
 #双指针
 https://leetcode.cn/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
 
 灵神的脑子怎么这么聪明啊
+
 ```js
 /**
  * Definition for singly-linked list.
@@ -743,9 +781,11 @@ function trap(height: number[]): number {
     return ans
 };
 ```
+
 # 1143 最长公共子序列
 #动态规划
 https://leetcode.cn/problems/longest-common-subsequence/description/
+
 ```js
 function longestCommonSubsequence(text1: string, text2: string): number {
     let m = text1.length
@@ -771,6 +811,7 @@ function longestCommonSubsequence(text1: string, text2: string): number {
     return dfs(m - 1, n - 1)
 };
 ```
+
 # 14 最长公共前缀
 
 # 226 翻转二叉树
@@ -780,6 +821,7 @@ function longestCommonSubsequence(text1: string, text2: string): number {
 # 62 不同路径
 #动态规划 
 https://leetcode.cn/problems/unique-paths/submissions/728284503/
+
 ```js
 function uniquePaths(m: number, n: number): number {
     const memo = new Array(m).fill('').map(i => new Array(n).fill(-1))
@@ -798,3 +840,217 @@ function uniquePaths(m: number, n: number): number {
     return dfs(m - 1, n - 1)
 };
 ```
+
+# 25 K个一组反转链表
+这道题我认为在前端就几乎不会考了。。。
+
+# 283 移动零
+https://leetcode.cn/problems/move-zeroes/description/
+简单来讲，就是将非零的元素全部都移动到数组的前面，再根据数组中非零元素的个数与数组的长度，将剩余的零补上就可以了
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function (nums) {
+    let stackSize = 0
+    // 遍历每一个元素，如果非零就直接进入数组（可能会覆盖掉自己）
+    // 0的位置不用考虑，等所有的非零元素进入后，再将0填入
+    for (const num of nums) {
+        if (num !== 0) {
+            nums[stackSize] = num
+            stackSize++
+        }
+    }
+    nums.fill(0, stackSize)
+}
+```
+
+# 236 二叉树的最近公共祖先
+没看懂哈。。。
+
+答案只有两种情况：
+- 这两个点是某个节点的子孙。直接返回，因为下面肯定没有，在另一个子树上。
+- 这两个点互为爷孙。那么遍历到这两个点就可以直接返回了，应为爷爷就是答案
+```js
+var lowestCommonAncestor = function(root, p, q) {
+    if (root === null || root === p || root === q) {
+        return root; // 找到 p 或 q 就不往下递归了，原因见上面答疑
+    }
+    const left = lowestCommonAncestor(root.left, p, q);
+    const right = lowestCommonAncestor(root.right, p, q);
+    if (left && right) { // 左右都找到
+        return root; // 当前节点是最近公共祖先
+    }
+    // 如果只有左子树找到，就返回左子树的返回值
+    // 如果只有右子树找到，就返回右子树的返回值
+    // 如果左右子树都没有找到，就返回 null（注意此时 right = null）
+    return left ?? right;
+};
+```
+
+#   103 二叉树的锯齿形层序遍历
+https://leetcode.cn/problems/binary-tree-zigzag-level-order-traversal/description/
+
+这道题和深度遍历很像
+
+# 199 二叉树的右视图
+https://leetcode.cn/problems/binary-tree-right-side-view/description/
+套用 102 题的 BFS 模板，把每一层的最后一个节点值保存到答案中。
+
+# 2 两数相加
+https://leetcode.cn/problems/add-two-numbers/description/
+
+```js
+/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function (l1, l2, carry=0) {
+    if (l1 === null && l2 === null && carry === 0) {
+        return null
+    }
+
+    let sum = carry;
+    if (l1) {
+        sum += l1.val;
+        l1=l1.next
+    }
+    if (l2) {
+        sum += l2.val
+        l2 = l2.next
+    }
+
+    return new ListNode(sum%10,addTwoNumbers(l1,l2,Math.floor(sum/10)))
+}
+```
+
+# 209 长度最小的子数组
+https://leetcode.cn/problems/minimum-size-subarray-sum/description/
+https://www.bilibili.com/video/BV1tZ4y1q7XE?spm_id_from=333.788.recommend_more_video.1&trackid=web_related_0.router-related-2589621-48s8n.1782031683220.519&vd_source=47c9acd507be61251cd2bb730416395c
+
+这道题的思路是不断的枚举右端点，当和大于目标值的时候，移动左端点，直到小于，然后移动右端点，再左端点：
+```js
+function minSubArrayLen(target: number, nums: number[]): number {
+    const n = nums.length
+    let ans = n + 1
+    let sum = 0
+    let left = 0
+    for (let right = 0; right < n; right++) {
+        sum += nums[right]
+        while(sum >= target){
+            sum -= nums[left]
+            ans = Math.min(ans, right - left +1)
+            left ++
+        }
+    }
+
+    return ans <= n ? ans : 0
+};
+```
+
+# 125 验证回文串
+
+# 394 字符串解码
+https://leetcode.cn/problems/decode-string/
+
+有点难度哈。。。
+
+```js
+var decodeString = function(s) {
+    const stack = []; // 用于模拟计算机的递归
+    let res = '';
+    let k = 0;
+    for (const c of s) {
+        if ('a' <= c && c <= 'z') {
+            res += c;
+        } else if ('0' <= c && c <= '9') {
+            k = k * 10 + parseInt(c);
+        } else if (c === '[') {
+            // 模拟递归
+            // 在递归之前，把当前递归函数中的局部变量 res 和 k 保存到栈中
+            stack.push([res, k]);
+            // 递归，初始化 res 和 k
+            res = '';
+            k = 0;
+        } else { // ']'
+            // 递归结束，从栈中恢复递归之前保存的局部变量
+            const [pre_res, pre_k] = stack.pop();
+            // 此时 res 是下层递归的返回值，将其重复 pre_k 次，拼接到递归前的 pre_res 之后
+            res = pre_res + res.repeat(pre_k);
+        }
+    }
+    return res;
+};
+```
+
+# 101 对称二叉树
+
+# 155 最小栈
+
+# 43 字符串相乘
+
+# 198 打家劫舍
+https://leetcode.cn/problems/house-robber/description/
+
+```js
+var rob = function(nums) {
+    const n = nums.length;
+    const memo = Array(n).fill(-1); // -1 表示没有计算过
+
+    // dfs(i) 表示从 nums[0] 到 nums[i] 最多能偷多少
+    function dfs(i) {
+        if (i < 0) { // 递归边界（没有房子）
+            return 0;
+        }
+        if (memo[i] !== -1) { // 之前计算过
+            return memo[i];
+        }
+        const res = Math.max(dfs(i - 1), dfs(i - 2) + nums[i]);
+        memo[i] = res; // 记忆化：保存计算结果
+        return res;
+    }
+
+    return dfs(n - 1); // 从最后一个房子开始思考
+};
+
+作者：灵茶山艾府
+链接：https://leetcode.cn/problems/house-robber/solutions/2102725/ru-he-xiang-chu-zhuang-tai-ding-yi-he-zh-1wt1/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+# 160 相交链表
+
+# 718 最长重复子数组
+![[Pasted image 20260621171215.png]]
+
+```js
+var findLength = function(nums1, nums2) {
+    const n = nums1.length, m = nums2.length;
+    const f = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
+    let ans = 0;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            if (nums1[i] === nums2[j]) {
+                f[i + 1][j + 1] = f[i][j] + 1;
+                ans = Math.max(ans, f[i + 1][j + 1]);
+            }
+        }
+    }
+    return ans;
+};
+
+作者：灵茶山艾府
+链接：https://leetcode.cn/problems/maximum-length-of-repeated-subarray/solutions/866328/on-hou-zhui-shu-zu-by-endlesscheng-jwr2/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+# 122 买股票的最佳时机
+
+---
+> 6/21/2026 
+> 已经将CodeTop中频度大于10的全部搞完了，LeedCode100也是，
