@@ -1,5 +1,5 @@
 # CodeTop Top55
-> Last Format Time：6/25/2026 19:48:41
+> Last Format Time：6/25/2026 23:53:57
 
 越是靠前，题目的热度越高🔥（筛选条件 岗位：前端）
 
@@ -7,7 +7,7 @@
 据我统计，岗位不限中，前80道题目全部做完，基本上可以覆盖前端常考的题目，前端做前55道就可以了。
 
 ---
-# 3 无重复字符的最长子串 ⌚️
+## 3 无重复字符的最长子串 ⌚️
 #双指针 #滑动窗口
 https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
 
@@ -29,7 +29,8 @@ var lengthOfLongestSubstring = function(s) {
 };
 ```
 
-# 165 比较版本号 ⌚️
+---
+## 165 比较版本号 ⌚️
 #字符串
 https://leetcode.cn/problems/compare-version-numbers/description/
 给你两个 **版本号字符串** `version1` 和 `version2` ，请你比较它们。版本号由被点 `'.'` 分开的修订号组成。**修订号的值** 是它 **转换为整数** 并忽略前导零。
@@ -60,7 +61,8 @@ var compareVersion = function (version1, version2) {
 };
 ```
 
-# 88 合并两个有序数组
+---
+## 88 合并两个有序数组
 #双指针
 https://leetcode.cn/problems/merge-sorted-array/description/
 
@@ -100,16 +102,23 @@ function merge(nums1: number[], m: number, nums2: number[], n: number): void {
 };
 ```
 
-# 20 有效括号
+---
+## 20 有效括号
 #栈 #简单
 https://leetcode.cn/problems/valid-parentheses/description/
-# 415 字符串相加 ⌚️
+
+---
+## 415 字符串相加 ⌚️
 #双指针 
 https://leetcode.cn/problems/add-strings/description/
-# 1 两数之和
+
+---
+## 1 两数之和
 #哈希表 
 https://leetcode.cn/problems/two-sum/description/
-# 46 全排列
+
+---
+## 46 全排列
 #回溯 
 https://leetcode.cn/problems/permutations/description/
 有点忘了，重新做一遍：
@@ -146,7 +155,8 @@ function permute(nums: number[]): number[][] {
 };
 ```
 
-# 206 反转链表
+---
+## 206 反转链表
 #链表 
 https://leetcode.cn/problems/reverse-linked-list/
 
@@ -185,7 +195,8 @@ var reverseList = function (head) {
 };
 ```
 
-# 102 二叉树的层序遍历
+---
+## 102 二叉树的层序遍历
 #二叉树 
 
 ```js
@@ -211,7 +222,8 @@ const levelOrder = (root) => {
 }
 ```
 
-# 53 最大子数组和
+---
+## 53 最大子数组和
 #动态规划 
 
 ```js
@@ -235,7 +247,8 @@ var maxSubArray = function (nums) {
 };
 ```
 
-# 121 买卖股票的最佳时机
+---
+## 121 买卖股票的最佳时机
 #贪心 
 https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/description/
 
@@ -259,7 +272,8 @@ var maxProfit = function (prices) {
 };
 ```
 
-# 三数之和
+---
+## 三数之和
 https://leetcode.cn/problems/3sum/description/
 #双指针 
 
@@ -305,10 +319,14 @@ function threeSum(nums: number[]): number[][] {
 };
 ```
 
-# 146 LRU缓存机制
+---
+## 146 LRU缓存机制
 https://leetcode.cn/problems/lru-cache/description/
-# 141 环形链表
-# 112 路径总和
+
+---
+## 141 环形链表
+---
+## 112 路径总和
 #链表 
 https://leetcode.cn/problems/path-sum/
 这道没做过
@@ -327,11 +345,15 @@ function hasPathSum(root: TreeNode | null, targetSum: number): boolean {
 };
 ```
 
-# 21 合并两个有序链表
-# 215 数组中的第K大
+---
+## 21 合并两个有序链表
+---
+## 215 数组中的第K大
 https://leetcode.cn/problems/kth-largest-element-in-an-array/description/
 在数组中，随机的选一个数，以它为准，将小于的放在其左侧，大于的在右侧，如果这个数正好是第k个，那么他就是第k大，如果不是，那就在左右两侧继续找
-# 912 快排
+
+---
+## 912 快排
 https://leetcode.cn/problems/sort-an-array/solutions/3799866/onlogn-kuai-su-pai-xu-fen-zhi-xie-fa-you-njpq/
 
 ```js
@@ -416,9 +438,12 @@ var sortArray = function(nums) {
 };
 ```
 
-# 5 最长回文子串 ⌚️
+---
+## 5 最长回文子串 ⌚️
 https://leetcode.cn/problems/longest-palindromic-substring/
-# 70 爬楼梯
+
+---
+## 70 爬楼梯
 https://leetcode.cn/problems/climbing-stairs/
 f(n) = f(n - 1) + f(n - 2)
 
@@ -447,13 +472,20 @@ var climbStairs = function (n) {
 }
 ```
 
-# 54 螺旋矩阵
+---
+## 54 螺旋矩阵
 https://leetcode.cn/problems/spiral-matrix/description/
-# 200 岛屿的数量
+
+---
+## 200 岛屿的数量
 https://leetcode.cn/problems/number-of-islands/description/
-# 300 最长上升子序列
+
+---
+## 300 最长上升子序列
 https://leetcode.cn/problems/longest-increasing-subsequence/description/
-# 56 区间合并 ⌚️
+
+---
+## 56 区间合并 ⌚️
 https://leetcode.cn/problems/merge-intervals/submissions/662938365/
 给定一个表示若干个区间的集合数组intervals，每个区间由起始位置start和结束位置end组成。请合并所有重叠的区间，返回一个不重叠的区间数组，该数组需包含输入中的所有区间，并确保区间之间没有重叠。
 
@@ -561,7 +593,8 @@ var merge = function(intervals) {
 ![[Pasted image 20260608172622.png]]
 我还做过呢，艹了。这肯定是没了啊，这题都没搞出来，你。。。这道好像是美团的，挂了已经
 
-# 704 二分查找
+---
+## 704 二分查找
 https://leetcode.cn/problems/binary-search/description/
 
 ```js
@@ -585,7 +618,8 @@ function search(nums: number[], target: number): number {
 };
 ```
 
-# 129 求根到叶子节点的路径值和
+---
+## 129 求根到叶子节点的路径值和
 https://leetcode.cn/problems/sum-root-to-leaf-numbers/description/
 
 ```js
@@ -601,7 +635,8 @@ var sumNumbers = function(root, x = 0) {
 };
 ```
 
-# 93 复原IP地址
+---
+## 93 复原IP地址
 https://leetcode.cn/problems/restore-ip-addresses/
 
 ```js
@@ -652,13 +687,20 @@ function restoreIpAddresses(s: string): string[] {
 }
 ```
 
-# 322 零钱兑换
+---
+## 322 零钱兑换
 https://leetcode.cn/problems/coin-change/description/
-# 104 二叉树的最大深度
+
+---
+## 104 二叉树的最大深度
 https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/
-# 22 括号生成
+
+---
+## 22 括号生成
 https://leetcode.cn/problems/generate-parentheses/description/
-# LCR 126 斐波那契数列
+
+---
+## LCR 126 斐波那契数列
 https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/description/
 
 ```js
@@ -683,7 +725,8 @@ function fib(n: number): number {
 }
 ```
 
-# 695 岛屿的最大面积
+---
+## 695 岛屿的最大面积
 https://leetcode.cn/problems/max-area-of-island/
 
 ```js
@@ -717,7 +760,8 @@ function maxAreaOfIsland(grid: number[][]): number {
 };
 ```
 
-# LCR 140 训练计划 II
+---
+## LCR 140 训练计划 II
 #双指针
 https://leetcode.cn/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
 
@@ -748,9 +792,12 @@ var trainingPlan = function(head, k) {
 };
 ```
 
-# 94 二叉树的中序遍历
+---
+## 94 二叉树的中序遍历
 左跟右
-# 42 接雨水
+
+---
+## 42 接雨水
 #双指针 
 https://leetcode.cn/problems/trapping-rain-water/description/
 
@@ -782,7 +829,8 @@ function trap(height: number[]): number {
 };
 ```
 
-# 1143 最长公共子序列
+---
+## 1143 最长公共子序列
 #动态规划
 https://leetcode.cn/problems/longest-common-subsequence/description/
 
@@ -812,13 +860,14 @@ function longestCommonSubsequence(text1: string, text2: string): number {
 };
 ```
 
-# 14 最长公共前缀
-
-# 226 翻转二叉树
-
-# 1556 千位分割数
-
-# 62 不同路径
+---
+## 14 最长公共前缀
+---
+## 226 翻转二叉树
+---
+## 1556 千位分割数
+---
+## 62 不同路径
 #动态规划 
 https://leetcode.cn/problems/unique-paths/submissions/728284503/
 
@@ -841,10 +890,12 @@ function uniquePaths(m: number, n: number): number {
 };
 ```
 
-# 25 K个一组反转链表
+---
+## 25 K个一组反转链表
 这道题我认为在前端就几乎不会考了。。。
 
-# 283 移动零
+---
+## 283 移动零
 https://leetcode.cn/problems/move-zeroes/description/
 简单来讲，就是将非零的元素全部都移动到数组的前面，再根据数组中非零元素的个数与数组的长度，将剩余的零补上就可以了
 
@@ -867,7 +918,8 @@ var moveZeroes = function (nums) {
 }
 ```
 
-# 236 二叉树的最近公共祖先
+---
+## 236 二叉树的最近公共祖先
 没看懂哈。。。
 
 答案只有两种情况：
@@ -890,16 +942,19 @@ var lowestCommonAncestor = function(root, p, q) {
 };
 ```
 
-#   103 二叉树的锯齿形层序遍历
+---
+##   103 二叉树的锯齿形层序遍历
 https://leetcode.cn/problems/binary-tree-zigzag-level-order-traversal/description/
 
 这道题和深度遍历很像
 
-# 199 二叉树的右视图
+---
+## 199 二叉树的右视图
 https://leetcode.cn/problems/binary-tree-right-side-view/description/
 套用 102 题的 BFS 模板，把每一层的最后一个节点值保存到答案中。
 
-# 2 两数相加
+---
+## 2 两数相加
 https://leetcode.cn/problems/add-two-numbers/description/
 
 ```js
@@ -927,7 +982,8 @@ var addTwoNumbers = function (l1, l2, carry=0) {
 }
 ```
 
-# 209 长度最小的子数组
+---
+## 209 长度最小的子数组
 https://leetcode.cn/problems/minimum-size-subarray-sum/description/
 https://www.bilibili.com/video/BV1tZ4y1q7XE?spm_id_from=333.788.recommend_more_video.1&trackid=web_related_0.router-related-2589621-48s8n.1782031683220.519&vd_source=47c9acd507be61251cd2bb730416395c
 
@@ -951,9 +1007,10 @@ function minSubArrayLen(target: number, nums: number[]): number {
 };
 ```
 
-# 125 验证回文串
-
-# 394 字符串解码
+---
+## 125 验证回文串
+---
+## 394 字符串解码
 https://leetcode.cn/problems/decode-string/
 
 有点难度哈。。。
@@ -986,13 +1043,14 @@ var decodeString = function(s) {
 };
 ```
 
-# 101 对称二叉树
-
-# 155 最小栈
-
-# 43 字符串相乘
-
-# 198 打家劫舍
+---
+## 101 对称二叉树
+---
+## 155 最小栈
+---
+## 43 字符串相乘
+---
+## 198 打家劫舍
 https://leetcode.cn/problems/house-robber/description/
 
 ```js
@@ -1022,9 +1080,10 @@ var rob = function(nums) {
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ```
 
-# 160 相交链表
-
-# 718 最长重复子数组
+---
+## 160 相交链表
+---
+## 718 最长重复子数组
 ![[Pasted image 20260621171215.png]]
 
 ```js
@@ -1049,8 +1108,8 @@ var findLength = function(nums1, nums2) {
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ```
 
-# 122 买股票的最佳时机
-
 ---
+## 122 买股票的最佳时机
+
 > 6/21/2026 
 > 已经将CodeTop中频度大于10的全部搞完了，LeedCode100也是，
