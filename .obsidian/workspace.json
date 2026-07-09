@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/项目笔记/代达罗斯/组件/Badge.md",
+                "file": "前端/项目笔记/代达罗斯/模式/双层级导航结构.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Badge"
+              "title": "双层级导航结构"
             }
           },
           {
@@ -123,13 +123,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/项目笔记/代达罗斯/组件/Badge.md",
+                "file": "前端/项目笔记/代达罗斯/模式/双层级导航结构.md",
                 "followCursor": true,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Badge 的大纲"
+              "title": "双层级导航结构 的大纲"
             }
           },
           {
@@ -199,6 +199,10 @@
   },
   "active": "7ff1757ccc611a66",
   "lastOpenFiles": [
+    "前端/项目笔记/代达罗斯/模式/错误处理.md",
+    "前端/项目笔记/代达罗斯/需求/国际化.md",
+    "前端/项目笔记/代达罗斯/需求/Linear.md",
+    "前端/项目笔记/代达罗斯/组件/Badge.md",
     "前端/项目笔记/代达罗斯/组件/Button.md",
     "前端/项目笔记/代达罗斯/BUG/hook 调用顺序不一致.md",
     "前端/项目笔记/代达罗斯/项目待做.md",
@@ -212,7 +216,6 @@
     "前端/面试/八股/React/Hooks/useForm.md",
     "前端/项目笔记/代达罗斯/踩坑.md",
     "attachments/Pasted image 20260709111050.png",
-    "前端/项目笔记/代达罗斯/需求/国际化.md",
     "AI/Agent/ClaudeCode.md",
     "前端/项目笔记/代达罗斯/需求/COD-104/用于稳定描述代码结构的数据结构方案.md",
     "个人/观星记录.md",
@@ -235,9 +238,7 @@
     "前端/项目笔记/代达罗斯/需求/COD-100/Crate 与 Archetype 关联设计.md",
     "前端/项目笔记/代达罗斯/需求/COD-100/Form Best Practice — Archetype 定义.md",
     "前端/项目笔记/代达罗斯/需求/COD-100/COD-100：场景分析 Crate 分解与 Archetype 契约设计.md",
-    "前端/项目笔记/代达罗斯/组件/Badge.md",
     "AI/Skills/Skills 架构分析.md",
-    "前端/三件套/样式/CSS/MDN文档/1 基础样式/2 选择器/1 CSS 选择器.md",
     "attachments/Pasted image 20260630165944.png",
     "attachments/Pasted image 20260630165657.png",
     "attachments/Pasted image 20260630165006.png",
