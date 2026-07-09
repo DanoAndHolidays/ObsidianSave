@@ -52,6 +52,8 @@ PUNCT_SPACE = re.compile(r'([。！？，：；])[ \t]+(?=\*\*|[一-龥])')
 H1 = re.compile(r'^#\s+\S')
 H2 = re.compile(r'^##\s+\S')
 H3 = re.compile(r'^###\s+\S')
+HEADING_H2_H6 = re.compile(r'^#{2,6}\s+\S')
+HEADING_ANY = re.compile(r'^#{1,6}\s+\S')
 
 # H1 + `> Last Format Time：M/D/YYYY HH:MM:SS` 紧邻
 H1_WITH_META = re.compile(
@@ -280,6 +282,92 @@ def _insert_separator(lines: list[str], h2_idx: int, n_changes: int) -> tuple[li
     return new_lines, n_changes + 1
 
 
+def remove_spurious_separators(content: str) -> tuple[str, int]:
+    """
+    删除不在 H2 紧上方（含隔一空行）的 `---` 行。
+    `---` 是 H2 专用的章节分隔符，出现在 H3/H4/H5/H6/正文前均为误用。
+    须跟踪代码块状态，避免触碰围栏内的 `---`。
+    """
+    lines = content.split('\n')
+    in_code = False
+    to_remove: set[int] = set()
+
+    for i, line in enumerate(lines):
+        if FENCE.match(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if line.strip() != '---':
+            continue
+
+        # `---` 行在代码块外。跳过空行找下一个非空行
+        j = i + 1
+        while j < len(lines) and lines[j].strip() == '':
+            j += 1
+
+        if j >= len(lines):
+            # 文件末尾孤立的 ---
+            to_remove.add(i)
+            continue
+
+        # 下一个非空行必须是 H2（紧邻或隔一空行均可），否则删 ---
+        if not H2.match(lines[j]):
+            to_remove.add(i)
+
+    if not to_remove:
+        return content, 0
+
+    new_lines = [l for idx, l in enumerate(lines) if idx not in to_remove]
+    return '\n'.join(new_lines), len(to_remove)
+
+
+def remove_blank_after_headings(content: str) -> tuple[str, int]:
+    """
+    删除 H2-H6 标题后紧接的空行。
+    规则：标题 → 正文/列表/代码块/下一级标题 均不空行。
+    唯一例外：标题 → `> 引用块` 空一行（保留空行）。
+    H1 跳过（其元信息块由 update_h1_metadata 处理）。
+    须跟踪代码块状态。
+    """
+    lines = content.split('\n')
+    in_code = False
+    to_remove: set[int] = set()
+
+    for i, line in enumerate(lines):
+        if FENCE.match(line):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if not HEADING_H2_H6.match(line):
+            continue
+
+        # 下一行必须是空行才有得删
+        if i + 1 >= len(lines):
+            continue
+        if lines[i + 1].strip() != '':
+            continue  # 不空行，合规
+
+        # 下一行是空行，看再下一行决定
+        if i + 2 >= len(lines):
+            # 标题后空行直达文件末尾 → 删空行
+            to_remove.add(i + 1)
+            continue
+
+        next_content = lines[i + 2]
+        if next_content.strip().startswith('> '):
+            continue  # 引用块，保留空行
+
+        to_remove.add(i + 1)
+
+    if not to_remove:
+        return content, 0
+
+    new_lines = [l for idx, l in enumerate(lines) if idx not in to_remove]
+    return '\n'.join(new_lines), len(to_remove)
+
+
 def fix_code_block_blank_lines(content: str) -> tuple[str, int]:
     """
     代码块前/后空行调整：
@@ -355,7 +443,9 @@ def process_file(path: Path) -> dict:
     content, n_h3 = h3_to_h2_if_loose(content)
     content, n_meta = update_h1_metadata(content)
     content, n_urls = wrap_bare_urls_under_h1(content)
+    content, n_spur = remove_spurious_separators(content)
     content, n_sep = ensure_h2_separators(content)
+    content, n_blank_after = remove_blank_after_headings(content)
     content, n_code_blanks = fix_code_block_blank_lines(content)
     content, n_punct = fix_punct_space(content)
     code_issues = check_code_blocks(content)
@@ -368,7 +458,9 @@ def process_file(path: Path) -> dict:
         'h3_to_h2': n_h3,
         'h1_meta_updated': n_meta,
         'h1_urls_wrapped': n_urls,
+        'spurious_separators_removed': n_spur,
         'h2_separators_added': n_sep,
+        'blank_after_heading_removed': n_blank_after,
         'code_block_blanks_fixed': n_code_blanks,
         'punct_space_fixed': n_punct,
         'code_issues': code_issues,
@@ -384,7 +476,9 @@ def _apply_writes(path: Path) -> None:
         h3_to_h2_if_loose,
         update_h1_metadata,
         wrap_bare_urls_under_h1,
+        remove_spurious_separators,
         ensure_h2_separators,
+        remove_blank_after_headings,
         fix_code_block_blank_lines,
         fix_punct_space,
     ):
@@ -406,7 +500,9 @@ def main() -> int:
         'h3_to_h2': 0,
         'h1_meta_updated': 0,
         'h1_urls_wrapped': 0,
+        'spurious_separators_removed': 0,
         'h2_separators_added': 0,
+        'blank_after_heading_removed': 0,
         'code_block_blanks_fixed': 0,
         'punct_space_fixed': 0,
         'code_issues': 0,
@@ -445,8 +541,12 @@ def main() -> int:
                 print(f'  H1 元信息块: {r["h1_meta_updated"]}')
             if r['h1_urls_wrapped']:
                 print(f'  H1 裸 URL 包裹: {r["h1_urls_wrapped"]}')
+            if r['spurious_separators_removed']:
+                print(f'  误用 --- 删除: {r["spurious_separators_removed"]}')
             if r['h2_separators_added']:
                 print(f'  H2 分隔符 ---: {r["h2_separators_added"]}')
+            if r['blank_after_heading_removed']:
+                print(f'  标题后空行删除: {r["blank_after_heading_removed"]}')
             if r['code_block_blanks_fixed']:
                 print(f'  代码块空行: {r["code_block_blanks_fixed"]}')
             if r['punct_space_fixed']:
@@ -461,7 +561,9 @@ def main() -> int:
             f'H3→H2 {totals["h3_to_h2"]}, '
             f'H1 元信息 {totals["h1_meta_updated"]}, '
             f'H1 裸URL {totals["h1_urls_wrapped"]}, '
+            f'误用--- {totals["spurious_separators_removed"]}, '
             f'H2 分隔符 {totals["h2_separators_added"]}, '
+            f'标题后空行 {totals["blank_after_heading_removed"]}, '
             f'代码块空行 {totals["code_block_blanks_fixed"]}, '
             f'标点空格 {totals["punct_space_fixed"]}, '
             f'代码块问题 {totals["code_issues"]}'

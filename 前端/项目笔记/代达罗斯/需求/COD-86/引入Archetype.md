@@ -1,5 +1,5 @@
 # 引入Archetype
-> Last Format Time：6/25/2026 23:50:12
+> Last Format Time：7/9/2026 23:46:20
 
 ---
 ## 背景

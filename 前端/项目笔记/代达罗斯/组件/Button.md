@@ -1,4 +1,6 @@
 # Button
+> Last Format Time：7/9/2026 23:46:20
+
 ```ts
 import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
@@ -38,5 +40,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 ```
-
-cd "g:\Save\Grogramming\CodeForge\daedalus" && git commit -m "feat: add Crate entity — full-stack CRUD with list, detail, and dialog pages" -m "- DB: crates table with migration 0006 (id, name, type, responsibility, metadata, timestamps)" -m "- DAO/Service: crates-dao + crates-service with list/getById/create/update/delete" -m "- API: tRCR crates router (list, getById, create, update, delete) + Refine dataProvider" -m "- UI: CratesPage (table + create/edit dialog), CrateDetailPage, sidebar & nav entries"

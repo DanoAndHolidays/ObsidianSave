@@ -1,6 +1,5 @@
 # 阅卷报告：CrateDetailPageContent
-> Last Format Time：6/25/2026 23:36:34
-
+> Last Format Time：7/9/2026 23:46:20
 
 **考生**: Dano Day  
 **试卷**: `apps/app/src/pages/CrateDetailPage/CrateDetailPageContent.tsx`  
@@ -9,9 +8,7 @@
 
 ---
 ## 逐题批改
-
 ### 第1题：路由参数 & 路由导航 — ✅ 满分 (10/10)
-
 ```tsx
 const { id } = useParams({ from: '/_layout/ai-reviews/crates/$id' })
 const router = useRouter()
@@ -19,10 +16,7 @@ const router = useRouter()
 
 完全正确。
 
----
-
 ### 第2题：数据查询 — ⚠️ 扣2分 (8/10)
-
 **你的代码**:
 ```tsx
 const queryResult = useOne<Crate>({ resource: ResourceName.crates, id })
@@ -51,10 +45,7 @@ const crate = useMemo(() => (queryResult ?? null) as unknown as Crate | null, [q
 
 **改进建议**: 养成解构 hooks 返回值的习惯——既省代码又提升性能。
 
----
-
 ### 第3题：变更 Hooks — ❌ 扣5分 (5/10)
-
 **你的代码**:
 ```tsx
 const mutateUpdate = useUpdate()
@@ -78,20 +69,14 @@ const { mutate: deleteRecord } = useDelete()
 
 **改进建议**: `useUpdate()` / `useDelete()` 返回 `{ mutate, isLoading, ... }`，重构命名解构 `{ mutate: updateRecord }` 可以在业务代码中获得干净的调用名。
 
----
-
 ### 第4题：对话框状态 — ✅ 满分 (10/10)
-
 ```tsx
 const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 ```
 
 完全正确。
 
----
-
 ### 第5题：打开/关闭对话框回调 — ✅ 满分 (10/10)
-
 ```tsx
 const handleOpenEdit = useCallback(() => setDialogOpen(true), [])
 const handleCloseDialog = useCallback(() => setDialogOpen(false), [])
@@ -99,10 +84,7 @@ const handleCloseDialog = useCallback(() => setDialogOpen(false), [])
 
 完全正确。
 
----
-
 ### 第6题：更新 crate 回调 — ⚠️ 扣2分 (8/10)
-
 **你的代码**:
 ```tsx
 const handleUpdate = useCallback(
@@ -137,10 +119,7 @@ const handleUpdate = useCallback(
 
 **改进建议**: 功能正确，链式效应来自第3题。修复第3题后此处自动改善。
 
----
-
 ### 第7题：删除 crate 回调 — ❌ 扣8分 (2/10)
-
 **你的代码**:
 ```tsx
 const handleDelete = useCallback(() => {
@@ -180,10 +159,7 @@ const handleDelete = useCallback(() => {
 
 **改进建议**: 复制粘贴路由路径时务必核对。用 IDE 的自动补全或常量管理路由路径可以避免此类错误。
 
----
-
 ### 第8题：空操作 & 返回 — ✅ 满分 (10/10)
-
 ```tsx
 const handleNoop = useCallback(() => { }, [])
 const handleBack = useCallback(() => {
@@ -193,10 +169,7 @@ const handleBack = useCallback(() => {
 
 完全正确。
 
----
-
 ### 第9题 + 第10题：UI 渲染 — ❌ 扣15分 (15/40)
-
 这是本次答卷最大的失分区。
 
 **你代码中的具体问题**:
@@ -210,7 +183,7 @@ const handleBack = useCallback(() => {
 | 🔴 | **缺失** | 副标题 | 缺少 `<p>Crate Detail</p>` |
 | 🔴 | **样式** | Edit/Delete 按钮 | `variant="ghost"` 应为 `variant="outline"`；缺少文字 "Edit"/"Delete"；缺少 `mr-1` 图标间距 |
 | 🔴 | **缺失** | 详情卡片 | 未使用 `grid grid-cols-2` 网格布局，直接裸写 `<br/>` 分割字段 |
-| 🔴 | **缺失** | Responsibility 空值 | 未处理 `crate.responsibility || "—"` |
+| 🔴 | **缺失** | Responsibility 空值 | 未处理 `crate.responsibility \|\| "—"` |
 | 🔴 | **缺失** | Metadata 条件渲染 | 应 `{crate.metadata && (...)}` 条件显示，非始终渲染 |
 | 🔴 | **缺失** | Created / Updated | 两个时间戳字段完全遗漏 |
 | 🟡 | 风格 | 详情区 | 卡片容器应为 `rounded-lg border` 内嵌 `p-6` 的 grid，而非直接裸标签 |
@@ -300,10 +273,7 @@ return (
 )
 ```
 
----
-
 ### 代码洁癖检查
-
 | # | 问题 |
 |---|------|
 | 🔴 | 第37-39行：3行 `console.log` 调试代码未清理 |
@@ -316,7 +286,6 @@ return (
 
 ---
 ## 成绩汇总
-
 | 题号 | 考点 | 得分 | 满分 | 主要问题 |
 |------|------|------|------|----------|
 | 1 | 路由参数 & 导航 | 10 | 10 | — |
@@ -332,7 +301,6 @@ return (
 
 ---
 ## 三大改进要点
-
 1. **解构 refine hooks 返回值** — `const { mutate: updateRecord } = useUpdate()` 而非 `const mutateUpdate = useUpdate()` 然后 `mutateUpdate.mutate(...)`。这是贯穿第2/3/6/7题的根因问题。
 
 2. **路由常量检查** — 第7题 `/archetypes` vs `/crates` 这类复制粘贴错误是实际生产中最常见的 bug 来源。建议项目中把路由路径定义为常量集中管理。
