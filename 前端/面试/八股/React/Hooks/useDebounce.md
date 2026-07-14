@@ -1,6 +1,8 @@
 # useDebounce
 > Last Format Time：6/15/2026 10:50:12
 
+[[前端/项目笔记/代达罗斯/模式/useDebounce|useDebounce]]
+
 ---
 ## code
 ```tsx

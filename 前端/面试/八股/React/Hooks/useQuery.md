@@ -1,5 +1,5 @@
 # useQuery
-> Last Format Time：6/15/2026 10:50:12
+> Last Format Time：7/14/2026 20:22:22
 
 [https://www.robinwieruch.de/react-hooks-fetch-data/](https://www.robinwieruch.de/react-hooks-fetch-data/)
 
@@ -47,6 +47,7 @@ const App = () => {
 
 ---
 ## best practice
+这里面的queryKey其实在useEffect中根本没有被使用，但是依旧被作为依赖添加进去了，只要queryKey发生了变化，那么就会触发副作用去获取信息：
 ```tsx
 type UseQueryArgs<T> = {
   queryKey: string[];
@@ -80,4 +81,35 @@ const useQuery = <T>({ queryFn, queryKey, initialData }: UseQueryArgs<T>) => {
 
   return { data, isLoading, isError };
 };
+```
+
+具体的使用例子：
+```ts
+import { useQuery } from "@tanstack/react-query";
+import { trpcClient } from "@/integrations/trpc/client";
+
+export const useStatsOverview = () =>
+  useQuery({
+    queryKey: ["stats", "overview"],
+    queryFn: () => trpcClient.stats.overview.query(),
+  });
+
+export const useStatsAcceptance = () =>
+  useQuery({
+    queryKey: ["stats", "acceptance"],
+    queryFn: () => trpcClient.stats.acceptance.query(),
+  });
+
+export const useStatsTrends = () =>
+  useQuery({
+    queryKey: ["stats", "trends"],
+    queryFn: () => trpcClient.stats.trends.query(),
+  });
+
+export const useStatsByCategory = () =>
+  useQuery({
+    queryKey: ["stats", "byCategory"],
+    queryFn: () => trpcClient.stats.byCategory.query(),
+  });
+
 ```

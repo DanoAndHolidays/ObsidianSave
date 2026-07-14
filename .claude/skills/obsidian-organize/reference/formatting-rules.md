@@ -87,7 +87,7 @@
 ##### 进一步细分
 ```
 
-❌ **错误**：标题前加数字标号
+❌ **错误**：H2-H6 前加数字标号
 
 ```markdown
 ## 1. 章节一
@@ -310,7 +310,7 @@ const x = 1;
 ```
 ````
 
-**合法标签**：jsx、tsx、ts、js、javascript、css、scss、html、bash、sh、shell、json、yaml、md、markdown、text。
+**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、py、python、go、java、c、cpp、rust、sql、xml。
 
 ## 链接
 ✅ 内部笔记用 `[[双链]]`：
@@ -326,12 +326,10 @@ const x = 1;
 ```
 
 ## 例外说明
-任何规则都允许例外，例外必须用斜体说明原因。
+任何规则都允许例外，例外必须用斜体记录日期、理由和原内容。
 
 ```markdown
-## 标准化的标题
-
-*原标题：xxx，因为要保持命名一致性*
-
-## 规范后的标题
+*7/14/26 【历史笔记保留原标题】
+原内容：# 旧标题
+修改点：保持 H1 与文件名一致，移除原 H1*
 ```

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian 笔记整理"
+  short_description: "按 Git 基线安全整理和规范化 Obsidian 笔记"
+  default_prompt: "Use $obsidian-organize to organize changed notes in this Obsidian vault."

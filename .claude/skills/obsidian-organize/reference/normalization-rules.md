@@ -19,7 +19,7 @@
 - H1 下面紧跟 `> Last Format Time：...` 元信息块（不空行）
 - 元信息块后再接引言/第一段正文 / 外部链接（中间空一行）
 - H2 下面不要再用 `**粗体小标题**：` 这种伪标题，**必须**升级为 H3
-- 任何标题前都不要加数字标号（如 `## 1. 标题`、`### 1. xxx` 都是违规）
+- H2-H6 前不要加数字标号（如 `## 1. 标题`、`### 1. xxx` 都是违规）；H1 始终以文件名为准
 
 **H1 元信息块格式**（脚本自动维护）：
 
@@ -88,10 +88,11 @@
 ## 4. 代码块
 
 - **必须**指定语言标签
-- 合法标签：jsx、tsx、ts、js、javascript、css、scss、html、bash、sh、shell、json、yaml、md、markdown、text
+- 合法标签：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、py、python、go、java、c、cpp、rust、sql、xml
 - 选错语言属于高把握违规 → 直接改成正确语言
 - `js` 和 `javascript`、`md` 和 `markdown`、`bash` 和 `sh`/`shell` 都视为合法等价
 - 不确定时优先选 `text` 而不是省略
+- 脚本为缺失标签的代码块自动使用 `text`，并把 ```` ```0 ```` 等异常闭合围栏修复为纯 ```` ``` ````
 
 ---
 
@@ -160,18 +161,26 @@
 
 | 违规类型 | 由谁处理 | 工具 |
 |----------|---------|------|
-| 标题前数字/中文标号 | 脚本 | `remove_number_prefixes` |
+| Git 基线与工作区候选收集 | 脚本 | `collect_changed_notes.py` |
+| H1 缺失/与文件名不一致 | 脚本 | `ensure_h1_title` |
+| H1 时间戳和区域空行 | 脚本 | `update_h1_metadata`、`normalize_h1_spacing` |
+| H2-H6 数字/中文标号 | 脚本 | `remove_number_prefixes` |
 | H4 标题 | 脚本 | `h4_to_h5` |
+| H6 标题 | 脚本 | `h6_to_h5` |
 | 文件无 H2 时 H3→H2 | 脚本 | `h3_to_h2_if_loose` |
-| H1 元信息块插入/更新 | 脚本 | `update_h1_metadata` |
+| 短粗体伪标题→H3 | 脚本 | `bold_pseudo_headings_to_h3` |
 | H1 下裸 URL 包裹 | 脚本 | `wrap_bare_urls_under_h1` |
-| H3 前误用 `---` | **脚本** | `remove_spurious_separators` |
+| H3 前误用 `---` | 脚本 | `remove_spurious_separators` |
 | 所有 H2 前补 `---` | 脚本 | `ensure_h2_separators` |
-| 标题后多余空行 | **脚本** | `remove_blank_after_headings` |
+| 标题后多余空行 | 脚本 | `remove_blank_after_headings` |
 | 代码块前/后空行 | 脚本 | `fix_code_block_blank_lines` |
 | 中文标点空格 | 脚本 | `fix_punct_space` |
-| 代码块缺/非法语言标签 | 脚本报告 + Agent 改 | `check_code_blocks` → Claude |
+| 代码块缺标签/异常闭合 | 脚本 | `set_missing_code_languages` |
+| 未知标签/未闭合围栏 | 脚本报告 | `check_code_blocks` |
+| 文件末尾无内容的空标题 | 脚本 | `remove_trailing_empty_heading` |
+| 后面仍有内容的空标题 | 脚本报告 + 用户判断 | `check_manual_issues` |
 | 空行调整（引用块等复杂场景） | Agent | Claude 判断 |
-| H2 下粗体伪标题→H3 | Agent | Claude 判断 |
 | 例外斜体标注 | Agent | Claude 判断 |
 | 规则7范围内的内容问题 | Agent → 问用户 | Claude + AskUserQuestion |
+
+脚本在任何文本正则处理前分离 YAML frontmatter，并用带 NUL 边界的定长占位符保护 fenced code。回归测试必须包含至少 12 个代码块，防止占位符 `1` 错配 `10` 一类的前缀碰撞。
