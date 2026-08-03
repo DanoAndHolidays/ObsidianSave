@@ -1,4 +1,4 @@
-# 错误处理
+# 用neverthrow进行错误处理
 这个模式来自 Rust 的 Result 枚举。核心思路是：用返回值代替 throw。                                  
 
 传统的 try-catch 是这样的：                                                                         

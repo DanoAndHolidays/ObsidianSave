@@ -71,7 +71,7 @@ const {
 > 注意：shadcn/ui 的 `Select`（Radix 封装，非原生 `<select>`）需要用 `<Controller>` 而不是 `register`。
 
 
-`register("name")` 返回一个对象，大概长这样：
+`register("name")` 返回一个对象，长这样：
 ```js
 {
   name: "name",
@@ -80,6 +80,7 @@ const {
   ref: (el) => { /* 拿到真实 DOM 引用 */ },
 }
 ```
+![[Pasted image 20260722163046.png]]
 
 展开到 `<Input>` 上，就等价于：
 ```tsx

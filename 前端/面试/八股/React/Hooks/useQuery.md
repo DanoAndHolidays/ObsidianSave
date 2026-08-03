@@ -111,5 +111,18 @@ export const useStatsByCategory = () =>
     queryKey: ["stats", "byCategory"],
     queryFn: () => trpcClient.stats.byCategory.query(),
   });
+```
 
+这里可以看到，我们使用的所有数据都是从trpcClient这里拿到的，不同的客户端之间具有不同的路由
+```ts
+import { useQuery } from "@tanstack/react-query";
+import { trpcClient } from "@/integrations/trpc/client";
+
+export const useGithubTree = (owner: string, repo: string, branch: string = "main") =>
+  useQuery({
+    queryKey: ["github", "repo", "tree", owner, repo, branch],
+    queryFn: () => trpcClient.github.repo.tree.query({ owner, repo, branch }),
+    enabled: owner.length > 0 && repo.length > 0,
+    staleTime: 5 * 60 * 1000,
+  });
 ```

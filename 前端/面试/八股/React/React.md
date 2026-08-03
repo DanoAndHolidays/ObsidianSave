@@ -1,600 +1,698 @@
 # React
+> Last Format Time：7/30/2026 10:45:21
 
-### 【Q008】当新入职一家公司时，如何快速搭建开发环境并让应用跑起来
-1. 阅读项目 README 和文档（onboarding、CONTRIBUTING）
-2. 安装 Node 版本管理工具，确认 Node 版本（.nvmrc）
-3. `git clone` + `npm install` / `pnpm install`
-4. 配置环境变量（.env.local/.env.development）
-5. 启动开发服务器（npm run dev / npm start）
-6. 配置 IDE（VSCode 插件、ESLint、Prettier）
-7. 了解项目目录结构和技术栈
-8. 跑起来后浏览 / 了解路由和页面
+这是一份面向前端面试的 React 知识树，按“核心概念 → Hooks → 渲染原理 → 性能 → 服务端 → 工程实践 → 手写题”组织。回答时建议先给结论，再解释原理，最后补充适用场景与边界。
 
-### 【Q010】了解 React 中的 ErrorBoundary 吗，它有那些使用场景
-React 16 引入的错误边界（类组件实现 `componentDidCatch` / `getDerivedStateFromError`，函数式组件不能直接作为 Error Boundary）：
-- 捕获子组件树渲染过程中的错误，阻止整个应用崩溃
-- 场景：第三方组件、复杂 UI 模块、异步数据渲染等
-- 不捕获：事件回调中的错误、异步代码（setTimeout）、SSR 中的错误、Error Boundary 自身的错误
+参考资料：
+- [React 官方文档](https://react.dev/)
+- [React 19 发布说明](https://react.dev/blog/2024/12/05/react-19)
+- [React 19.2 发布说明](https://react.dev/blog/2025/10/01/react-19-2)
+- [React Compiler](https://react.dev/learn/react-compiler)
 
-```jsx
-class ErrorBoundary extends React.Component {
-  state = { hasError: false };
-  static getDerivedStateFromError() { return { hasError: true }; }
-  componentDidCatch(error, info) { console.error(error, info); }
-  render() {
-    if (this.state.hasError) return <h1>Something went wrong.</h1>;
-    return this.props.children;
-  }
-}
-```
+---
+## 复习路线
+建议按面试频率分三轮复习：
+- 第一轮：组件、props/state、key、受控组件、Hooks、Effect、状态更新与批处理
+- 第二轮：Reconciliation、Fiber、Render/Commit、并发渲染、性能优化、状态管理
+- 第三轮：SSR/RSC、Suspense、React 19、组件库设计、测试和手写 Hooks
 
-### 【Q013】有没有使用过 react hooks，它带来了那些便利
-1. 函数组件中可以使用 state 和生命周期（不需要 class）
-2. 逻辑复用变得容易（自定义 hook，脱离 this）
-3. 关注点分离，相关逻辑聚拢，而不是分散在生命周期方法中
-4. 减少嵌套（不用 render props / HOC）
-5. 代码更简洁、Tree Shaking 友好
+高频追问通常不是“API 怎么用”，而是：为什么这样设计、什么时候会失效、错误方案会造成什么后果、如何用 Profiler 或最小示例证明判断。
 
-### 【Q014】如何使用 react hooks 实现一个计数器的组件
-```jsx
-function Counter() {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <p>{count}</p>
-      <button onClick={() => setCount(c => c + 1)}>+1</button>
-      <button onClick={() => setCount(c => c - 1)}>-1</button>
-      <button onClick={() => setCount(0)}>Reset</button>
-    </div>
-  );
-}
-```
+---
+## 核心概念与组件模型
+### React 的核心思想是什么
+React 用组件描述 UI，并把界面视为状态的函数：`UI = f(state)`。开发者声明“某个状态下 UI 应该是什么”，React 负责协调前后两次结果并提交必要的宿主环境变更。核心特征包括**组件化**、**单向数据流**、**声明式渲染**和**跨平台 Renderer**。
 
-### 【Q021】React 中，cloneElement 与 createElement 各是什么，有什么区别
-- `createElement(type, props, ...children)`：创建 React 元素，是 JSX 的编译结果
-- `cloneElement(element, props, ...children)`：以已有 element 为基础、shallow 合并新 props 和 children。常用于给子组件传递 props（如 React.Children.map 遍历 children 时附加 props）
+### JSX 是什么，最终会变成什么
+JSX 是 JavaScript 的==语法扩展==，不是模板字符串，也不能被浏览器直接执行。现代 JSX Transform 会把它编译成 `jsx/jsxs` 调用；旧转换则编译成 `React.createElement` 调用，最终得到 ==React Element 描述对象==。
 
-### 【Q038】使用 react 实现一个通用的 message 组件
-```jsx
-// Message 显示组件 + 命令式调用封装
-function Message({ type, content, onClose }) {
-  return <div className={`msg msg-${type}`}>{content}</div>;
-}
+### React Element、Component 与 Fiber 有什么区别
+- React Element：一次渲染产生的不可变描述对象，描述元素类型、props、key 等
+- Component：生成 UI 描述的函数或类
+- Fiber：React 运行时内部的工作单元，保存组件状态、更新队列、树关系、优先级和副作用标记（后面有更详细的）
 
-// 命令式 API
-function showMessage(type, content, duration = 3000) {
-  const div = document.createElement('div');
-  document.body.appendChild(div);
-  const root = createRoot(div); // React 18
-  const close = () => { root.unmount(); div.remove(); };
-  root.render(<Message type={type} content={content} onClose={close} />);
-  setTimeout(close, duration);
-}
-export const message = {
-  success: (msg) => showMessage('success', msg),
-  error: (msg) => showMessage('error', msg),
-};
+### createElement 与 cloneElement 有什么区别
+- `createElement(type, props, ...children)`：根据类型和 props 创建新 React Element
+- `cloneElement(element, props, ...children)`：以现有 Element 为基础浅合并 props，并可替换 children
 
-// React 17 兼容：import { render } from 'react-dom'
-// React 18：import { createRoot } from 'react-dom/client'
-```
+`cloneElement` 会让数据来源变得隐蔽，现代代码通常优先使用显式 props、Context 或组合模式。
 
-### 【Q066】如何使用 react hooks 实现 useFetch 请求数⌚️
-```jsx
-function useFetch(url) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+### 函数组件与类组件有什么区别
+函数组件是现代 React 的主流写法，通过 Hooks 使用状态、副作用和 Context；类组件通过实例、生命周期和 `this.setState` 管理逻辑。函数组件更利于逻辑复用和组合，但 Error Boundary 目前仍通常使用类组件实现。
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    fetch(url)
-      .then(res => res.json())
-      .then(data => { if (!cancelled) setData(data); })
-      .catch(err => { if (!cancelled) setError(err); })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
-  }, [url]);
+### props 和 state 有什么区别
+- props：由父组件传入，组件不应直接修改
+- state：组件对某次渲染的内部状态快照，通过更新函数请求下一次渲染
+- 二者变化都可能触发重新渲染，但重新渲染不等于一定修改 DOM
 
-  return { data, loading, error };
-}
-```
+### 为什么 React 强调单向数据流
+数据从父组件流向子组件，子组件通过回调表达事件。这样能明确状态所有权，使变化路径更容易追踪、测试和调试。兄弟组件共享状态时，优先把状态提升到最近的公共父组件。
 
-### 【Q067】react 如何使用 render prop component 请求数据
-```jsx
-class Fetch extends React.Component {
-  state = { data: null, loading: true };
-  componentDidMount() {
-    fetch(this.props.url)
-      .then(res => res.json())
-      .then(data => this.setState({ data, loading: false }));
-  }
-  render() {
-    return this.props.children(this.state);
-  }
-}
-// 使用
-<Fetch url="/api/user">
-  {({ data, loading }) => loading ? <div>Loading...</div> : <div>{data.name}</div>}
-</Fetch>
-```
+### 什么是组合，为什么通常优于继承
+组合通过 `children`、具名插槽式 props 或自定义 Hook 拼装能力，耦合更低。React 很少需要组件继承；继承适合真正的类型层次，而 UI 复用通常是行为与结构的组合。
 
-### 【Q068】React Portal 有哪些使用场景
-Portal 将子组件渲染到父组件 DOM 树以外的 DOM 节点，保持 React 组件树的层级不变（事件冒泡仍按 React 树）。
+### React 中如何进行条件渲染
+常见方式包括提前 `return`、三元表达式和 `&&`。注意 `0 && <View />` 会渲染出 `0`，需要显式转换为布尔值；也不要在条件分支中调用 Hooks。
 
-**场景**：模态框（Modal）、Tooltip、Dropdown 菜单、通知 Toast、全局 Loading。
+### Fragment 有什么作用
+Fragment 可以在不增加额外 DOM 节点的情况下返回多个兄弟元素。短语法 `<>...</>` 不能传 `key`；列表中需要 `key` 时应使用 `<Fragment key={id}>`。
+
+### Portal 有什么作用，事件如何冒泡
+Portal 把 DOM 渲染到另一个容器，但子节点在 React 组件树中的位置不变。因此 Context 和 React 事件冒泡仍按 React 树工作，而不是按 DOM 树工作。常用于 Modal、Tooltip、Dropdown 和 Toast。
 
 ```jsx
 import { createPortal } from 'react-dom';
+
 function Modal({ children }) {
   return createPortal(children, document.body);
 }
 ```
 
-### 【Q069】什么是 virtual DOM，它的引入带了什么好处
-Virtual DOM 是真实 DOM 的 JS 对象映射。UI=f(data)，数据变化时：
-1. 生成新的 Virtual DOM 树
-2. Diff 新旧两棵树，找出最小变更（O(n)）
-3. Patch 批量更新真实 DOM
-
-**好处**：
-- 开发者不必直接操作 DOM（声明式），框架自动化优化变更
-- 跨平台（Virtual DOM → 不同渲染器：浏览器 DOM、React Native、Canvas）
-- 批量更新、减少直接 DOM 操作
-
-### 【Q071】react 与 vue 数组中 key 的作用是什么
-key 帮助框架的 diff 算法**识别虚拟 DOM 节点的身份**（哪些元素改变了、新增、移除）。没有 key 时，默认用顺序对比（index），可能导致不必要的 DOM 更新/复用错误状态（如：输入框内容未随数据更新清空）。
-
-### 【Q092】react 中 ref 是干什么用的，有哪些使用场景
-ref 获取 DOM 元素或组件实例的引用：
-- 焦点管理（自动 focus）
-- 触发动画
-- 获取 DOM 尺寸/位置
-- 集成第三方 DOM 库
-- 存储不触发重渲染的可变值（ref.current）
+### Error Boundary 能捕获哪些错误
+Error Boundary 能捕获后代组件在渲染、构造和生命周期中的错误并展示降级 UI；不能捕获事件处理器、普通异步回调、SSR 阶段以及边界自身抛出的错误。事件和请求错误应在对应流程中显式处理。
 
 ```jsx
-const inputRef = useRef(null);
-useEffect(() => { inputRef.current?.focus(); }, []);
-return <input ref={inputRef} />;
-```
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
 
-### 【Q100】如何使用 react/vue 实现一个 message API
-同 Q038。
-
-### 【Q142】react hooks 中如何模拟 componentDidMount
-```jsx
-useEffect(() => {
-  // 这里在组件挂载后执行（仅一次，类似 componentDidMount）
-}, []); // 空依赖数组
-```
-
-### 【Q146】如果使用 SSR，可以在 created/componentWillMount 中访问 localStorage 吗
-**不可以**。SSR 时没有浏览器环境，没有 window、localStorage、document 等对象。需要在客户端代码中用 `typeof window !== 'undefined'` 检查，或把相关逻辑放在 useEffect / componentDidMount 中（只在客户端执行）。
-
-### 【Q151】react hooks 如何替代或部分替代 redux 功能
-- `useContext` + `useReducer` 替代 Redux 全局状态
-- `useState` 替代组件级状态
-- 自定义 hook 封装业务逻辑（`useXXX`）
-- Context 性能优化（拆分多个 Context 避免全树重渲染）
-
-### 【Q152】如何实现一个 react hook，你有没有自己写过一个
-自定义 hook 是以 `use` 开头的函数，内部可使用其他 Hooks：
-- `useLocalStorage`：同步状态到 localStorage
-- `useDebounce` / `useThrottle`：防抖/节流值
-- `usePrevious`：获取上一次渲染的值
-- `useWindowSize`：监听窗口尺寸
-
-### 【Q154】在 react/vue 中数组是否可以以在数组中的次序为 key
-**不建议**。用 index 作为 key 在增删/排序场景下会导致错误的复用（框架认为同一个 key 的元素未变，不会重新渲染内部状态，如输入框内容错位）。关键是要与数据唯一稳定 id 绑定。
-
-### 【Q164】React 中 fiber 是用来做什么的 ⌚️
-Fiber 是 React 16 的重写的 Reconciliation 架构：
-1. 将渲染任务拆成小的"工作单元"，通过**可中断**的循环调度
-2. 实现**时间切片（Time Slicing）**：在浏览器空闲时处理任务，高优先级任务（用户输入）可打断低优先级更新
-3. 双缓存 Fiber Tree 和链表结构支持增量渲染
-
-### 【Q211】React hooks 中 useCallback 的使用场景是什么
-缓存函数引用，避免子组件因函数引用变化而无效渲染（配合 React.memo）。注意不一定需要所有函数都用 useCallback：只在传给子组件且子组件用 React.memo 优化时有用。
-
-```jsx
-const handleClick = useCallback(() => {
-  doSomething(count);
-}, [count]);
-// 该 handleClick 只在 count 变化时创建新引用
-```
-
-### 【Q235】useEffect 中如何使用 async/await
-useEffect 的回调不能直接是 async 函数（async 返回 Promise，useEffect 期望返回 undefined 或 cleanup 函数）：
-
-```jsx
-useEffect(() => {
-  async function fetchData() {
-    const data = await fetchSomething();
-    setData(data);
+  static getDerivedStateFromError() {
+    return { hasError: true };
   }
-  fetchData();
-}, []);
-// 或 IIFE：
-useEffect(() => {
-  (async () => {
-    const data = await fetchSomething();
-  })();
-}, []);
-```
 
-### 【Q271】react hooks 的原理是什么
-Hooks 基于**链表**实现：每个组件关联一个 hook 链表（Fiber 节点的 memoizedState）。
-- 首次渲染：按调用顺序创建 hook 节点（形成链表）
-- 再次渲染：按顺序遍历链表读取对应 hook 的状态
-- 这就是为什么 Hooks 不能被放在条件/循环中（打乱顺序导致错位）
-
-### 【Q277】redux 解决什么问题，还有什么其他方案
-**解决**：跨组件共享状态、统一的状态管理、可预测的状态变更、时间旅行调试。
-
-**其他方案**：
-- React Context + useReducer（轻量场景）
-- MobX（响应式）
-- Zustand（轻量、简洁）
-- Jotai / Recoil（原子化状态）
-- XState（状态机）
-- Pinia（Vue 生态）
-
-### 【Q278】为什么不能在表达式里面定义 react hooks
-React 通过调用顺序识别每个 Hook 的身份。如果放在条件/循环中，不同渲染轮次的 Hook 数量/顺序不一致，会产生错位并导致状态混乱。所以 React 要求 Hooks 在顶层（Top Level）调用。
-
-### 【Q367】redux 和 mobx 有什么不同
-- **Redux**：单一 Store、纯函数 Reducer、不可变数据、中间件机制、显式 dispatch action
-- **MobX**：多 Store、响应式（Observable）、可变数据（直接赋值）、隐式追踪依赖（autorun）、装饰器风格、学习成本更低
-
-### 【Q368】关于 React hooks 的 caputre value，以下输出多少
-（需看具体代码）Hooks Capture Value 是闭包的特性：state 是固定快照，回调中的 state 是创建时那个渲染周期的值。
-
-### 【Q369】在 React 项目中 immutable 是优化性能的
-Immutable（不可变数据）确保引用变更=数据变更，让 React.memo / PureComponent 的浅比较（shallow compare）能正确判断是否需要重渲染。相比直接 mutable 修改（引用不变但内容变了）、shallow compare 会跳过本应更新的组件。
-
-### 【Q371】在 redux 中如何发送请求
-使用 **Redux Thunk**（最常用）或 **Redux Saga**：
-```javascript
-// Redux Thunk
-const fetchUser = (id) => async (dispatch) => {
-  dispatch({ type: 'FETCH_USER_REQUEST' });
-  try {
-    const user = await api.getUser(id);
-    dispatch({ type: 'FETCH_USER_SUCCESS', payload: user });
-  } catch (err) {
-    dispatch({ type: 'FETCH_USER_FAILURE', error: err.message });
+  componentDidCatch(error, info) {
+    reportError(error, info);
   }
-};
+
+  render() {
+    return this.state.hasError ? <Fallback /> : this.props.children;
+  }
+}
 ```
 
-### 【Q375】在 redux 中如何写一个记录状态变更的日志插件
-```javascript
-// Redux Middleware 记录日志
-const logger = store => next => action => {
-  console.log('dispatching', action);
-  console.log('prev state', store.getState());
-  const result = next(action);
-  console.log('next state', store.getState());
-  return result;
-};
-// applyMiddleware(logger)
-```
+---
+## 状态、数据流与表单
+### 为什么说 state 是一次渲染的快照
+每次渲染都会获得当次固定的 props、state 和事件处理函数。调用更新函数不会修改当前闭包里的 state，只会请求下一次渲染。这解释了连续执行 `setCount(count + 1)` 为什么可能只增加一次。
 
-### 【Q378】React 在 setState 时发生了什么
-1. 调用 setState/useState 的 dispatch
-2. React 标记组件需要更新，创建更新对象（Update），加入更新队列
-3. 调度（scheduler）协调优先级
-4. Render Phase：重新执行组件函数/Render 方法，生成新 Fiber 树（Virtual DOM 的最新表示）
-5. Reconciliation 阶段：Diff 新旧 Fiber 树，标记变更
-6. Commit Phase：将变更应用到 DOM（同步，不可中断）
-7. 执行相应的 Effect（useLayoutEffect 同步执行，useEffect 异步执行）
-
-### 【Q380】如何设计一个UI组件库
-1. **设计规范**：颜色、字体、间距、圆角、阴影等 Design Token
-2. **组件分类**：基础组件（Button、Input）、布局组件、业务组件
-3. **API 设计**：统一的 props 命名、组合 vs 配置、受控/非受控
-4. **可访问性**：ARIA、键盘导航、屏幕阅读器
-5. **主题**：CSS 变量 / ThemeProvider 支持多主题和自定义
-6. **开发环境**：Storybook 用于开发和文档
-7. **构建打包**：Rollup/Vite 构建，导出 ESM + CJS，支持 Tree Shaking
-8. **测试**：单元测试 + 视觉回归测试
-
-### 【Q403】React 中的 dom diff 算法如何从 O(n3) 优化到 O(n) 的
-传统 Tree Diff 时间复杂度 O(n³)。React 基于三个假设进行优化：
-1. **同层级比较**：只对同级节点进行比较（不跨层级 diff）
-2. **类型不同直接替换**：元素类型改变时直接卸载旧树、新建整棵子树
-3. **key 标识**：通过 key 在列表中识别元素身份，实现高效增删移动
-
-### 【Q404】在 React 应用中如何排查性能问题
-1. **React DevTools Profiler**：记录组件渲染时间，找出慢渲染组件
-2. **Chrome Performance**：JS 执行、Layout、Paint 各阶段耗时
-3. **why-did-you-render**：检测不必要的重渲染
-4. **React.memo / useMemo / useCallback**：检查是否缺少 memo
-5. **虚拟列表**：大数据量列表的性能
-6. **Code Splitting**：检查 Bundle 大小是否过大
-
-### 【Q408】React 17.0 有什么变化
-- 无重大新特性，主要渐进式升级
-- 新 JSX Transform（不需要 `import React from 'react'`）
-- 事件委托从 document 改为 root 节点（便于多版本共存）
-- 移除事件池（SyntheticEvent pooling 不再需要）
-- 副作用清理时机（useEffect cleanup 在异步执行）
-- 为 React 18 的 Concurrent Mode 铺路
-
-### 【Q466】在 SSR 项目中如何判断当前环境时服务器端还是浏览器端
-```javascript
-const isServer = typeof window === 'undefined';
-const isClient = typeof window !== 'undefined';
-// 需要浏览器 API 的代码放在 if (isClient) { ... } 中
-```
-
-### 【Q497】React.setState 是同步还是异步的
-**React 18 之前**：在 React 合成事件和生命周期中是**异步批量更新**，在 setTimeout/Promise/原生事件中是**同步**的。
-**React 18（自动批处理）**：所有更新都是**异步批量**的（setTimeout 中也批处理）。可以使用 `flushSync` 强制同步。
-
-### 【Q498】什么是服务器渲染 (SSR)
-**SSR（Server-Side Rendering）**：服务端将 React/Vue 组件渲染为 HTML 字符串返回给浏览器，浏览器收到后直接展示 HTML，然后加载 JS 进行"注水"（Hydration：客户端 JS 接管交互）。
-
-**优点**：更快的首屏加载（白屏短）、SEO 友好
-**缺点**：服务器负载大、开发复杂度高、TTFB 可能较长
-
-### 【Q499】在 React 中如何实现代码分割 (code splitting)
+### 连续更新依赖旧状态时为什么要用函数式更新
+值形式捕获的是当前渲染的快照；函数式更新会按队列依次接收前一个计算结果：
 ```jsx
-// React.lazy + Suspense
-const LazyComponent = React.lazy(() => import('./HeavyComponent'));
+setCount(count + 1);
+setCount(count + 1); // 两次都基于同一个 count
+
+setCount(value => value + 1);
+setCount(value => value + 1); // 在前一次结果上继续计算
+```
+
+### setState 是同步还是异步
+更准确的说法是：状态更新是被 React 排队和调度的，而不是把 `setState` 简单归类为 Promise 式“异步”。React 18 使用 `createRoot` 后，React 事件、Promise、定时器和原生事件中的多次更新通常都会自动批处理。确需立即同步提交 DOM 时可用 `flushSync`，但应少用。
+
+### React 如何决定保留还是重置组件状态
+状态与组件在渲染树中的位置绑定。相同位置且元素类型与 `key` 相同通常会保留状态；类型或 `key` 改变会创建新的组件身份并重置状态。不要在组件函数内部定义组件，否则每次渲染都会得到新的组件类型。
+
+### key 的作用是什么
+`key` 用于标识同一父节点下兄弟元素的身份，帮助 React 匹配新增、删除、移动和复用。它不是全局唯一，也不会作为普通 prop 传入组件。稳定的==业务 ID ==通常是最佳 key。
+
+### 为什么不建议使用数组下标作为 key
+当列表插入、删除或排序时，下标会对应到不同业务项，可能造成组件本地状态、输入内容和动画==错位==。只有列表静态、不会重排且没有稳定 ID 时才可谨慎使用下标。
+
+### 受控组件与非受控组件有什么区别
+- 受控组件：表单值来自 React state，通过 `value/checked` 与 `onChange` 同步，便于校验和联动
+- 非受控组件：值由 DOM 保存，通过 `defaultValue` 和 ref 读取，接入简单、更新开销较低
+
+同一个输入框生命周期内不要在受控与非受控之间切换。
+
+### 状态提升、Context 与全局 Store 如何选择
+- 只被一个组件使用：本地 state
+- 少量相邻组件共享：状态提升或组合
+- 跨层级且变化不频繁：Context
+- 跨页面、更新频繁、需要中间件或调试能力：Redux、Zustand 等外部 Store
+- 服务端数据：优先交给路由框架或 TanStack Query、SWR 等缓存层，不必都塞进全局 Store
+
+### 不可变更新为什么重要
+React 和许多状态库会使用==引用相等性==快速判断数据是否变化。不可变更新能保留未修改分支的引用并为修改分支创建新引用，使浅比较、时间旅行和并发渲染更可靠。它不是要求深拷贝整个对象。
+
+### Immer 的原理是什么
+Immer 使用 Proxy 记录对 draft 的读写，并在完成时进行写时复制。只有被修改的路径会生成新对象，未修改部分继续结构共享，因此写法看似可变，结果仍是不可变数据。
+
+---
+## Hooks
+### Hooks 带来了什么
+Hooks 让函数组件可以使用状态、Context、ref 和副作用，并把相关逻辑聚合到自定义 Hook 中，减少类组件的 `this`、生命周期拆散和 HOC/render props 嵌套。
+
+### Hooks 的两条核心规则是什么
+- 只在 React 函数组件或自定义 Hook 中调用 Hook
+- 在组件顶层调用，不放在条件、循环、事件处理函数或普通函数中
+
+React 依赖稳定的调用顺序，把每次 Hook 调用与 Fiber 上对应的 Hook 状态关联起来。
+
+### Hooks 的底层数据结构是什么
+函数组件 Fiber 的 `memoizedState` 会关联一组 Hook 节点。渲染时 React 按调用顺序读取或创建这些节点；状态 Hook 还维护更新队列。理解到“调用顺序必须稳定”即可，具体字段属于内部实现，不能作为业务代码契约。
+
+### useState 与 useReducer 如何选择
+`useState` 适合独立、简单的状态；`useReducer` 适合多个字段由同一事件共同变化、状态转移复杂或希望把更新规则集中测试的场景。二者都不能替代跨组件共享机制。
+
+### useRef 有哪些用途
+- 获取 DOM 节点或命令式实例
+- 保存定时器 ID、上一次值等跨渲染可变数据
+- 保存最新回调或第三方实例
+
+修改 `ref.current` 不会触发渲染，因此参与 UI 展示的数据应放在 state 中，也不应在渲染期间随意读写 ref。
+
+### useMemo 与 useCallback 有什么区别
+- `useMemo` 缓存计算结果
+- `useCallback` 缓存函数引用，近似 `useMemo(() => fn, deps)`
+
+它们是性能优化手段而不是语义保证。只有昂贵计算、稳定引用确实能避免下游工作，或依赖项需要稳定时才使用；滥用会增加比较和维护成本。
+
+### React.memo 如何工作
+`React.memo` 默认用 `Object.is` 逐个浅比较新旧 props。props 相同则可跳过该组件的渲染，但组件==自身 state 或消费的 Context 变化==仍会更新。自定义比较函数必须比较所有影响输出的 props，包括函数闭包。
+
+### 什么是闭包捕获值或 stale closure
+事件处理函数和 Effect 捕获创建它们那次渲染的值。如果依赖数组缺项、异步回调长时间保存旧函数，就可能读到旧状态。常见解法是补全依赖、使用函数式更新、重新设计数据流，或在确实需要“最新值但不触发 Effect”时使用 Effect Event 等模式。
+
+### 自定义 Hook 的本质是什么
+自定义 Hook 是以 `use` 开头、内部组合其他 Hooks 的普通函数。它复用的是有状态逻辑，不共享同一份状态；每个调用方都有独立的 Hook 状态。
+
+### useContext 的更新特点是什么
+组件调用 `useContext` 后会订阅最近 Provider 的值。Provider 的 `value` 与上次相比发生变化时，消费者会重新渲染，`React.memo` 不能屏蔽其读取到的 Context 更新。高频场景可拆分 Context、稳定 value 或改用支持 selector 的外部 Store。
+
+### useId 解决什么问题
+`useId` 生成适合无障碍属性关联且能在服务端与客户端匹配的 ID。它不应作为列表 key；key 应来自业务数据。
+
+### useImperativeHandle 有什么作用
+[[useImperativeHandle]]
+它允许组件自定义通过 ref 暴露的命令式能力，例如只暴露 `focus()` 和 `reset()`，避免把整个 DOM 节点泄漏给父组件。React 19 中函数组件可以直接把 `ref` 作为 prop 接收；旧版本通常配合 `forwardRef`。
+
+### useSyncExternalStore 解决什么问题
+它为外部 Store 提供一致的订阅协议，通过 `subscribe`、`getSnapshot` 和可选的 `getServerSnapshot` 读取快照，避免并发渲染中的 tearing，并支持 SSR hydration 一致性。状态库应优先基于它接入 React。
+
+### useInsertionEffect 适合什么场景
+它主要供 CSS-in-JS 库在布局 Effect 读取样式前注入样式使用，不是普通业务副作用的替代品。业务代码通常使用 `useEffect` 或 `useLayoutEffect`。
+
+### 如何用 Hook 模拟 componentDidMount
+`useEffect(fn, [])` 表示 Effect 不依赖响应式值，通常可表达挂载后的同步逻辑，但它不等价于“生命周期模拟器”。开发环境 Strict Mode 会额外执行一次 setup → cleanup → setup，用来暴露清理不完整的问题。
+
+---
+## Effect、事件与 Ref
+### 什么是副作用
+副作用是渲染计算之外与外部系统的同步，例如网络请求、订阅、定时器、日志、浏览器 API、手动 DOM 操作和第三方组件实例。纯数据派生通常不需要 Effect。
+
+### useEffect 的执行与清理时机是什么
+Effect 在提交后运行。依赖变化时，React 会先用旧 props/state 执行上一次 cleanup，再用新值执行 setup；卸载时执行 cleanup。Effect 具体是否严格发生在一次浏览器绘制之后不能作为业务契约，视觉测量应使用 `useLayoutEffect`。
+
+### useEffect 为什么不能直接传 async 函数
+Effect 回调只能返回 `undefined` 或清理函数，而 `async` 函数总会返回 Promise。应在 Effect 内定义并调用异步函数，同时处理取消、竞态和错误。
+
+```jsx
+useEffect(() => {
+  const controller = new AbortController();
+
+  async function load() {
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      if (error.name !== 'AbortError') setError(error);
+    }
+  }
+
+  load();
+  return () => controller.abort();
+}, [url]);
+```
+
+### 依赖数组应该如何填写
+Effect 中读取的每个响应式值都应作为依赖，包括 props、state 和组件内声明的函数或变量。不要靠删依赖“控制执行次数”；应通过移出非响应式逻辑、函数式更新、拆分 Effect 或稳定必要引用来解决重复执行。
+
+### 哪些逻辑不应该放进 useEffect
+- 根据 props/state 计算派生值：直接在渲染时计算，昂贵时再用 `useMemo`
+- 用户点击引起的动作：放进事件处理函数
+- 重置子树状态：用不同 `key`
+- 调整同一份状态的多个字段：合并状态模型或使用 reducer
+
+### useEffect 与 useLayoutEffect 有什么区别
+[[React Hooks 面试金句与原理]]
+`useLayoutEffect` 在 DOM 提交后、浏览器重新绘制前同步执行，会阻塞绘制，适合测量布局并立即修正；`useEffect` 不应阻塞视觉更新，适合大多数订阅和外部同步。SSR 环境二者都不在服务端执行。
+
+### 父子组件的 Effect 顺序是什么
+常见实现中，挂载提交时子组件的 layout/passive Effect setup 先于父组件。但更新、整棵子树删除、Strict Mode 和未来实现的清理顺序存在差异。业务逻辑不应依赖跨组件 Effect 的先后，只依赖“同一个 Effect 的旧 cleanup 先于新 setup”等公开保证。
+
+### React 合成事件是什么
+`SyntheticEvent` 是 React 对浏览器事件的统一封装。React 17 起事件委托主要绑定到 React 根容器，且移除了旧的事件池机制。需要原生事件时可读取 `event.nativeEvent`，但不要假设原生与 React 事件传播细节完全相同。
+
+### 如何阻止事件传播与默认行为
+使用 `event.stopPropagation()` 阻止 React 事件继续冒泡，使用 `event.preventDefault()` 阻止浏览器默认行为。返回 `false` 不会自动实现这两件事。
+
+### ref、state 与普通变量如何选择
+- 影响渲染输出：state
+- 跨渲染保留但变化不触发 UI：ref
+- 仅服务于本次函数执行：普通变量
+- 可从现有 props/state 得出：直接派生，不重复存 state
+
+---
+## Reconciliation、Fiber 与渲染流程
+### Virtual DOM 是什么，它解决了什么问题
+Virtual DOM 是对 UI 的 JavaScript 描述。它让开发者以声明式方式表达界面，并使 React 可以在提交前比较、调度和跨平台渲染。它不保证每次都生成理论上的最少 DOM 操作，也不意味着一定比手写 DOM 更快。
+
+### Reconciliation 与 Diff 是什么关系
+Reconciliation 是 React 根据新旧元素树决定组件复用、状态保留和宿主节点变更的整个协调过程；Diff 是其中比较新旧子节点的重要部分。最终变更会记录到 Fiber 树并在 Commit 阶段应用。
+
+### React 为什么能把通用树比较从 O(n³) 降为近似 O(n)
+React 采用启发式假设：
+- 不跨层级寻找任意移动
+- 元素类型不同则替换对应子树
+- 同级列表由 `key` 辅助匹配
+
+因此常见协调过程近似线性，但实际成本仍受组件工作量、列表变化模式和 DOM 操作影响。
+
+### 列表 Diff 如何利用 key
+React 先顺序匹配可复用节点；不再匹配时会为剩余旧节点建立映射，再根据新节点的 key 或位置查找可复用 Fiber。它还利用旧索引判断节点是否需要移动，并为插入、移动和删除记录相应标记。`key` 相同但元素类型不同仍不能复用。
+
+### Fiber 解决了什么问题
+旧的递归协调工作一旦开始就难以暂停。Fiber 把组件树表示为可逐个处理的工作单元，使 Render 阶段具备暂停、恢复、重做和按优先级调度的能力，并承载状态、更新队列和副作用信息。
+
+### Fiber 节点包含哪些关键数据
+可按五类理解：
+- 身份：`tag`、`type`、`key`
+- 树关系：`return`、`child`、`sibling`
+- 输入与状态：`pendingProps`、`memoizedProps`、`memoizedState`
+- 更新与副作用：`updateQueue`、`flags`、`lanes`
+- 双缓冲：`alternate`
+
+字段是内部实现，版本间可能变化。
+
+### 双缓冲 Fiber 树是什么
+屏幕当前对应 current 树，React 在内存中基于它构建 work-in-progress 树。渲染成功提交后，两棵树的角色互换，`alternate` 连接同一逻辑节点的两个版本。被中断或失败的工作不会污染当前屏幕。
+
+### 一次状态更新经历哪些阶段
+大致流程是：创建更新并入队 → 选择优先级并调度 → Render 阶段执行组件、协调子节点并构建 work-in-progress 树 → Commit 阶段应用 DOM 变更和 Effect → 浏览器绘制与后续 passive Effect。Render 可暂停或废弃，Commit 必须保持同步和一致。
+
+### Render 阶段与 Commit 阶段有什么区别
+- Render：计算下一棵树，没有可见 DOM 变更，可被打断、重做，因此必须保持纯函数特性
+- Commit：应用 DOM、ref 和布局 Effect 等变更，不可中断，应尽量短
+
+### Commit 阶段做了什么
+可概括为：提交前读取必要快照、执行 DOM mutation 与相关清理、更新 ref、执行 layout Effect 和类组件布局生命周期，之后再安排 passive Effect。具体内部子阶段和遍历方式可能随版本变化。
+
+### Scheduler 与 Lane 分别负责什么
+Scheduler 负责在主线程上安排可中断任务并在合适时让出执行权；Lane 是 React Reconciler 内部表示更新优先级和批次关系的位掩码模型。二者协作，但浏览器任务优先级、Scheduler 优先级和 Lane 不是同一个概念。
+
+### 为什么渲染必须保持纯粹
+并发渲染下 React 可能多次调用、暂停或丢弃一次渲染。如果渲染期间修改外部变量、发请求或操作 DOM，会产生重复和不可回滚的副作用。副作用应放在事件或 Effect 中。
+
+---
+## 并发渲染与 Suspense
+### 并发渲染是什么
+并发渲染是一组底层能力：React 可以按优先级准备多个 UI 版本，并暂停、继续或放弃低优先级 Render。它不是让 JavaScript 多线程执行，Commit 仍然同步完成。
+
+### useTransition 与 startTransition 有什么作用
+它们把某些状态更新标记为非紧急 Transition，使输入等紧急更新可以优先响应。`useTransition` 还提供 `isPending`。Transition 不能用于控制文本输入本身，也不能让同步的重计算自动变快；计算仍应拆分、缓存或移出主线程。
+
+### useDeferredValue 与防抖有什么区别
+`useDeferredValue` 允许非关键 UI 使用某个值的延迟版本，React 会在后台尝试更新且能被新输入打断。它没有固定延迟，不会减少网络请求；防抖按时间窗口减少触发次数，语义不同。
+
+### Suspense 的工作机制是什么
+子树在渲染时挂起后，React 找到最近的 Suspense 边界显示 fallback；资源就绪后重试渲染。Suspense 本身不是通用的数据请求库，数据源必须与框架或 Suspense 集成。它还用于懒加载、流式 SSR 和选择性 hydration。
+
+### React.lazy 如何实现代码分割
+`lazy(() => import('./Page'))` 让打包器生成独立 chunk。模块 Promise 未完成时组件会挂起，由最近的 Suspense 展示 fallback；成功后 React 重试渲染。路由级分割通常比对大量小组件分割更有效。
+
+```jsx
+const SettingsPage = lazy(() => import('./SettingsPage'));
 
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LazyComponent />
+    <Suspense fallback={<PageSkeleton />}>
+      <SettingsPage />
     </Suspense>
   );
 }
-
-// 路由级别分割（React Router）
-const About = React.lazy(() => import('./About'));
 ```
 
-### 【Q500】在 React 中如何做好性能优化
-1. **React.memo** 避免不必要的重渲染
-2. **useMemo / useCallback** 缓存计算结果和函数引用
-3. **虚拟列表**（react-window/react-virtuoso）
-4. **代码分割**（React.lazy + Suspense、路由懒加载）
-5. **避免 inline object/function** 直接作为 props
-6. **使用 useTransition / useDeferredValue** 降低低优先级状态更新的影响
-7. **图片优化**（懒加载、WebP 格式、CDN）
-8. **key 用稳定唯一 id** 不用 index
+### 什么是自动批处理
+React 18 的 `createRoot` 默认会把同一时机中的多次状态更新合并为较少的提交，包括 Promise、定时器和原生事件中的更新。批处理不意味着不同状态更新会互相覆盖；更新队列仍按规则计算。
 
-### 【Q501】在 React 中发现状态更新时卡顿，此时应该如何定位及优化
-1. Profiler 找到慢组件 → 检查是否是高频更新（useMemo/useCallback/React.memo）
-2. 查看是否触发了性能瓶颈 API（animate 读取了 layout 触发重排）
-3. **拆分状态**，将独立的 state 拉到不同组件
-4. **虚拟列表**处理长列表
-5. 使用 **useTransition** 降低不紧急更新的优先级
-6. 检查不必要的重渲染用 `why-did-you-render`
+### Strict Mode 为什么会出现“执行两次”
+开发环境 Strict Mode 会额外调用部分纯函数逻辑，并对 Effect 执行 setup → cleanup → setup，以发现渲染副作用、不可重复初始化和缺失清理。生产环境不会保留这类开发检查，不应通过关闭 Strict Mode 掩盖问题。
 
-### 【Q502】当多次重复点击按钮时，以下三个 Heading 是如何渲染的
-（需看具体代码）React 18 自动批处理：在事件回调中多次 setState 会合并为一次渲染。
+---
+## 状态管理与数据请求
+### Redux 解决什么问题
+Redux 通过单一状态树、action、reducer 和订阅机制，让跨组件状态变更可预测、可追踪，并提供中间件与开发工具。现代 Redux 推荐 Redux Toolkit，减少样板代码并内置合理默认配置。
 
-### 【Q552】关于 setState 以下代码的输出
-（需看具体代码）考点：setState 在 React 18 中的批处理行为变更、类组件的 setState 接收值/函数两种方式的区别、连续 setState 的合并。
+### Context 加 useReducer 能替代 Redux 吗
+小型、低频更新场景可以。它缺少 Redux Toolkit 完整的中间件、DevTools、selector 优化和成熟生态，而且 Context value 变化会影响全部消费者。是否替代取决于规模、更新频率和调试需求。
 
-### 【Q590】React 中什么是合成事件
-**SyntheticEvent**：React 封装原生浏览器事件的跨浏览器包装对象。
-- 统一不同浏览器事件 API（如 event.target、event.preventDefault()）
-- 事件委托（React 17 开始挂载到 root 节点而非 document）
-- 事件池回收（React 17 移除了事件池，不需要 e.persist()）
+### Redux、MobX 与 Zustand 有什么区别
+- Redux Toolkit：显式 action/reducer、不可变更新、工具链成熟，适合复杂可追踪流程
+- MobX：基于 observable 自动追踪依赖，样板少但数据流更隐式
+- Zustand：轻量 Store 与 selector API，上手快，适合中小型客户端状态
 
-### 【Q592】前端项目中有哪些副作用
-- 数据获取（fetch/API 请求）
-- 订阅/取消订阅（websocket、event listener）
-- 手动修改 DOM
-- 计时器（setTimeout/setInterval）
-- 写入 localStorage/cookie
-- 日志上报
-- 修改全局变量/ref
+服务端状态应优先评估 TanStack Query、SWR 或框架数据层。
 
-### 【Q593】React/Vue 中受控组件与不受控组件的区别
-- **受控组件**：value 由 state 控制，onChange 更新 state。表单数据由 React/Vue 管理。
-- **不受控组件**：value 由 DOM 自身管理，通过 ref 获取表单值。
-- React 中受控组件用 useState 管理 input 的 value；不受控组件用 useRef 获取。
+### Redux 中如何处理异步请求
+简单流程可用 `createAsyncThunk`，复杂缓存和请求生命周期优先考虑 RTK Query。Thunk 本质是允许 dispatch 一个函数，该函数可读取 state、执行异步逻辑并继续 dispatch action。
 
-### 【Q600】在 React hooks 中如何模拟 forceUpdate
-```jsx
-const [, forceUpdate] = useReducer(x => x + 1, 0);
-// 或
-const [_, setTick] = useState(0);
-const forceUpdate = () => setTick(t => t + 1);
-// 或使用 useSyncExternalStore / useReducer 实现
+```js
+const fetchUser = createAsyncThunk('user/fetch', async id => {
+  return api.getUser(id);
+});
 ```
 
-### 【Q611】React/Vue 中兄弟组件如何进行通信
-1. **状态提升**：将共享状态提升到最近的公共父组件，通过 props 传递
-2. **全局状态管理**：Redux、Zustand、Context / Pinia、Vuex
-3. **事件总线**：发布订阅（不推荐用在 React 中，但 Vue 可用 EventBus）
-4. **URL 参数**：通过路由参数传递
+### Redux 中如何实现日志中间件
+中间件签名是 `store => next => action`，必须调用并返回 `next(action)`，否则 action 链会被截断。
 
-### 【Q612】React.memo 中是如何实现性能优化的
-React.memo 对组件进行包裹，通过**浅比较**（shallow compare）新旧 props 判断是否需要重渲染：props 相同则复用上次渲染结果（跳过 render 和后续的 diff 比较）。可传入自定义比较函数控制比较逻辑。
+```js
+const logger = store => next => action => {
+  const prevState = store.getState();
+  const result = next(action);
+  console.log({ action, prevState, nextState: store.getState() });
+  return result;
+};
+```
 
-### 【Q614】immer 的原理是什么，为什么它的性能更高
-Immer 基于 **Copy-on-Write + Proxy**：
-1. 用 Proxy 追踪对草稿（draft）的操作
-2. 只复制被修改的部分（结构共享），未修改的保持引用不变
-3. 返回新的不可变状态
+### 同一页面多个组件请求相同 API，如何避免重复请求
+优先把请求交给带缓存与去重的数据层，用统一 query key 共享结果；也可在最近公共父级请求一次后下发。还要定义缓存时效、错误重试、取消、失效和并发竞态，而不是只缓存最终值。
 
-这种结构性共享（Structural Sharing）避免了深拷贝整个 state 树的性能开销，同时保证了不可变性。
+### useFetch 应该考虑哪些边界
+至少包含 loading、error、取消请求、组件卸载、参数变化竞态、响应状态校验、缓存与重试。生产项目优先使用成熟请求库；手写 Hook 主要用于展示思路。
 
-### 【Q615】React.useMemo 与 React.useCallback 是如何进行性能优化的
-- **useMemo**：缓存**计算结果**（值），依赖不变则直接返回缓存值，避免重复执行昂贵的计算
-- **useCallback**：缓存**函数引用**，依赖不变则函数引用不变，配合 React.memo 避免子组件不必要的重渲染
+### 客户端状态与服务端状态有什么区别
+客户端状态由前端拥有，例如弹窗、主题和草稿；服务端状态由远端拥有，具有缓存、过期、重取、并发和一致性问题。把二者分开能避免全局 Store 变成难维护的数据仓库。
 
-### 【Q624】同一页面三个组件请求同一个 API 发送了三次请求，如何优化
-- **请求缓存**：在请求层做缓存（SWR、React Query 的 dedup、共享一个 Promise 引用）
-- **提升到共同父组件**：在父组件请求一次，通过 props/context 下发给三个子组件
-- **状态管理**：放进全局 store（Redux/Zustand）
-- **React Query/SWR** 自动去重（同一时间同一 key 只发一次请求）
+---
+## 性能优化与排查
+### React 性能优化的正确顺序是什么
+先测量，再定位根因，最后选择优化：
+1. React DevTools Profiler 找出慢提交和高频渲染组件
+2. Chrome Performance 区分脚本、样式计算、布局、绘制和网络问题
+3. 检查状态放置、组件边界、列表规模和 props 稳定性
+4. 再使用 memo、虚拟列表、代码分割、缓存或并发 API
+5. 优化后重新测量，确认收益且没有引入错误
 
-### 【Q627】如何优化 React 项目的性能
-同 Q500。
+### 组件为什么会重新渲染
+常见原因包括自身 state 更新、父组件重新渲染、消费的 Context 变化以及外部 Store 快照变化。props 引用变化本身不是普通组件“被触发”的独立来源，而是父组件渲染后子组件默认也会执行；`React.memo` 才会比较 props 决定是否跳过。
 
-### 【Q653】useLayoutEffect 和 useEffect 有什么区别
-- **useEffect**：DOM 更新 + 浏览器**绘制后**异步执行，不阻塞渲染（不阻塞视觉更新）
-- **useLayoutEffect**：DOM 更新后、浏览器**绘制前**同步执行（阻塞渲染）。用于需要在浏览器绘制前读取/修改 DOM 尺寸/位置的场景（避免闪烁）
-- 顺序：DOM 更新 → useLayoutEffect（同步）→ 浏览器绘制 → useEffect（异步）
+### 如何减少不必要的重新渲染
+- 把 state 放到真正需要它的最低公共位置
+- 拆分高频与低频更新区域
+- 通过 `children` 组合隔离不相关子树
+- 必要时使用 `React.memo` 并稳定关键 props
+- 拆分 Context 或使用 selector
+- 避免 Effect 造成级联状态更新
 
-### 【Q659】在 React Hooks 中实现 usePreviouseValue 取上次渲染的值
+不要机械地消灭所有重渲染，便宜且正确的渲染通常比复杂 memo 更好。
+
+### inline object 和 inline function 一定有性能问题吗
+不一定。创建小对象或函数通常很便宜；只有当它破坏了下游 memo、触发 Effect 或导致昂贵第三方组件更新时，稳定引用才有实际价值。应以 Profiler 证据为准。
+
+### 长列表如何优化
+使用虚拟列表只渲染可视区域，保证稳定 key，减少每项渲染成本，并处理动态高度、滚动定位和无障碍。分页或增量加载减少数据量，但不能替代 DOM 虚拟化。
+
+### 状态更新导致输入卡顿时如何排查
+先确认是事件处理、组件 Render、DOM 布局还是网络导致；再缩小高频 state 的影响范围，对昂贵派生计算做缓存，把非紧急列表更新放入 Transition，长列表使用虚拟化，CPU 密集计算移到 Web Worker。
+
+### 代码分割有哪些策略
+- 路由级分割：收益通常最大
+- 重型且低频功能按交互加载
+- 预加载下一步高概率访问的 chunk
+- 避免过度切分造成请求瀑布和 fallback 闪烁
+
+### React Compiler 会让 useMemo 和 useCallback 消失吗
+React Compiler 能基于静态分析自动 memoize 组件和表达式，减少手写 memo 的需要，但不是“React 19 自动内置并默认开启”。它需要单独配置且受代码可分析性约束；语义上必要的稳定引用、第三方 API 边界和经测量的特殊场景仍需判断。
+
+### Profiler API 能提供什么
+`<Profiler>` 的 `onRender` 可获得提交阶段的 `actualDuration`、`baseDuration`、开始时间等信息，用于量化某个子树的渲染成本。React DevTools Profiler 更适合交互式定位；生产分析需注意采样与构建配置的额外开销。
+
+---
+## SSR、Hydration 与 Server Components
+### CSR、SSR、SSG 有什么区别
+- CSR：浏览器下载 JavaScript 后生成主要 UI，交互灵活但首屏和 SEO 依赖资源加载
+- SSR：每次请求在服务端生成 HTML，再在客户端 hydration
+- SSG：构建时生成 HTML，访问快但内容更新需要重新生成或增量策略
+
+实际项目常由框架按路由和数据选择混合渲染。
+
+### 什么是 Hydration
+Hydration 是客户端 React 复用服务端 HTML、建立组件树并绑定交互的过程。服务端和客户端首屏输出必须一致，否则会产生 hydration mismatch，严重时 React 会放弃局部复用并重新客户端渲染。
+
+### 常见 hydration mismatch 原因有哪些
+- 渲染时读取 `window`、`localStorage` 或视口尺寸
+- `Date.now()`、随机数、时区或本地化结果不同
+- 无效 HTML 嵌套被浏览器自动修正
+- 服务端与客户端数据快照不一致
+- 条件分支导致 DOM 结构不同
+
+浏览器专属逻辑放到客户端 Effect，稳定 ID 使用 `useId`，数据应传递同一快照。
+
+### SSR 中能访问 localStorage 吗
+不能。服务端没有 `window`、`document` 和 `localStorage`。可以用 `typeof window !== 'undefined'` 做能力判断，但为了首屏一致性，通常应在客户端 Effect 中读取并提供明确的初始 UI。
+
+### 流式 SSR 是什么
+服务端可先发送应用 shell 和已完成内容，再随数据就绪逐步流出 Suspense 边界内容，改善 TTFB 和首屏呈现。Node 环境常用 `renderToPipeableStream`，Web Streams 环境常用 `renderToReadableStream`。
+
+### 选择性 Hydration 是什么
+Suspense 边界让 React 可以按优先级 hydration 页面不同区域。用户交互的区域可被优先激活，而不是等待整棵树从上到下完成，改善可交互性。
+
+### React Server Components 与 SSR 有什么区别
+- SSR：把组件首屏渲染成 HTML，客户端通常仍需下载对应组件代码并 hydration
+- RSC：组件只在服务端执行，结果以 RSC Payload 传给客户端，Server Component 自身代码不进入客户端包
+
+二者可以组合。RSC 需要框架和打包器集成，不是仅调用一个 React API 就能完整落地。
+
+### Server Component 与 Client Component 如何划分
+Server Component 适合靠近数据源、读取后端资源和减少客户端 JavaScript；Client Component 适合 state、Effect、浏览器 API 和事件交互。边界之间传递的 props 必须可序列化，敏感信息不能越过服务端到客户端边界。
+
+### use API 有什么作用
+React 19 的 `use(resource)` 可以在渲染中读取 Promise 或 Context。读取未完成 Promise 会触发 Suspense，拒绝则交给 Error Boundary。与普通 Hooks 不同，`use` 可在条件和循环中调用，但仍必须在组件或 Hook 内调用，也不能放在 `try/catch` 中吞掉挂起行为。
+
+---
+## React 版本与现代特性
+### React 17 的主要变化是什么
+React 17 主要为渐进升级铺路：事件委托从 `document` 移到 React 根容器、移除合成事件池、新 JSX Transform 得到支持，并调整部分 Effect 清理行为。它没有引入新的面向开发者核心特性。
+
+### React 18 的主要变化是什么
+- `createRoot` 与 `hydrateRoot`
+- 并发渲染基础能力
+- 自动批处理
+- `startTransition`、`useTransition`、`useDeferredValue`
+- `useId`、`useSyncExternalStore`、`useInsertionEffect`
+- Suspense SSR、流式渲染和选择性 hydration 改进
+- Strict Mode 开发检查增强
+
+“Concurrent Mode”不再是一个需要整体打开的独立模式，而是由并发根和具体功能逐步采用相关能力。
+
+### React 19 的主要变化是什么
+- Actions 与表单 action，统一 pending、error、乐观更新和提交结果处理
+- `useActionState`、`useOptimistic`、`use`，以及 React DOM 的 `useFormStatus`
+- 函数组件可把 `ref` 作为 prop，ref cleanup 函数得到支持
+- `<Context value={...}>` 可直接作为 Provider
+- 原生支持文档 metadata、样式表优先级、异步脚本和资源预加载 API
+- Server Components 与 Server Actions 相关能力进入稳定发布面，但底层打包器集成 API 仍需跟随框架
+- 改善 hydration 和错误报告
+
+React Compiler 是独立工具链能力，不能简单当作“安装 React 19 就自动获得”。
+
+### React 19 Actions 解决什么问题
+Action 可以接收异步函数，并把 pending、错误、表单重置和乐观更新串成统一流程。`useActionState` 管理 action 结果，`useFormStatus` 读取父表单提交状态，`useOptimistic` 在请求完成前展示预测结果。
+
+### useOptimistic 的适用场景是什么
+它适合点赞、评论、状态切换等成功概率高且容易回滚的交互。必须设计失败提示、回滚/重试和重复提交策略；资金、权限等高风险操作不应只依赖无确认的乐观 UI。
+
+### React 19.2 值得关注什么
+React 19.2 增加了 `<Activity>`、`useEffectEvent`、面向 Server Components 的 `cacheSignal`，并增强性能分析与服务端渲染能力。面试中应说明这些是 19.2 能力，避免和 React 19.0 的首发特性混为一谈。
+
+### useEffectEvent 解决什么问题
+它允许 Effect 中的非响应式逻辑始终读取最新 props/state，而不因为这些值变化重新同步整个 Effect。返回的 Effect Event 只能从 Effect 相关逻辑调用，不能用来逃避本应声明的依赖。
+
+### Activity 组件解决什么问题
+`<Activity>` 用于隐藏和恢复一部分 UI：隐藏时可清理 Effect，同时保留组件状态，并让隐藏内容以更低优先级准备。它适合标签页预渲染、返回页面状态保留等场景，不等同于简单的 CSS `display: none`。
+
+---
+## 工程实践与架构设计
+### 新加入项目后如何快速把 React 应用跑起来
+1. 阅读 README、CONTRIBUTING 和部署文档
+2. 确认 Node、包管理器与锁文件版本，不混用 npm、pnpm、yarn
+3. 安装依赖并复制环境变量模板，确认哪些变量可以暴露到客户端
+4. 运行 lint、类型检查、测试和开发服务器
+5. 从入口、路由、状态层、请求层和构建配置理解目录
+6. 用一个小改动走通本地开发、提交检查和预览环境
+
+### 如何设计 React 组件 API
+- 明确受控与非受控模式，避免双重数据源
+- 优先组合和语义化 props，避免大量互斥布尔参数
+- 支持 `className`、`style`、ref 和必要的原生属性透传
+- 保持事件命名和参数一致
+- 为 loading、empty、error、disabled 和边界数据设计状态
+- 默认满足键盘操作、焦点管理和 ARIA 要求
+
+### 如何设计 UI 组件库
+从 Design Token、基础组件和组合规则开始；统一 API、主题、样式隔离和无障碍；提供文档与交互示例；输出 ESM 并验证 tree shaking；使用单元测试、交互测试、视觉回归和多框架/多版本兼容矩阵；同时管理版本、变更日志与迁移指南。
+
+### Render Props、HOC 与自定义 Hook 如何选择
+- 自定义 Hook：复用无 UI 的有状态逻辑，现代代码首选
+- Render Props：调用方需要完全控制渲染结构时仍有价值
+- HOC：适合横切增强或维护旧代码，但要处理 props 冲突、ref 和调试层级
+
+三者都不等于共享同一份状态。
+
+### React 应用如何做错误治理
+按层级设置 Error Boundary，提供可恢复的 fallback；事件和请求错误单独处理；上报错误、组件栈、版本、路由和用户操作上下文；避免记录隐私；对动态 import 失败、离线、权限和接口降级设计重试或回退。
+
+### 如何测试 React 组件
+优先测试用户可观察行为而不是内部 state：使用语义化查询模拟点击、输入和键盘操作；对网络使用可控 mock；覆盖 loading、成功、空数据、错误和竞态；关键流程再使用端到端测试。不要把快照测试当作主要断言。
+
+### 如何保证组件可访问性
+优先使用原生语义元素；表单具有 label；交互元素支持键盘；Modal 正确管理焦点、Esc 和焦点恢复；状态变化通过合适的 ARIA 通知；颜色对比满足要求。可结合 eslint-plugin-jsx-a11y、Testing Library 和 axe 自动检查。
+
+### 如何组织大型 React 项目
+按业务特性而不是纯文件类型组织模块，明确页面、领域组件、共享 UI、数据访问和工具边界；限制跨层导入；让状态靠近使用位置；公共抽象需由多个真实场景推动，避免提前建立“万能组件”。
+
+---
+## 常见手写题
+### 使用 useState 实现计数器
 ```jsx
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => { ref.current = value; });
-  return ref.current; // 返回上一次的值
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <output>{count}</output>
+      <button onClick={() => setCount(value => value + 1)}>+1</button>
+      <button onClick={() => setCount(value => value - 1)}>-1</button>
+      <button onClick={() => setCount(0)}>重置</button>
+    </div>
+  );
 }
 ```
 
-### 【Q699】在虚拟 DOM 中进行 diff 算法时，介绍当根据 key 对数组进行重用时的算法
-1. 遍历新 children，为每个元素建立 key → index 的 map
-2. 遍历旧 children，对每个结点检查其 key 是否在新 map 中：
-   - 在：如果可在对应位置复用，则直接移动（Fiber 架构中的 Placement）
-   - 不在：旧结点需要被删除（标记 Deletion）
-3. 新 children 中有但旧 map 中没有的 key → 新插入（标记 Placement）
-4. 复杂度 O(n)
+### 实现 usePrevious
+Effect 在提交后更新 ref，因此本次渲染读取到的是上一次提交保存的值。
 
-### 【Q474】在 react 中，以下父子组件的 useEffect/useLayoutEffect 顺序如何
-**子组件的 effect 先于父组件执行**。挂载时：子 useEffect → 父 useEffect。Commit Phase 中的 useLayoutEffect 和 useEffect 的调用顺序均是**从子到父**。Unmount 时：cleanup 子 → 父。
+```jsx
+function usePrevious(value) {
+  const ref = useRef();
 
-### 【Q749】React18 有哪些新特性
-1. **Concurrent Mode（并发特性）**：并发渲染，可中断
-2. **自动批处理**：所有更新都批量（不只在事件回调）
-3. **Transitions**：`startTransition` / `useTransition` 标记低优先级更新
-4. **Suspense 改进**：支持服务端 Suspense、Transition 中的 Suspense
-5. **新的 Hooks**：`useId`、`useDeferredValue`、`useSyncExternalStore`、`useInsertionEffect`
-6. **createRoot API**：替代 ReactDOM.render
-7. **Strict Mode 行为变化**：mount-unmount-remount 不修改 UI
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
 
-### 【Q750】React19 有哪些新特性
-1. **React Compiler（React Forget）**：自动 memo，开发者不再需要手动 useMemo/useCallback
-2. **Server Components（RSC）**：正式稳定，服务端组件
-3. **Actions**：`useActionState` / `useFormStatus` / `useOptimistic`（表单 actions 支持）
-4. **Document Metadata**：`<title>`、`<meta>` 等原生支持
-5. **ref as prop**：ref 可像普通 prop 传递
-6. **改进的错误报告**
-7. Suspense 等进一步改进
+  return ref.current;
+}
+```
 
-# React
+### 实现一个基础 useFetch
+下面用于面试展示取消与状态建模；生产项目还应考虑缓存、重试、竞态策略和框架数据层。
 
-## 核心概念篇
+```jsx
+function useFetch(url) {
+  const [state, setState] = useState({
+    data: null,
+    error: null,
+    loading: false,
+  });
 
-1. **React的虚拟DOM是什么？它有什么优势？** **参考答案：** 虚拟 DOM（Virtual DOM）本质上是使用 JavaScript 对象来描述真实 DOM 结构的轻量级抽象表示。它的核心优势在于：① 减少昂贵的真实 DOM 操作，通过 JS 层面的计算找出最小差异后再更新视图；② 保证跨平台能力，因为它是纯 JS 对象，除了渲染到浏览器 DOM，还可以映射到 Native、Canvas 等环境（如 React Native）；③ 提升开发体验，让开发者只需关注状态变化，无需手动维护复杂的 UI 更新逻辑。
-    
-2. **React的diff算法是如何工作的？** **参考答案：** React 的 Diff 算法是一种时间复杂度为 O(n) 的启发式算法，基于三个核心策略：① 同层比较（Tree Diff）：只对比同一层级的节点，忽略跨层级移动，若节点跨层则直接销毁重建；② 类型检查（Component Diff）：如果新旧节点类型不同，React 会判定为完全不同的树，直接销毁旧节点并创建新节点；③ Key 标识（Element Diff）：对于同级列表节点，通过 key 来判断节点是否仅仅是位置发生变化，从而实现节点的精准复用与移动。
-    
-3. **React的合成事件是什么？为什么要使用合成事件？** **参考答案：** 合成事件（SyntheticEvent）是 React 自己实现的一套事件系统，它是对浏览器原生事件的跨浏览器兼容封装。使用它的原因主要有三点：① 性能优化：利用事件委托机制，将事件统一绑定在根容器上，大幅减少内存占用和监听器数量；② 抹平浏览器差异：提供统一的 API 接口，解决不同浏览器下事件对象的兼容性问题；③ 更好的跨端能力：脱离底层 DOM 依赖，使得 React 逻辑更容易移植到 React Native 等非浏览器环境。
-    
-4. **React的setState是同步还是异步的？为什么？** **参考答案：** `setState` 本身并不是一个异步 API，而是 React 的状态更新表现为“调度式”的异步行为。这是因为 React 为了实现性能优化，采用了批处理（Batching）机制。当调用 `setState` 时，React 不会立即修改状态并重新渲染，而是将更新任务放入队列中，在合适的时机（如微任务阶段或事务结束时）统一处理。这种设计避免了频繁触发重渲染导致的布局抖动（Layout Thrashing）。
-    
-5. **React的Fiber架构解决了什么问题？** **参考答案：** Fiber 架构主要解决了复杂应用下的主线程阻塞问题。在 React 15 及之前的 Stack Reconciler 中，渲染是同步且不可中断的递归过程，大组件树会导致页面假死。Fiber 架构将渲染任务拆分为一个个小的工作单元（Fiber 节点），利用链表结构替代递归调用栈，实现了可中断、可恢复、带优先级的增量渲染，从而赋予了 React 真正的并发能力，确保高优先级交互（如用户输入）不被低优先级任务阻塞。
-    
-6. **React的 reconciliation 过程是怎样的？** **参考答案：** Reconciliation（协调）是 React 用于更新 UI 的核心算法过程。当组件状态或属性改变时，React 会生成新的 Virtual DOM 树，并与旧的树进行对比。协调过程遵循深度优先遍历，首先判断根节点类型是否相同，若不同则完全替换子树；若相同则保留 DOM 节点，仅更新变化的属性，并递归比对子节点。最终计算出最小化 DOM 操作的补丁（Patch），并在 Commit 阶段应用到真实 DOM 上。
-    
-7. **React的key属性有什么作用？** **参考答案：** `key` 是 React 识别列表项唯一性的核心标识，帮助 Diff 算法精准匹配新旧列表中的同一个节点。其作用是实现节点复用，避免无效的 DOM 销毁和重建，从而大幅提升列表增删、排序时的性能。同时，稳定的 key 还能防止包含本地状态的组件（如输入框）在列表变动时发生状态错位。注意，key 仅在 React 内部使用，不会作为 props 传递给组件。
-    
-8. **React的批处理更新机制是如何实现的？** **参考答案：** React 内部维护了一个更新队列（Update Queue）。当触发状态更新时，更新请求会被暂存到队列中，而不是立即执行。在 React 18 之前，批处理仅限于 React 合成事件和生命周期中；而在 React 18 引入 Automatic Batching 后，无论是 `setTimeout`、`Promise` 还是原生事件中的多次 `setState`，都会被自动收集并在微任务阶段统一处理，最终只触发一次重渲染，极大提升了性能。
-    
-9. **React的并发模式（Concurrent Mode）是什么？** **参考答案：** 并发模式是 React 18 引入的新特性，它允许 React 在渲染过程中中断工作，优先响应用户输入。其核心是基于 Fiber 架构的时间切片（Time Slicing）技术，将大型渲染任务拆分为多个小片。如果在执行过程中检测到更高优先级的任务（如点击、按键），React 会暂停当前渲染，让出主线程控制权，待空闲时再恢复，从而构建出高度响应式的用户界面。
-    
-10. **React的优先级调度是如何实现的？** **参考答案：** React 采用 Lane（车道）模型来实现优先级调度。Lane 使用 32 位二进制变量（位掩码）来表示不同的任务优先级，通过高效的位运算来判断和管理优先级。调度器（Scheduler）会根据任务的 Lane 将其分配到不同的优先级通道（如 SyncLane 代表同步高优先级，DefaultLane 代表普通优先级）。高优先级任务可以打断低优先级任务，相同优先级的任务则会被合并批量处理。
-    
+  useEffect(() => {
+    const controller = new AbortController();
+    setState({ data: null, error: null, loading: true });
 
-## 源码实现篇
+    fetch(url, { signal: controller.signal })
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => setState({ data, error: null, loading: false }))
+      .catch(error => {
+        if (error.name !== 'AbortError') {
+          setState({ data: null, error, loading: false });
+        }
+      });
 
-11. **React.createElement的实现原理是什么？** **参考答案：** `React.createElement` 是 JSX 编译后的核心函数。它接收元素类型（type）、配置对象（config，包含 key、ref 和 props）以及子元素（children）作为参数。其内部逻辑主要是处理这些参数，构建并返回一个普通的 JavaScript 对象（即 ReactElement）。该对象包含 `$$typeof`（用于防御 XSS 攻击的安全标识）、`type`、`key`、`ref` 和 `props` 等核心属性，用于后续生成虚拟 DOM。
-    
-12. **React.render的内部实现流程是怎样的？** **参考答案：** 以 React 18 的 `createRoot().render()` 为例，其内部流程主要分为：① 创建 Fiber Root 和 Host Root 节点；② 将传入的 React Element 封装为更新任务（Update），加入更新队列；③ 触发调度器（Scheduler）开始工作；④ 进入 Render 阶段，构建 WorkInProgress 树并进行 Diff；⑤ 进入 Commit 阶段，将副作用同步应用到真实 DOM；⑥ 执行 useEffect 等异步副作用。
-    
-13. **Fiber节点的结构是怎样的？包含哪些关键属性？** **参考答案：** Fiber 节点是一个 JS 对象，核心属性包括：① 静态数据结构：`type`（组件类型）、`key`、`tag`（组件类型标识）；② 链表指针：`child`（第一个子节点）、`sibling`（下一个兄弟节点）、`return`（父节点）；③ 状态与属性：`memoizedState`（Hook 链表状态）、`memoizedProps`、`pendingProps`；④ 更新相关：`updateQueue`（更新队列）、`lanes`（优先级）；⑤ 双缓冲：`alternate`（指向另一棵树的对应节点）。
-    
-14. **React的调度器（Scheduler）是如何工作的？** **参考答案：** Scheduler 是 React 的调度中心，核心职责是管理任务队列和执行时间切片。它利用 `MessageChannel` 实现异步宏任务调度。在执行任务时，Scheduler 会开启一个 `while` 循环（workLoop），每处理完一个工作单元就检查当前时间片（默认约 5ms）是否耗尽。如果超时，则主动让出主线程（yield），等待浏览器空闲时再继续执行下一个切片，从而实现可中断渲染。
-    
-15. **React的渲染器（Renderer）是如何与Fiber协调的？** **参考答案：** Renderer（如 react-dom）负责将 Fiber 节点转换为特定平台的实际视图。在协调过程中，Renderer 提供了宿主配置（Host Config），定义了如何创建、更新、删除节点以及提交副作用。Fiber 协调器在 Render 阶段只进行内存中的 Diff 计算并生成 Effect List，随后交由 Renderer 在 Commit 阶段执行真实的 DOM 操作，实现了核心逻辑与平台渲染的解耦。
-    
-16. **React的commit阶段具体做了哪些事情？** **参考答案：** Commit 阶段是不可中断的同步过程，主要分为三个子阶段：① Before Mutation：读取 DOM 状态（如执行 getSnapshotBeforeUpdate）；② Mutation：执行真实的 DOM 增删改操作，卸载旧节点，插入新节点；③ Layout：执行 DOM 相关的生命周期和 Hook（如 useLayoutEffect、componentDidMount/Update）。最后还会异步调度 useEffect 的执行。
-    
-17. **React的reconciliation阶段是如何遍历Fiber树的？** **参考答案：** 协调阶段放弃了传统的递归遍历，改用基于链表的循环遍历。从根节点开始，通过 `child` 指针向下深入，处理完当前节点后通过 `sibling` 指针向右平移，如果没有兄弟节点则通过 `return` 指针向上回溯。这种深度优先的链表遍历方式使得遍历过程可以随时记录当前进度，从而实现任务的暂停与恢复。
-    
-18. **React的workLoop是如何实现的？** **参考答案：** `workLoop` 是 Fiber 调度的核心执行循环。在并发模式下，其伪代码逻辑为：`while (workInProgress !== null && !shouldYieldToHost()) { workInProgress = performUnitOfWork(workInProgress); }`。它不断取出当前的工作单元进行处理，并在每次处理后检查是否需要让出主线程。如果时间片用完或存在更高优先级任务，循环就会退出，将控制权交还给浏览器。
-    
-19. **React的lane模型是什么？如何表示优先级？** **参考答案：** Lane 模型是 React 17 引入的优先级管理系统，取代了早期的 expirationTime。它使用 32 位二进制数（位掩码）来表示优先级，每一位代表一个“车道”。例如，`SyncLane` 是最高优先级（最右侧的位），`DefaultLane` 是常规优先级。通过按位与（&）等位运算，React 能够极其高效地判断两个更新的优先级关系、合并相同优先级的任务，以及提取最高优先级任务。
-    
-20. **React的expirationTime机制是如何计算的？** **参考答案：** `expirationTime` 是 React 16 引入但在 17/18 中被 Lane 模型取代的旧机制。它的计算公式大致为：`currentTime + timeout`。其中 `timeout` 根据任务优先级决定（如用户交互为 0，普通数据请求为 5000ms）。通过比较过期时间与当前时间，React 判断任务是否已经超时，超时任务会被赋予更高优先级立即执行。由于其在批量处理和优先级合并时存在精度和计算缺陷，最终被更优雅的 Lane 模型替代。
-    
+    return () => controller.abort();
+  }, [url]);
 
-## 性能优化篇
+  return state;
+}
+```
 
-21. **React.memo的工作原理是什么？** **参考答案：** `React.memo` 是一个高阶组件，用于缓存组件的渲染结果。它在内部对传入的 props 进行浅比较（Shallow Compare），如果新旧 props 完全相同，则跳过当前组件的重渲染，直接复用上一次的渲染结果。这可以有效避免父组件更新导致的不必要的子组件重渲染，但需注意如果 props 包含引用类型且未做稳定化处理，可能会导致 memo 失效。
-    
-22. **useMemo和useCallback的区别和实现原理？** **参考答案：** 两者都用于缓存以避免不必要的重复计算或渲染。`useMemo` 缓存的是**计算结果的值**，只有当依赖项变化时才重新执行工厂函数；`useCallback` 缓存的是**函数的引用**，等价于 `useMemo(() => fn, deps)`。它们的底层实现都是依附于 Fiber 节点的 Hook 链表，通过对比依赖数组来决定是返回缓存值还是重新计算。
-    
-23. **React的lazy和Suspense是如何实现的？** **参考答案：** `React.lazy` 接收一个返回 Promise 的动态 import 函数，在渲染时会创建一个特殊的 Lazy 组件。当首次渲染该组件时，React 会捕获抛出的 Promise，并向上寻找最近的 `Suspense` 边界，暂时渲染其 `fallback` UI。当 Promise resolve 后，React 会重新触发渲染，加载并渲染真正的组件。结合并发模式，Suspense 还能实现流式 SSR 和选择性注水。
-    
-24. **如何实现React的shouldComponentUpdate？** **参考答案：** `shouldComponentUpdate(nextProps, nextState)` 是 Class 组件的生命周期方法，在渲染前被调用。开发者可以通过自定义逻辑对比新旧 state 和 props，返回 true 则继续渲染，返回 false 则跳过更新。在现代 React 中，通常推荐使用函数组件配合 `React.memo` 来实现相同的性能优化目的，或者通过 `useMemo/useCallback` 细粒度控制。
-    
-25. **React的Profiler API是如何收集性能数据的？** **参考答案：** `<Profiler>` 组件包裹需要测量的组件树，它接收 `onRender` 回调。每当包裹内的组件提交更新时，React 会将渲染耗时（包括 Render 阶段和 Commit 阶段的耗时）、触发更新的原因（如 setState、props change）等指标传递给该回调。这些数据可用于定位性能瓶颈，但 Profiler 仅在开发环境或显式启用的生产构建中生效。
-    
-26. **React的并发模式如何帮助性能优化？** **参考答案：** 并发模式通过将渲染任务分片和赋予优先级来优化性能。它允许 React 准备多个版本的 UI，并将非紧急更新（如大数据列表过滤）降级为 Transition。当用户进行紧急交互时，React 可以中断低优先级渲染，确保输入框不卡顿。此外，结合 `useDeferredValue` 和 `startTransition`，可以将重型计算延后到空闲期执行，彻底解决长任务阻塞主线程的问题。
-    
-27. **React的hydration过程是什么？** **参考答案：** Hydration（注水）是 SSR（服务端渲染）专属的过程。客户端加载 HTML 后，React 会复用服务端生成的真实 DOM 节点，而不是重新创建。React 会遍历服务端生成的 DOM 和客户端生成的 Virtual DOM，将事件监听器绑定到现有 DOM 上，并激活组件状态。如果两者结构不一致，React 会放弃复用并回退到客户端全量渲染。
-    
-28. **React的代码分割是如何实现的？** **参考答案：** 代码分割主要通过动态 `import()` 语法和 `React.lazy` 实现。打包工具（如 Webpack/Vite）会将动态导入的模块拆分为独立的 Chunk 文件。在运行时，当路由切换或条件满足触发懒加载组件时，浏览器才会去请求对应的 JS 文件。配合 Suspense 展示 Loading 状态，可以显著减小首屏包体积，加快初始加载速度。
-    
-29. **React的并发渲染如何避免卡顿？** **参考答案：** 并发渲染通过“时间切片”机制避免卡顿。浏览器通常以 60fps（每帧约 16.6ms）刷新屏幕，React 将渲染工作切分为小于 5ms 的小块。每完成一块，React 都会检查是否即将超出帧预算，如果是，则主动让出主线程，把控制权交还给浏览器去处理用户输入和绘制动画，从而保证界面的流畅响应。
-    
-30. **React的优先级中断机制是如何工作的？** **参考答案：** 当中断发生时，React 的调度器会停止执行当前的 `workLoop`。此时，正在处理的 WorkInProgress 树会被保留在内存中，不会被丢弃。当浏览器空闲或高优先级任务处理完毕后，调度器会恢复 `workLoop`，从上次中断的 Fiber 节点继续向下遍历和处理。这种机制确保了低优先级任务不会饿死，也不会阻塞高优先级交互。
-    
+### 使用 Render Props 请求数据
+```jsx
+class Fetch extends React.Component {
+  state = { data: null, error: null, loading: true };
 
-## Hooks机制篇
+  componentDidMount() {
+    fetch(this.props.url)
+      .then(response => response.json())
+      .then(data => this.setState({ data, loading: false }))
+      .catch(error => this.setState({ error, loading: false }));
+  }
 
-31. **useState的实现原理是什么？** **参考答案：** `useState` 的底层依赖于 Fiber 节点上的单向链表结构。首次渲染时，React 会创建一个 Hook 对象（包含 `memoizedState` 和 `queue`），并将其挂载到当前 Fiber 的 `memoizedState` 链表上。调用 `setState` 时，会将更新动作推入队列并触发调度。再次渲染时，React 会根据 Hook 的调用顺序从链表中恢复对应的状态，并计算新的 state 值。
-    
-32. **useEffect的执行时机和清理机制？** **参考答案：** `useEffect` 是在 Commit 阶段之后**异步执行**的，不会阻塞浏览器绘制。它的执行时机是在浏览器完成布局和绘制之后。清理机制方面，React 会在执行新的 Effect 之前，先同步执行上一次 Effect 返回的清理函数（Cleanup Function）；在组件卸载时，也会执行最后一次清理函数，以防止内存泄漏。
-    
-33. **useLayoutEffect和useEffect的区别？** **参考答案：** 核心区别在于执行时机。`useLayoutEffect` 在 DOM 变更后、浏览器绘制前**同步执行**，因此它会阻塞页面渲染，适合用于测量 DOM 尺寸或在绘制前同步修改 DOM 以避免闪烁。而 `useEffect` 是异步执行的，不阻塞绘制，适合用于数据请求、订阅等不需要立即同步修改 DOM 的副作用。
-    
-34. **useReducer的实现原理？** **参考答案：** `useReducer` 适用于复杂的状态逻辑。它的底层实现与 `useState` 类似，也是存储在 Fiber 的 Hook 链表中。区别在于它的更新队列（queue）存储的是 action 而不是直接的 state。当 dispatch 一个 action 时，React 会在下一次渲染时，使用传入的 reducer 函数结合当前的 state 和 action 计算出新的 state。
-    
-35. **useContext的实现机制？** **参考答案：** `useContext` 接收一个 Context 对象并返回当前的 Context 值。其底层原理是：当组件调用 `useContext` 时，React 会沿着当前 Fiber 树的 `return` 指针向上查找，直到找到匹配的 Context Provider 节点，读取其 `_currentValue`。如果 Provider 的值发生变化，所有消费该 Context 的子组件都会被标记为需要更新。
-    
-36. **自定义Hooks的实现原理？** **参考答案：** 自定义 Hooks 本质上只是普通的 JavaScript 函数，其命名必须以 `use` 开头。它没有特殊的底层魔法，之所以能工作，是因为它内部调用了内置 Hooks（如 useState、useEffect）。由于每次渲染都会重新执行函数组件，自定义 Hooks 内的内置 Hooks 依然遵循严格的调用顺序和 Fiber 链表绑定规则，从而实现逻辑的复用。
-    
-37. **Hooks的调用顺序为什么必须一致？** **参考答案：** 因为 React 依赖 Hooks 的**调用顺序**来匹配状态。在 Fiber 节点上，所有的 Hooks 是通过单向链表连接的。React 在更新时，按照代码从上到下的执行顺序，依次从链表中取出对应的 Hook 节点。如果在条件语句或循环中使用 Hooks，会导致某次渲染时跳过了某个 Hook，后续的 Hook 就会错误地关联到错误的状态，引发严重 Bug。
-    
-38. **Hooks是如何存储在Fiber节点中的？** **参考答案：** Hooks 存储在 Fiber 节点的 `memoizedState` 属性上。对于函数组件，`memoizedState` 指向一个单向链表，链表的每个节点代表一个 Hook。每个 Hook 节点包含 `memoizedState`（当前状态值）、`queue`（更新队列）、`next`（指向下一个 Hook）等属性。这种链表结构使得 React 能够通过顺序遍历精确恢复每一个 Hook 的状态。
-    
-39. **useRef的实现原理和用途？** **参考答案：** `useRef` 返回一个包含 `current` 属性的普通 JS 对象 `{ current: initialValue }`。其底层实现非常简单：在首次渲染时创建一个普通对象挂在 Hook 链表上，后续渲染直接从链表中取出该对象返回，因此它的引用在整个组件生命周期内保持不变。常用于获取 DOM 引用、保存定时器 ID 或存储任何不需要触发重渲染的可变值。
-    
-40. **useImperativeHandle的作用和实现？** **参考答案：** `useImperativeHandle` 通常与 `forwardRef` 配合使用，用于自定义暴露给父组件的 ref 实例。它的实现原理是在 Commit 阶段（Layout 子阶段），将传入的工厂函数返回值赋给 ref 对象的 `current` 属性。这样父组件通过 ref 调用方法时，实际上调用的是我们自定义暴露的方法，而不是底层的 DOM 节点，实现了更好的封装性。
-    
+  render() {
+    return this.props.children(this.state);
+  }
+}
 
-## 高级特性篇
+<Fetch url="/api/user">
+  {({ data, error, loading }) => {
+    if (loading) return <Loading />;
+    if (error) return <ErrorView error={error} />;
+    return <User user={data} />;
+  }}
+</Fetch>;
+```
 
-41. **React的context机制是如何实现的？** **参考答案：** Context 的实现依赖于 Fiber 树的上下文传播机制。Provider 组件在渲染时，会创建一个 Context 对象并挂载到自身的 Fiber 节点上。当 Consumer（或 useContext）所在的组件更新时，React 会沿着 `return` 链向上遍历，检查路径上是否存在匹配的 Provider。如果 Provider 的值发生改变，React 会强制触发所有消费者的重渲染，绕过常规的 memo 优化。
-    
-42. **React的错误边界（Error Boundary）是如何工作的？** **参考答案：** 错误边界目前只能通过 Class 组件的 `componentDidCatch` 和 `getDerivedStateFromError` 生命周期实现。当子组件树在渲染、生命周期或构造函数中抛出 JS 错误时，React 会冒泡查找最近的 Error Boundary。找到后，React 会调用其生命周期更新状态以渲染 Fallback UI，并阻止错误导致整个应用崩溃。注意它无法捕获事件处理和异步代码中的错误。
-    
-43. **React的portal是如何实现的？** **参考答案：** Portal 提供了一种将子节点渲染到存在于父组件以外的 DOM 节点的能力。其底层实现是在 Fiber 树中创建一个特殊的 `HostPortal` 类型的节点。这个节点虽然逻辑上属于当前的组件树，但在 Commit 阶段，Renderer 会将其子节点挂载到指定的外部 DOM 容器中，而不是默认的父 DOM 节点下，常用于实现模态框、Tooltip 等需要突破 CSS 层叠上下文的场景。
-    
-44. **React的并发模式下的自动批处理？** **参考答案：** 在并发模式下，React 18 实现了 Automatic Batching。无论更新发生在同步代码、`setTimeout`、`Promise.then` 还是原生事件中，React 都会将这些更新收集起来，默认在微任务阶段统一处理。这意味着连续多次 `setState` 只会触发一次重渲染。如果需要强制同步更新，可以使用 `flushSync`，但这通常会损害并发性能。
-    
-45. **React的transition API是如何实现的？** **参考答案：** Transition API（如 `startTransition` 和 `useTransition`）允许开发者将某些更新标记为“非紧急的过渡更新”。其底层实现是为这些更新分配一个特殊的低优先级 Lane（如 `TransitionLane`）。当高优先级更新（如用户输入）到来时，调度器可以中断 Transition 渲染。`useTransition` 还会返回一个 `isPending` 状态，方便开发者在后台准备新 UI 时展示过渡指示器。
-    
-46. **React的server components原理？** **参考答案：** React Server Components (RSC) 允许组件在服务端运行并直接访问数据库或文件系统。它们在构建或服务端请求时被渲染，输出一种特殊的、紧凑的序列化格式（RSC Payload），而不是 HTML 字符串。客户端接收到 Payload 后，React 会将其与客户端组件树融合，按需 hydrate。RSC 不包含业务逻辑到客户端包中，极大减小了 JS 体积。
-    
-47. **React的streaming SSR是如何工作的？** **参考答案：** Streaming SSR 结合了 Suspense 和服务端渲染。服务端不再等待所有数据准备好才发送 HTML，而是先发送带有 Suspense fallback 的外壳 HTML。当某个 Suspense 边界内的数据准备好后，服务端会通过流（Stream）发送该部分的真实 HTML 和一个内联脚本，客户端接收到后无缝替换掉 fallback 内容。这实现了更快的首屏响应（FCP）。
-    
-48. **React的hydration with Suspense？** **参考答案：** 传统 SSR 的 hydration 是自上而下同步进行的，一旦遇到慢组件就会阻塞整个页面的交互。结合 Suspense 的 Selective Hydration（选择性注水）允许 React 优先 hydrate 用户正在交互的部分或视口内的部分。未被注水的 Suspense 边界会保持服务端生成的静态 HTML，直到 React 在空闲时或用户交互时才对其进行注水，大幅提升了 TTI（可交互时间）。
-    
-49. **React的并发渲染中的优先级继承？** **参考答案：** 优先级继承是指当一个低优先级的更新（如 Transition）阻塞了高优先级更新所需的资源或路径时，React 会临时提升该低优先级任务的 Lane，使其以高优先级执行，防止“饥饿”现象。在 React 的 Lane 模型中，这通常体现在调度器在处理更新队列时，对相互依赖的任务进行优先级对齐，确保紧急任务不会因为排在长任务后面而被无限期推迟。
-    
-50. **React的并发模式下的状态重置机制？** **参考答案：** 在并发模式下，如果一个正在渲染的低优先级任务被高优先级任务打断，并且高优先级任务导致了该组件的卸载或关键 props 改变，React 可能会直接丢弃（Abort）之前已完成的低优先级 WorkInProgress 树。当下次再恢复或重新触发该组件的渲染时，由于之前的中间状态已被废弃，组件会从最新的 props/state 重新开始渲染，这就是并发模式下的状态重置与防抖机制。
+### 实现命令式 Message API
+真实组件库应使用单一容器和队列，避免每条消息创建一个独立 React Root。下面展示最小思路：
+```jsx
+import { createRoot } from 'react-dom/client';
+
+let root;
+let container;
+
+function ensureRoot() {
+  if (!container) {
+    container = document.createElement('div');
+    container.setAttribute('aria-live', 'polite');
+    document.body.appendChild(container);
+    root = createRoot(container);
+  }
+  return root;
+}
+
+export function showMessage(content) {
+  ensureRoot().render(<div role="status">{content}</div>);
+}
+```
+
+### 使用 useReducer 实现 forceUpdate 是否合理
+可以通过递增无业务意义的状态触发渲染，但通常说明数据没有正确建模。应先检查是否直接修改了对象、是否把 UI 数据错误放进 ref，或外部 Store 是否缺少订阅。
+
+```jsx
+const [, forceUpdate] = useReducer(value => value + 1, 0);
+```
+
+### 如何实现一个可取消的防抖 Hook
+```jsx
+function useDebouncedValue(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+```
+
+### 如何回答代码输出题
+先按以下顺序推导：
+1. 标记每次渲染的 state 快照与闭包
+2. 区分值更新和函数式更新
+3. 确认更新是否处于同一批次
+4. 区分 Render、DOM Commit、layout Effect 和 passive Effect
+5. 检查 Strict Mode 是否只存在于开发环境
+
+题目缺少具体代码时不能直接断言输出。

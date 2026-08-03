@@ -1,0 +1,4 @@
+interface:
+  display_name: "前端秋招能力画像"
+  short_description: "以证据持续更新 React 与 TypeScript 秋招能力画像"
+  default_prompt: "Use $maintain-frontend-profile to update my React and TypeScript autumn-recruitment skill profile from recent notes."

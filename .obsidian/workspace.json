@@ -8,31 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "d7b0b7e27342c6bc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "前端/面试/项目/Quota&火山BABI/旧简历实习/分页导出 Excel ⌚️🌟.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "分页导出 Excel ⌚️🌟"
-            }
-          },
-          {
             "id": "7ff1757ccc611a66",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/项目笔记/代达罗斯/模式/以schema为中心的.md",
+                "file": "自媒体/尝试自己的风格.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "以schema为中心的"
+              "title": "尝试自己的风格"
             }
           },
           {
@@ -41,16 +27,44 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/项目笔记/代达罗斯/项目待做.md",
+                "file": "前端/项目笔记/代达罗斯/需求/COD-225/COD-225 Anatomy 管理与版本绑定实现计划.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "项目待做"
+              "title": "COD-225 Anatomy 管理与版本绑定实现计划"
+            }
+          },
+          {
+            "id": "02bb9aa5b9880309",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "前端/项目笔记/代达罗斯/模式/Zustand/ToastStoreProvider.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ToastStoreProvider"
+            }
+          },
+          {
+            "id": "c264252b68040308",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "前端/面试/能力画像/秋招学习计划.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "秋招学习计划"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -82,7 +96,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "useCallBack",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -107,7 +121,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 308.5
+    "width": 303.5
   },
   "right": {
     "id": "141ae94ee7b6a608",
@@ -123,13 +137,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/项目笔记/代达罗斯/模式/以schema为中心的.md",
+                "file": "前端/面试/能力画像/秋招学习计划.md",
                 "followCursor": true,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "以schema为中心的 的大纲"
+              "title": "秋招学习计划 的大纲"
             }
           },
           {
@@ -197,53 +211,53 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "7ff1757ccc611a66",
+  "active": "c264252b68040308",
   "lastOpenFiles": [
-    "前端/项目笔记/代达罗斯/Zod&Schema/Zod 使用实践指南.md",
-    "前端/项目笔记/代达罗斯/模式/以schema为中心的.md",
-    "前端/项目笔记/代达罗斯/Zod&Schema/未命名.md",
-    "前端/项目笔记/代达罗斯/踩坑/Schema化.md",
-    "前端/项目笔记/代达罗斯/踩坑/drizzle的版本冲突.md",
-    "前端/面试/八股/React/Hooks/useQuery.md",
-    "前端/项目笔记/代达罗斯/模式/useDebounce.md",
-    "前端/面试/八股/React/Hooks/useDebounce.md",
-    "前端/项目笔记/代达罗斯/踩坑/踩坑.md",
-    "前端/项目笔记/代达罗斯/踩坑/DataBase.md",
-    "前端/项目笔记/代达罗斯/Zod&Schema/zod.md",
-    "前端/项目笔记/代达罗斯/BUG/表单数据获取&提交需要loading.md",
-    "前端/项目笔记/代达罗斯/性能优化.md",
+    "前端/面试/能力画像/前端能力画像.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-仓库导入异步一致性/题目.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-仓库导入异步一致性/交付说明.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-仓库导入异步一致性/答辩记录.md",
+    "前端/面试/能力画像/秋招学习计划.md",
+    "前端/面试/能力画像/更新记录.md",
+    "前端/项目笔记/代达罗斯/需求/国际化.md",
+    "前端/面试/能力画像/profile-data.json",
+    "前端/面试/能力画像/能力证据.jsonl",
+    "前端/面试/能力画像",
+    "前端/项目笔记/代达罗斯/需求/需求整体流程.md",
+    "前端/项目笔记/代达罗斯/需求/Linear.md",
+    "前端/项目笔记/代达罗斯/需求/COD-225/COD-225 Anatomy 管理与版本绑定实现计划.md",
+    "前端/面试/可投递企业.md",
+    "前端/面试/面经/0 面试技巧&HR面⬇️.md",
+    "前端/面试/面经/提问汇总/面试题目汇总1-16.md",
+    "前端/面试/面经/18 美团-二面-核心本地商业.md",
+    "前端/面试/面经/6懂车帝-前端实习-一面.md",
+    "前端/面试/面经/12 腾讯-一面-企业微信团队.md",
+    "前端/面试/面经/13 腾讯-一面-腾讯金融科技.md",
+    "前端/面试/面经/14 腾讯-二面-腾讯金融科技.md",
+    "前端/面试/面经/17 字节-一面-飞书.md",
+    "前端/面试/面经/15 美团-一面-核心本地商业.md",
+    "前端/项目笔记/代达罗斯/模式/StoryBook/组件的content.md",
+    "前端/项目笔记/代达罗斯/模式/异步三态切换.md",
+    "前端/项目笔记/代达罗斯/模式/StoryBook",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-Finding反馈交互/阅卷报告.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-Finding反馈交互/题目.md",
+    "前端/面试/八股/React/Hooks/useImperativeHandle.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-仓库导入异步一致性",
+    "前端/面试/八股/React/Hooks/React Hooks 面试金句与原理.md",
+    "前端/项目笔记/代达罗斯/考试/2026-07-30-Finding反馈交互",
+    "前端/项目笔记/代达罗斯/考试/2026-07-29-Anatomy列表状态流",
+    "前端/项目笔记/代达罗斯/考试/2026-07-28-代码片段管理",
+    "前端/项目笔记/代达罗斯/Anatomy/cli",
+    "附件/正则表达式速查备忘手册.pdf",
+    "前端/工程化/类型检查/TS/官方HandBook/typescript-cheat-sheets/pngs/TypeScript Types.png",
+    "前端/工程化/类型检查/TS/官方HandBook/typescript-cheat-sheets/pngs/TypeScript Control Flow Analysis.png",
+    "前端/工程化/类型检查/TS/官方HandBook/typescript-cheat-sheets/pngs/TypeScript Classes.png",
+    "前端/工程化/类型检查/TS/官方HandBook/typescript-cheat-sheets/pngs/TypeScript Interfaces.png",
+    "attachments/Pasted image 20260727114513.png",
+    "attachments/Pasted image 20260722163046.png",
+    "attachments/Pasted image 20260717163941.png",
     "attachments/Pasted image 20260714101817.png",
     "attachments/Pasted image 20260714101620.png",
-    "前端/项目笔记/代达罗斯/组件/不使用解构赋值.md",
-    "前端/面试/八股/React/Hooks/useLocalStorage.md",
-    "前端/面试/八股/React/Hooks/useList.md",
-    "前端/面试/八股/React/Hooks/useHandler ⌚️🌟.md",
-    "前端/面试/八股/React/Hooks/useForm.md",
-    "前端/项目笔记/代达罗斯/组件/LoadingState.md",
-    "前端/项目笔记/代达罗斯/组件/Lable.md",
-    "前端/面试/八股/JS/label.md",
-    "前端/项目笔记/代达罗斯/组件/Dialog.md",
-    "前端/项目笔记/代达罗斯/数据流向/Zod Schema 模式.md",
-    "前端/项目笔记/代达罗斯/Zod&Schema",
-    "前端/项目笔记/代达罗斯/模式/tRPC.md",
-    "前端/项目笔记/代达罗斯/踩坑/空字符串与filter.md",
-    "前端/项目笔记/代达罗斯/模式/TanStack Router 路由模式.md",
-    "前端/项目笔记/代达罗斯/踩坑",
-    "前端/项目笔记/未命名",
-    "前端/项目笔记/代达罗斯/项目待做.md.tmp.39560.8d8fa164b44f",
-    "前端/项目笔记/代达罗斯/项目待做.md.tmp.39560.24f744a98412",
-    "前端/项目笔记/代达罗斯/项目待做.md.tmp.39560.65e05dd02ddd",
-    "前端/项目笔记/代达罗斯/BUG",
-    "attachments/Pasted image 20260709111050.png",
-    "attachments/Pasted image 20260705221454.png",
-    "attachments/天蝎座-2026-7-5-2209.jpg",
-    "个人",
-    "attachments/Pasted image 20260702212633.png",
-    "前端/项目笔记/代达罗斯/需求/COD-104/用于稳定描述代码结构的数据结构方案.md.tmp.53692.28194b72566b",
-    "前端/项目笔记/代达罗斯/需求/COD-104/用于稳定描述代码结构的数据结构方案.md.tmp.53692.3cfbe9509d76",
-    "attachments/Pasted image 20260630165944.png",
-    "attachments/Pasted image 20260630165657.png",
-    "attachments/Pasted image 20260630165006.png",
-    "attachments/Pasted image 20260626114108.png"
+    "attachments/Pasted image 20260709111050.png"
   ]
 }
