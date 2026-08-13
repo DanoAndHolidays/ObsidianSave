@@ -310,7 +310,7 @@ const x = 1;
 ```
 ````
 
-**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、py、python、go、java、c、cpp、rust、sql、xml。
+**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml。
 
 ## 链接
 ✅ 内部笔记用 `[[双链]]`：

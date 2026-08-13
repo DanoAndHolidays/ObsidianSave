@@ -1,12 +1,11 @@
 # Zustand 5.x API
+> Last Format Time：8/13/2026 15:14:01
+
 下面用一套完整的 Todo 项目，把 Zustand 从基础讲到实际项目用法。示例基于当前 Zustand 5.x API；截至 2026 年 7 月，npm 上的最新版本是 5.0.14。([NPM][1])
 
----
 
 # 一、Zustand 到底解决什么问题
-
 React 本身已经有：
-
 ```tsx
 useState()
 useReducer()
@@ -14,7 +13,6 @@ useContext()
 ```
 
 但当状态需要跨多个组件共享时，经常出现：
-
 ```text
 App
 ├── Header：显示用户信息
@@ -24,7 +22,6 @@ App
 ```
 
 使用 `useState` 时，状态通常要放到公共父组件，再通过 props 一层层传递：
-
 ```tsx
 <App user={user}>
   <Header user={user} />
@@ -37,7 +34,6 @@ App
 这就是常说的 props drilling。
 
 Zustand 的思路是，在 React 组件树之外创建一个 Store：
-
 ```text
 组件 A ──读取──┐
 组件 B ──修改──┼── Zustand Store
@@ -46,7 +42,6 @@ Zustand 的思路是，在 React 组件树之外创建一个 Store：
 
 组件可以直接订阅 Store 中自己需要的部分，不要求在顶层包一层 Provider。`create` 返回的既是 React Hook，也附带了 `getState`、`setState`、`subscribe` 等 Store API。([Zustand 文档][2])
 
----
 
 # 二、安装 Zustand
 
@@ -64,14 +59,13 @@ pnpm add zustand
 yarn add zustand
 ```
 
----
 
 # 三、第一个 Zustand Store
 
 先做一个计数器。
 
-## 1. 创建 Store
-
+---
+## 创建 Store
 新建：
 
 ```text
@@ -113,8 +107,8 @@ export const useCounterStore = create<CounterStore>()((set) => ({
 }));
 ```
 
-## 2. 在组件中使用
-
+---
+## 在组件中使用
 ```tsx
 import { useCounterStore } from "@/stores/counter-store";
 
@@ -150,7 +144,6 @@ const count = useCounterStore((state) => state.count);
 
 当 `count` 变化时，组件重新渲染；其他状态变化时，这个组件通常不需要重新渲染。
 
----
 
 # 四、理解 create、set 和 get
 
@@ -180,8 +173,8 @@ create<Store>()((set, get) => {
 });
 ```
 
-## 1. `create<Store>()`
-
+---
+## `create<Store>()`
 用于创建 Store。
 
 泛型 `Store` 描述 Store 的完整类型：
@@ -210,13 +203,10 @@ action：修改状态的方法
 ```
 
 ---
-
-## 2. `set`
-
+## `set` 🔖
 `set` 用于更新 Store。
 
 ### 直接更新
-
 ```ts
 set({
   count: 10,
@@ -224,9 +214,7 @@ set({
 ```
 
 Zustand 的 `set` 默认对第一层对象进行合并，而不是替换整个 Store。([Zustand 文档][3])
-
 假设当前 Store 是：
-
 ```ts
 {
   count: 0,
@@ -235,7 +223,6 @@ Zustand 的 `set` 默认对第一层对象进行合并，而不是替换整个 S
 ```
 
 执行：
-
 ```ts
 set({
   count: 10,
@@ -243,7 +230,6 @@ set({
 ```
 
 结果是：
-
 ```ts
 {
   count: 10,
@@ -254,7 +240,6 @@ set({
 `name` 不会消失。
 
 ### 根据旧状态更新
-
 当新状态依赖旧状态时，要使用函数写法：
 
 ```ts
@@ -274,9 +259,7 @@ set({
 虽然很多情况下也能工作，但函数更新能更清楚地表达“新状态依赖旧状态”，连续更新时也更加稳妥。
 
 ---
-
-## 3. `get`
-
+## `get`
 `get` 用于在 action 内读取当前 Store。
 
 ```ts
@@ -329,7 +312,6 @@ incrementTwice: () => {
 },
 ```
 
----
 
 # 五、Selector：Zustand 最重要的使用习惯
 
@@ -344,8 +326,8 @@ interface UserStore {
 }
 ```
 
+---
 ## 不推荐：订阅整个 Store
-
 ```tsx
 const store = useUserStore();
 ```
@@ -362,8 +344,8 @@ function UserName() {
 
 即使只用到 `name`，`age` 或 `theme` 变化时，这个组件也可能跟着重新渲染。
 
+---
 ## 推荐：精确订阅
-
 ```tsx
 function UserName() {
   const name = useUserStore((state) => state.name);
@@ -380,7 +362,6 @@ const setName = useUserStore((state) => state.setName);
 
 官方文档同样推荐通过 selector 读取 Store 的属性和 action。([Zustand 文档][4])
 
----
 
 # 六、一次读取多个状态
 
@@ -404,8 +385,8 @@ const { name, age } = useUserStore((state) => ({
 
 Zustand 默认通过 `Object.is` 比较 selector 的新旧结果。在 Zustand 5 中，不稳定的对象 selector 甚至可能导致无限更新问题。([Zustand 文档][5])
 
+---
 ## 方案一：分别订阅，最推荐
-
 ```tsx
 const name = useUserStore((state) => state.name);
 const age = useUserStore((state) => state.age);
@@ -413,8 +394,8 @@ const age = useUserStore((state) => state.age);
 
 这种写法最直观。
 
+---
 ## 方案二：使用 `useShallow`
-
 ```tsx
 import { useShallow } from "zustand/react/shallow";
 
@@ -445,12 +426,11 @@ const userNames = useUserStore(
 );
 ```
 
----
 
 # 七、更新不同类型的状态
 
-## 1. 更新基本类型
-
+---
+## 更新基本类型
 ```ts
 interface AppStore {
   loading: boolean;
@@ -484,9 +464,7 @@ export const useAppStore = create<AppStore>()((set) => ({
 ```
 
 ---
-
-## 2. 更新对象
-
+## 更新对象
 ```ts
 interface User {
   name: string;
@@ -539,9 +517,7 @@ set({
 这会直接替换原来的 `user`，导致 `age` 丢失。
 
 ---
-
-## 3. 更新数组
-
+## 更新数组
 ```ts
 interface Todo {
   id: string;
@@ -607,9 +583,7 @@ todos: [...state.todos, todo];
 ```
 
 ---
-
-## 4. Map 和 Set
-
+## Map 和 Set
 更新 `Map`、`Set` 时也应该创建新实例：
 
 ```ts
@@ -633,14 +607,13 @@ set((state) => ({
 
 官方文档明确要求更新 `Map` 和 `Set` 时创建新实例，否则引用没有变化，订阅组件可能无法察觉更新。([Zustand 文档][7])
 
----
 
 # 八、完整 Todo 项目
 
 下面做一个更接近真实项目的 Store。
 
-## 1. 定义类型
-
+---
+## 定义类型
 ```ts
 import { create } from "zustand";
 
@@ -674,9 +647,7 @@ type TodoStore = TodoState & TodoActions;
 将 state 和 actions 分开定义，后期维护会比较清晰。
 
 ---
-
-## 2. 实现 Store
-
+## 实现 Store
 ```ts
 const initialState: TodoState = {
   todos: [],
@@ -760,9 +731,7 @@ export const useTodoStore = create<TodoStore>()((set) => ({
 ```
 
 ---
-
-## 3. 新增 Todo 组件
-
+## 新增 Todo 组件
 ```tsx
 import { useState, type FormEvent } from "react";
 import { useTodoStore } from "@/stores/todo-store";
@@ -805,9 +774,7 @@ export function TodoForm() {
 输入框的临时内容只属于 `TodoForm`，使用 `useState` 更合理。
 
 ---
-
-## 4. Todo 列表
-
+## Todo 列表
 ```tsx
 import { useTodoStore } from "@/stores/todo-store";
 
@@ -897,9 +864,7 @@ const visibleTodos = todos.filter(...);
 ```
 
 ---
-
-## 5. 筛选组件
-
+## 筛选组件
 ```tsx
 import {
   useTodoStore,
@@ -936,9 +901,7 @@ export function TodoFilters() {
 ```
 
 ---
-
-## 6. 统计信息
-
+## 统计信息
 ```tsx
 import { useTodoStore } from "@/stores/todo-store";
 
@@ -971,7 +934,6 @@ state.todos.filter((todo) => todo.completed).length
 
 只要 selector 返回的是稳定的基本类型，就很好处理。
 
----
 
 # 九、异步请求
 
@@ -1065,8 +1027,8 @@ export function UserList() {
 }
 ```
 
+---
 ## Zustand 能请求接口，不代表所有请求都该用它
-
 对于真正的服务端状态，更推荐使用 TanStack Query：
 
 ```text
@@ -1090,7 +1052,6 @@ export function UserList() {
 
 这些不是 Zustand 的核心职责。
 
----
 
 # 十、持久化 persist
 
@@ -1141,9 +1102,7 @@ localStorage
 刷新页面后，Zustand 会从存储中恢复数据，这个过程叫 hydration。
 
 ---
-
 ## 只持久化部分状态
-
 假设 Store 中还有：
 
 ```ts
@@ -1194,9 +1153,7 @@ export const useSettingsStore = create<SettingsStore>()(
 ```
 
 ---
-
 ## 持久化版本迁移
-
 假设旧数据结构是：
 
 ```ts
@@ -1245,7 +1202,6 @@ persist(
 
 对长期运行的项目，Store 数据结构变化时，版本迁移非常重要。
 
----
 
 # 十一、Redux DevTools 调试
 
@@ -1317,7 +1273,6 @@ false
 
 表示合并状态。
 
----
 
 # 十二、同时使用 persist 和 devtools
 
@@ -1365,36 +1320,35 @@ devtools 包装
 最终 Store
 ```
 
----
 
 # 十三、在 React 组件外访问 Store
 
 `create` 返回的 Hook 上还挂载了 Store API。([Zustand 文档][2])
 
-## 1. 获取当前状态
-
+---
+## 获取当前状态
 ```ts
 const currentState = useCounterStore.getState();
 
 console.log(currentState.count);
 ```
 
-## 2. 修改状态
-
+---
+## 修改状态
 ```ts
 useCounterStore.setState({
   count: 100,
 });
 ```
 
-## 3. 调用 action
-
+---
+## 调用 action
 ```ts
 useCounterStore.getState().increment();
 ```
 
-## 4. 订阅变化
-
+---
+## 订阅变化
 ```ts
 const unsubscribe = useCounterStore.subscribe((state, previousState) => {
   console.log("新状态", state);
@@ -1433,7 +1387,6 @@ function Counter() {
 const count = useCounterStore((state) => state.count);
 ```
 
----
 
 # 十四、订阅特定状态
 
@@ -1474,7 +1427,6 @@ const unsubscribe = usePositionStore.subscribe(
 
 `y` 变化时，这个回调不会执行。`subscribeWithSelector` 就是用来订阅 Store 中特定片段的。([Zustand 文档][11])
 
----
 
 # 十五、复杂嵌套对象与 Immer
 
@@ -1556,7 +1508,6 @@ Immer 允许你写出类似“直接修改”的代码，但实际上会帮助�
 
 不要因为有 Immer 就把状态设计得无限嵌套。优先思考是否能将数据结构扁平化。
 
----
 
 # 十六、大型项目的 Store 拆分
 
@@ -1628,14 +1579,13 @@ useGlobalStore
 
 这种 Store 后面会越来越难维护。
 
----
 
 # 十七、Slices Pattern
 
 如果一些状态必须存在同一个 Store，但代码又很多，可以使用 Slice 模式。官方文档提供了将多个 slice 组合成一个 Store 的模式。([Zustand 文档][13])
 
-## 1. 创建计数 Slice
-
+---
+## 创建计数 Slice
 ```ts
 import type { StateCreator } from "zustand";
 
@@ -1660,8 +1610,8 @@ export const createCounterSlice: StateCreator<
 });
 ```
 
-## 2. 创建用户 Slice
-
+---
+## 创建用户 Slice
 ```ts
 import type { StateCreator } from "zustand";
 
@@ -1684,8 +1634,8 @@ export const createUserSlice: StateCreator<
 });
 ```
 
-## 3. 合并 Store
-
+---
+## 合并 Store
 ```ts
 import { create } from "zustand";
 import {
@@ -1712,8 +1662,8 @@ const count = useAppStore((state) => state.count);
 const username = useAppStore((state) => state.username);
 ```
 
+---
 ## 什么时候使用 Slice
-
 适合：
 
 ```text
@@ -1724,12 +1674,11 @@ const username = useAppStore((state) => state.username);
 
 不适合为了“看起来高级”而强行使用。很多业务直接使用多个独立 Store 更简单。
 
----
 
 # 十八、重置 Store
 
+---
 ## 简单重置
-
 ```ts
 interface FormStore {
   name: string;
@@ -1774,7 +1723,6 @@ export const useStore = create<Store>()((set, get, store) => ({
 }));
 ```
 
----
 
 # 十九、测试 Zustand Store
 
@@ -1811,12 +1759,11 @@ describe("counter store", () => {
 
 测试前重置 Store 很重要，因为模块级 Store 会在多个测试之间共享状态。官方测试指南也重点处理了 Store 重置问题。([Zustand 文档][15])
 
----
 
 # 二十、常见错误
 
+---
 ## 错误一：每个组件都订阅整个 Store
-
 ```tsx
 const store = useTodoStore();
 ```
@@ -1828,9 +1775,7 @@ const todos = useTodoStore((state) => state.todos);
 ```
 
 ---
-
 ## 错误二：selector 每次返回新对象
-
 不推荐：
 
 ```tsx
@@ -1859,9 +1804,7 @@ const value = useStore(
 ```
 
 ---
-
 ## 错误三：直接修改数组或对象
-
 不推荐：
 
 ```ts
@@ -1885,9 +1828,7 @@ set((state) => ({
 或者使用 Immer。
 
 ---
-
 ## 错误四：认为 `set` 会递归合并
-
 ```ts
 set({
   user: {
@@ -1910,9 +1851,7 @@ set((state) => ({
 ```
 
 ---
-
 ## 错误五：存储可以推导的数据
-
 不推荐：
 
 ```ts
@@ -1941,9 +1880,7 @@ const completedCount = useTodoStore(
 ```
 
 ---
-
 ## 错误六：把所有接口数据都放进 Zustand
-
 Zustand 可以执行异步请求，但不自动提供完整的服务端缓存管理。
 
 一般组合是：
@@ -1963,9 +1900,7 @@ useState
 ```
 
 ---
-
 ## 错误七：只有一个超级 Store
-
 一开始看起来方便：
 
 ```ts
@@ -1988,7 +1923,6 @@ useSettingsStore
 useGlobalUIStore
 ```
 
----
 
 # 二十一、推荐的日常写法
 
@@ -2049,7 +1983,6 @@ function Example() {
 }
 ```
 
----
 
 # 二十二、最终知识地图
 

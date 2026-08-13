@@ -88,7 +88,7 @@
 ## 4. 代码块
 
 - **必须**指定语言标签
-- 合法标签：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、py、python、go、java、c、cpp、rust、sql、xml
+- 合法标签：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml
 - 选错语言属于高把握违规 → 直接改成正确语言
 - `js` 和 `javascript`、`md` 和 `markdown`、`bash` 和 `sh`/`shell` 都视为合法等价
 - 不确定时优先选 `text` 而不是省略

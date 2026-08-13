@@ -1,4 +1,5 @@
-# Badge[bædʒ]
+# Badge
+> Last Format Time：8/13/2026 15:14:02
 
 ---
 ## 示例
@@ -6,6 +7,8 @@
 
 ---
 ## 源代码
+目前已经重构的和下面的一模不一样了
+
 ```ts
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";

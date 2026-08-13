@@ -50,7 +50,7 @@ FENCE = re.compile(r'^```(\S*)\s*$')
 LEGAL_LANGS = {
     'jsx', 'tsx', 'ts', 'typescript', 'js', 'javascript', 'css', 'scss', 'html',
     'bash', 'sh', 'shell', 'powershell', 'pwsh', 'cmd', 'batch',
-    'json', 'yaml', 'yml', 'md', 'markdown', 'text',
+    'json', 'yaml', 'yml', 'md', 'markdown', 'text', 'mermaid',
     # 等价别名（保留原样，不强制转换）
     'vue', 'py', 'python', 'go', 'java', 'c', 'cpp', 'rust', 'sql', 'xml',
 }
@@ -559,8 +559,8 @@ def remove_blank_after_headings(content: str) -> tuple[str, int]:
 
         # 下一行是空行，看再下一行决定
         if i + 2 >= len(lines):
-            # 标题后空行直达文件末尾 → 删空行
-            to_remove.add(i + 1)
+            # split('\n') 会把文件末尾换行表示成一个空字符串；
+            # 这不是标题后的空白行，应保留 POSIX 末尾换行。
             continue
 
         next_content = lines[i + 2]

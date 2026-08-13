@@ -89,6 +89,12 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(stats['closing_fences_fixed'], 1)
         self.assertEqual(stats['code_issues'], [])
 
+    def test_mermaid_language_is_valid(self):
+        source = '# Note\n```mermaid\nflowchart LR\n  A --> B\n```\n'
+        result, stats = normalize.normalize_content(source, now=self.now)
+        self.assertIn('```mermaid\nflowchart LR\n  A --> B\n```', result)
+        self.assertEqual(stats['code_issues'], [])
+
     def test_more_than_ten_code_blocks_restore_without_token_collisions(self):
         blocks = '\n\n'.join(
             f'```typescript\nconst value{i} = {i};\n```'
@@ -167,6 +173,21 @@ class NormalizeTests(unittest.TestCase):
         self.assertNotIn('## ', result)
         self.assertEqual(stats['trailing_empty_headings_removed'], 1)
         self.assertEqual(stats['manual_issues'], [])
+
+    def test_trailing_newline_after_heading_is_preserved_and_idempotent(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## First\n'
+            '---\n'
+            '## Last\n'
+        )
+        first, _ = normalize.normalize_content(source, now=self.now)
+        second, stats = normalize.normalize_content(first, now=self.now)
+        self.assertTrue(first.endswith('## Last\n'))
+        self.assertEqual(second, first)
+        self.assertEqual(stats['blank_after_heading_removed'], 0)
 
 
 if __name__ == '__main__':
