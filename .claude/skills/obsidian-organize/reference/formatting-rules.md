@@ -310,7 +310,7 @@ const x = 1;
 ```
 ````
 
-**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml。
+**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、less、html、xhtml、bash、sh、shell、powershell、pwsh、cmd、batch、json、jsonc、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml、latex、tex、http、markup、nginx、apache、haproxy、node、php。已知标签会转为小写，`plain`、`plaintext`、`txt` 会统一为 `text`。
 
 ## 链接
 ✅ 内部笔记用 `[[双链]]`：
@@ -333,3 +333,23 @@ const x = 1;
 原内容：# 旧标题
 修改点：保持 H1 与文件名一致，移除原 H1*
 ```
+
+## 内容审核标记
+
+机械格式化完成后还要审核表达、事实、代码和顺序。每个语义调整在新内容旁添加可见锚点，并在文末逐项记录：
+
+```markdown
+修正后的内容。〔CR-001〕
+
+---
+## 内容审核变更记录
+### CR-001｜流畅性
+- 日期：8/13/2026
+- 位置：开头第 1 段
+- 原内容：原来的不流畅表述。
+- 调整后：修正后的内容。
+- 原因：消除歧义并补全主语。
+- 依据：无需外部依据（措辞调整）
+```
+
+详细要求见 [内容审核与变更标记规则](content-review-rules.md)。

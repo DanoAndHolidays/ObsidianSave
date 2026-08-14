@@ -51,6 +51,7 @@ class OrganizeChangedNotesTests(unittest.TestCase):
         self.assertEqual(written['changed_count'], 1)
         self.assertEqual(repeated['changed_count'], 0)
         self.assertEqual(repeated['code_issue_count'], 0)
+        self.assertEqual(repeated['review_marker_issue_count'], 0)
         self.assertIn('```text\n流程\n```', note_content)
 
 

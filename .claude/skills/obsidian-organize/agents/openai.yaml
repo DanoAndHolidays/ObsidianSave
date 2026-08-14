@@ -1,4 +1,4 @@
 interface:
-  display_name: "Obsidian 笔记整理"
-  short_description: "按 Git 基线安全整理和规范化 Obsidian 笔记"
-  default_prompt: "Use $obsidian-organize to organize changed notes in this Obsidian vault."
+  display_name: "Obsidian 笔记整理与审核"
+  short_description: "提交时自动格式化，按需进行 Obsidian 内容审核"
+  default_prompt: "使用 $obsidian-organize 检查机械格式并按需审核本库中变更的笔记。"

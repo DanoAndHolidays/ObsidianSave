@@ -2,6 +2,7 @@ import importlib.util
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 
@@ -46,6 +47,17 @@ class CollectChangedNotesTests(unittest.TestCase):
 
         self.assertEqual(result['baseline'], 'obsidian-organized-2026-07-14')
         self.assertEqual(result['files'], ['tracked.md', '新笔记.md'])
+
+    def test_prefers_reviewed_baseline_over_legacy_organized_tag(self):
+        with mock.patch.object(
+            collector,
+            'run_git',
+            return_value=b'obsidian-reviewed-2026-08-14\n',
+        ) as run_git:
+            baseline = collector.latest_baseline(Path('.'))
+
+        self.assertEqual(baseline, 'obsidian-reviewed-2026-08-14')
+        self.assertEqual(run_git.call_count, 1)
 
 
 if __name__ == '__main__':

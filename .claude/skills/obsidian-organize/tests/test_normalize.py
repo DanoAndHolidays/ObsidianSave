@@ -189,6 +189,43 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(second, first)
         self.assertEqual(stats['blank_after_heading_removed'], 0)
 
+    def test_single_call_reaches_fixed_point_after_pseudo_heading_conversion(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/1/2026 09:00:00\n\n'
+            '**1. Section：**\n'
+            '正文\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        repeated, _ = normalize.normalize_content(
+            normalized,
+            now=datetime.datetime(2026, 7, 15, 11, 0, 0),
+            expected_title='Note',
+        )
+        self.assertIn('\n---\n## Section\n', normalized)
+        self.assertNotIn('### 1. Section', normalized)
+        self.assertGreaterEqual(stats['normalization_passes'], 2)
+        self.assertEqual(repeated, normalized)
+
+    def test_known_code_languages_are_canonicalized_without_false_issues(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '```TypeScript\nconst value = 1\n```\n\n'
+            '```Plain\nplain text\n```\n\n'
+            '```latex\nx^2\n```\n'
+        )
+        normalized, stats = normalize.normalize_content(source, now=self.now)
+        self.assertIn('```typescript\n', normalized)
+        self.assertIn('```text\n', normalized)
+        self.assertIn('```latex\n', normalized)
+        self.assertEqual(stats['code_languages_canonicalized'], 2)
+        self.assertEqual(stats['code_issues'], [])
+
 
 if __name__ == '__main__':
     unittest.main()

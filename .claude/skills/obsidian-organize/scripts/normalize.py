@@ -19,6 +19,7 @@ import re
 import sys
 from pathlib import Path
 
+
 def configure_console_output() -> None:
     """仅在 CLI 入口配置 Windows UTF-8，避免模块导入时修改全局输出流。"""
     if sys.platform == 'win32':
@@ -46,14 +47,26 @@ BOLD_PSEUDO_HEADING = re.compile(
 # 代码块围栏
 FENCE = re.compile(r'^```(\S*)\s*$')
 
-# 合法语言标签
+# 合法语言标签。已知标签按小写规范化，未知标签保留并报告。
 LEGAL_LANGS = {
     'jsx', 'tsx', 'ts', 'typescript', 'js', 'javascript', 'css', 'scss', 'html',
     'bash', 'sh', 'shell', 'powershell', 'pwsh', 'cmd', 'batch',
-    'json', 'yaml', 'yml', 'md', 'markdown', 'text', 'mermaid',
-    # 等价别名（保留原样，不强制转换）
+    'json', 'jsonc', 'yaml', 'yml', 'md', 'markdown', 'text', 'mermaid',
     'vue', 'py', 'python', 'go', 'java', 'c', 'cpp', 'rust', 'sql', 'xml',
+    'latex', 'tex', 'http', 'markup', 'nginx', 'apache', 'haproxy', 'node',
+    'xhtml', 'php', 'less',
 }
+LANGUAGE_ALIASES = {
+    'plain': 'text',
+    'plaintext': 'text',
+    'txt': 'text',
+}
+
+MAX_NORMALIZATION_PASSES = 5
+
+
+class NormalizationConvergenceError(RuntimeError):
+    """机械规范化无法在有限轮次内达到固定点。"""
 
 # 中英文标点之间多余空格（如 "。 **" → "。**"），不跨换行
 PUNCT_SPACE = re.compile(r'([。！？，：；])[ \t]+(?=\*\*|[一-龥])')
@@ -286,6 +299,32 @@ def set_missing_code_languages(
                 closings_fixed += 1
             in_block = False
     return '\n'.join(lines), languages_added, closings_fixed
+
+
+def canonicalize_code_languages(content: str) -> tuple[str, int]:
+    """把已知代码语言标签统一为小写规范名；未知标签原样保留。"""
+    lines = content.split('\n')
+    in_block = False
+    changed = 0
+    for i, line in enumerate(lines):
+        match = FENCE.match(line)
+        if not match:
+            continue
+        if not in_block:
+            lang = match.group(1)
+            if lang:
+                lowered = lang.lower()
+                canonical = LANGUAGE_ALIASES.get(
+                    lowered,
+                    lowered if lowered in LEGAL_LANGS else lang,
+                )
+                if canonical != lang:
+                    lines[i] = f'```{canonical}'
+                    changed += 1
+            in_block = True
+        else:
+            in_block = False
+    return '\n'.join(lines), changed
 
 
 def fix_punct_space(content: str) -> tuple[str, int]:
@@ -641,13 +680,13 @@ def fix_code_block_blank_lines(content: str) -> tuple[str, int]:
     return '\n'.join(final_lines), n_changes
 
 
-def normalize_content(
+def _normalize_content_once(
     content: str,
     now: datetime.datetime = None,
     default_lang: str = None,
     expected_title: str = None,
 ) -> tuple[str, dict]:
-    """规范化内容并返回统计；frontmatter 与 fenced code 内容保持不变。"""
+    """执行一轮机械规范化；由 normalize_content 驱动至固定点。"""
     frontmatter, body = split_frontmatter(content)
     original_body = body
 
@@ -665,6 +704,7 @@ def normalize_content(
     body, n_code_blanks = fix_code_block_blank_lines(body)
     body, n_punct = apply_outside_fenced_code(body, fix_punct_space)
 
+    body, n_lang_canonicalized = canonicalize_code_languages(body)
     body, n_lang_added, n_closing_fixed = set_missing_code_languages(
         body,
         default_lang or 'text',
@@ -694,12 +734,74 @@ def normalize_content(
         'blank_after_heading_removed': n_blank_after,
         'code_block_blanks_fixed': n_code_blanks,
         'punct_space_fixed': n_punct,
+        'code_languages_canonicalized': n_lang_canonicalized,
         'code_languages_added': n_lang_added,
         'closing_fences_fixed': n_closing_fixed,
         'code_issues': code_issues,
         'manual_issues': manual_issues,
     }
     return normalized, stats
+
+
+def normalize_content(
+    content: str,
+    now: datetime.datetime = None,
+    default_lang: str = None,
+    expected_title: str = None,
+    max_passes: int = MAX_NORMALIZATION_PASSES,
+) -> tuple[str, dict]:
+    """
+    规范化内容并返回统计；单次调用内部运行到固定点。
+
+    时间戳在所有内部轮次使用同一时刻，避免内部收敛过程制造时间差异。
+    若规则发生循环或超过最大轮次，抛出错误并拒绝写回。
+    """
+    if max_passes < 1:
+        raise ValueError('max_passes must be at least 1')
+
+    fixed_now = now or datetime.datetime.now()
+    current = content
+    seen = {current}
+    totals: dict[str, int | list] = {}
+    meta_updated = False
+
+    # 允许 max_passes 轮产生变化，再额外运行一轮确认已经稳定。
+    for pass_number in range(1, max_passes + 2):
+        normalized, stats = _normalize_content_once(
+            current,
+            now=fixed_now,
+            default_lang=default_lang,
+            expected_title=expected_title,
+        )
+        for key, value in stats.items():
+            if isinstance(value, int):
+                if key == 'h1_meta_updated':
+                    meta_updated = meta_updated or bool(value)
+                else:
+                    totals[key] = int(totals.get(key, 0)) + value
+
+        if normalized == current:
+            for key, value in stats.items():
+                if isinstance(value, list):
+                    totals[key] = value
+                elif isinstance(value, int):
+                    totals.setdefault(key, 0)
+            totals['h1_meta_updated'] = int(meta_updated)
+            totals['normalization_passes'] = pass_number - 1
+            return normalized, totals
+
+        if pass_number > max_passes:
+            raise NormalizationConvergenceError(
+                f'normalization did not converge after {max_passes} passes'
+            )
+        if normalized in seen:
+            raise NormalizationConvergenceError(
+                f'normalization entered a cycle on pass {pass_number}'
+            )
+        seen.add(normalized)
+        current = normalized
+
+    raise AssertionError('unreachable normalization state')
 
 
 def process_file(
@@ -756,8 +858,10 @@ def main() -> int:
         'blank_after_heading_removed': 0,
         'code_block_blanks_fixed': 0,
         'punct_space_fixed': 0,
+        'code_languages_canonicalized': 0,
         'code_languages_added': 0,
         'closing_fences_fixed': 0,
+        'normalization_passes': 0,
         'code_issues': 0,
         'manual_issues': 0,
     }
@@ -816,6 +920,8 @@ def main() -> int:
                 print(f'  代码块空行: {r["code_block_blanks_fixed"]}')
             if r['punct_space_fixed']:
                 print(f'  标点空格修复: {r["punct_space_fixed"]}')
+            if r['code_languages_canonicalized']:
+                print(f'  代码块语言规范化: {r["code_languages_canonicalized"]}')
             if r['code_languages_added']:
                 print(f'  代码块语言补充: {r["code_languages_added"]}')
             if r['closing_fences_fixed']:
@@ -852,6 +958,7 @@ def main() -> int:
             f'标题后空行 {totals["blank_after_heading_removed"]}, '
             f'代码块空行 {totals["code_block_blanks_fixed"]}, '
             f'标点空格 {totals["punct_space_fixed"]}, '
+            f'代码语言规范化 {totals["code_languages_canonicalized"]}, '
             f'代码块语言 {totals["code_languages_added"]}, '
             f'闭合围栏 {totals["closing_fences_fixed"]}, '
             f'代码块问题 {totals["code_issues"]}, '

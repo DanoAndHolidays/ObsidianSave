@@ -88,7 +88,8 @@
 ## 4. 代码块
 
 - **必须**指定语言标签
-- 合法标签：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml
+- 合法标签：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、less、html、xhtml、bash、sh、shell、powershell、pwsh、cmd、batch、json、jsonc、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml、latex、tex、http、markup、nginx、apache、haproxy、node、php
+- 已知标签不区分输入大小写并规范为小写；`plain`、`plaintext`、`txt` 统一为 `text`
 - 选错语言属于高把握违规 → 直接改成正确语言
 - `js` 和 `javascript`、`md` 和 `markdown`、`bash` 和 `sh`/`shell` 都视为合法等价
 - 不确定时优先选 `text` 而不是省略
@@ -143,17 +144,18 @@
 
 ---
 
-## 7. 不在规则内的事项
+## 7. 内容审核的边界
 
-以下内容**不**做规范化（避免过度发挥）：
+机械规范化结束后，按 [内容审核与变更标记规则](content-review-rules.md) 审核流畅性、事实正确性、代码、顺序、完整性、去重和术语。每个语义调整必须使用 `CR-xxx` 可见锚点和变更记录，不能静默修改。
 
-- 内容的语义正确性
-- 是否加 frontmatter
-- 标签体系
-- 目录迁移
-- 笔记之间的引用关系
+以下事项仍不自动修改：
 
-如果发现这些层面的问题，**停下来问用户**，不要自作主张。
+- frontmatter 与标签体系
+- 目录、附件和笔记引用关系
+- 无法用可靠来源确认的事实
+- 作者核心观点或主观结论
+
+这些事项需要用户明确授权或确认。
 
 ---
 
@@ -162,6 +164,7 @@
 | 违规类型 | 由谁处理 | 工具 |
 |----------|---------|------|
 | Git 基线与工作区候选收集 | 脚本 | `collect_changed_notes.py` |
+| 暂存笔记提交前机械格式化 | Git hook | `format_staged_notes.py` |
 | H1 缺失/与文件名不一致 | 脚本 | `ensure_h1_title` |
 | H1 时间戳和区域空行 | 脚本 | `update_h1_metadata`、`normalize_h1_spacing` |
 | H2-H6 数字/中文标号 | 脚本 | `remove_number_prefixes` |
@@ -176,11 +179,14 @@
 | 代码块前/后空行 | 脚本 | `fix_code_block_blank_lines` |
 | 中文标点空格 | 脚本 | `fix_punct_space` |
 | 代码块缺标签/异常闭合 | 脚本 | `set_missing_code_languages` |
+| 已知代码语言大小写/别名 | 脚本 | `canonicalize_code_languages` |
 | 未知标签/未闭合围栏 | 脚本报告 | `check_code_blocks` |
 | 文件末尾无内容的空标题 | 脚本 | `remove_trailing_empty_heading` |
 | 后面仍有内容的空标题 | 脚本报告 + 用户判断 | `check_manual_issues` |
 | 空行调整（引用块等复杂场景） | Agent | Claude 判断 |
 | 例外斜体标注 | Agent | Claude 判断 |
-| 规则7范围内的内容问题 | Agent → 问用户 | Claude + AskUserQuestion |
+| 流畅性、事实、代码、顺序与去重 | Agent 审核并标记 | `content-review-rules.md` |
+| 审核锚点与记录完整性 | 脚本 | `validate_content_review.py` |
+| frontmatter、标签、目录、附件与引用关系 | Agent → 问用户 | 用户确认 |
 
 脚本在任何文本正则处理前分离 YAML frontmatter，并用带 NUL 边界的定长占位符保护 fenced code。回归测试必须包含至少 12 个代码块，防止占位符 `1` 错配 `10` 一类的前缀碰撞。
