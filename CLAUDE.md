@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 核心 skill：obsidian-organize
 
-负责把新增/修改的笔记按规范化规则整理。工作流详见 `.claude/skills/obsidian-organize/SKILL.md`，但日常最常用的入口是直接调用其脚本：
+负责把新增/修改的笔记按规范化规则整理，并在机械格式化后逐篇审核内容的流畅性、事实、代码与顺序。工作流详见 `.claude/skills/obsidian-organize/SKILL.md`，但日常最常用的入口是直接调用其脚本：
 
 ```bash
 # 查看哪些机械违规可修（不写文件）
@@ -27,9 +27,12 @@ python .claude/skills/obsidian-organize/scripts/normalize.py --write <file.md> [
 
 # JSON 输出供其他工具消费
 python .claude/skills/obsidian-organize/scripts/normalize.py --json <file.md>
+
+# 校验语义调整的 CR-xxx 锚点与变更记录
+python .claude/skills/obsidian-organize/scripts/validate_content_review.py --json <file.md>
 ```
 
-脚本只做**纯正则可解的机械修复**（H4→H5、文件无 H2 时 H3 升 H2、H1 元信息块时间戳、`---` 分隔符、代码块空行等），不做语义判断。判断性修复（标题层级重构、斜体保留例外等）由 Claude 配合 `Edit` / `Write` 完成。
+`normalize.py` 只做**纯正则可解的机械修复**（H4→H5、文件无 H2 时 H3 升 H2、H1 元信息块时间戳、`---` 分隔符、代码块空行等）。语义审核由 Agent 完整阅读后执行；每个改变表达、事实、代码含义或顺序的调整，都必须在新内容旁添加可见 `〔CR-xxx〕` 锚点，并在文末记录日期、位置、原内容、调整后、原因与依据。`validate_content_review.py` 负责校验标记一一对应和字段完整性。
 
 整理时**跳过**以下路径：`.obsidian/`、`attachments/`、`docs/superpowers/specs/`。
 
