@@ -1,0 +1,394 @@
+# polymorphic
+> Last Format Time：8/24/2026 15:30:15
+
+可以。关键在于：`asChild` 只是帮你把 props 和行为“注入”到用户元素上，但**不同 HTML 元素天生拥有的语义和浏览器行为不一样**。
+
+最典型就是 `button` 换成 `a`。
+
+你原本的 Trigger：
+
+```tsx
+<Tabs.Trigger value="account">
+  Account
+</Tabs.Trigger>
+```
+
+底层是：
+
+```html
+<button role="tab">
+  Account
+</button>
+```
+
+`button` 天生具备很多行为，比如：
+
+```text
+可以获得焦点
+Enter / Space 可以触发 click
+disabled 可以真正禁用
+默认不会导航
+```
+
+所以你写：
+
+```tsx
+<button disabled>
+```
+
+浏览器会自动帮你：
+
+* 禁止点击
+* 禁止获得正常键盘焦点
+* 不触发 click
+* 提供 disabled 语义
+
+
+但现在用户：
+
+```tsx
+<Tabs.Trigger
+  value="account"
+  disabled
+  asChild
+>
+  <a href="/account">
+    Account
+  </a>
+</Tabs.Trigger>
+```
+
+经过 Slot 以后可能得到：
+
+```html
+<a
+  href="/account"
+  role="tab"
+  disabled
+>
+  Account
+</a>
+```
+
+问题来了：
+
+```html
+<a disabled>
+```
+
+**实际上没有原生 disabled 行为。**
+
+浏览器不会因为它有：
+
+```html
+disabled
+```
+
+就阻止：
+
+```text
+点击
+→ 跳转 /account
+```
+
+所以：
+
+```text
+button disabled
+```
+
+和：
+
+```text
+a disabled
+```
+
+完全不是一回事。
+
+---
+## 再举一个更明显的例子
+假设：
+
+```tsx
+<Tabs.Trigger asChild value="account">
+  <div>Account</div>
+</Tabs.Trigger>
+```
+
+Slot 最终：
+
+```html
+<div
+  role="tab"
+  tabindex="0"
+>
+  Account
+</div>
+```
+
+看起来似乎没问题。
+
+但是 `<div>` 和 `<button>` 又有行为差异。
+
+### 鼠标点击
+如果我们注入：
+
+```tsx
+onClick={handleClick}
+```
+
+那么鼠标点击 `<div>`：
+
+```text
+✅ 可以工作
+```
+
+但键盘呢？
+
+原生 button：
+
+```text
+焦点在 button
+
+按 Enter
+→ click
+
+按 Space
+→ click
+```
+
+浏览器自动完成。
+
+但是普通：
+
+```html
+<div tabindex="0">
+```
+
+即便它能获得焦点：
+
+```text
+按 Enter
+→ 不一定触发 click
+
+按 Space
+→ 不会像 button 一样自动 click
+```
+
+所以：
+
+```tsx
+asChild
+```
+
+把：
+
+```html
+button
+```
+
+换成：
+
+```html
+div
+```
+
+之后，**你失去了 button 原生的键盘行为**。
+
+这就是我说的：
+
+> 当 asChild 允许底层 DOM 改变后，组件原来的语义和行为不一定还能保证。
+
+---
+## `role="tab"` 也不能完全解决
+你可能会想到：
+
+```html
+<div role="tab">
+```
+
+不是已经告诉浏览器这是 tab 了吗？
+
+这里要特别注意：
+
+> `role` 主要改变的是**可访问性语义**，不会自动赋予这个元素原生交互行为。
+
+比如：
+
+```html
+<div role="button">
+```
+
+屏幕阅读器可能会把它读成“按钮”。
+
+但它不会突然获得：
+
+```text
+<button> 的所有行为
+```
+
+你还是可能需要自己处理：
+
+```tsx
+onKeyDown={(event) => {
+  if (
+    event.key === "Enter" ||
+    event.key === " "
+  ) {
+    // 模拟 button 行为
+  }
+}}
+```
+
+所以：
+
+```text
+role
+≠
+原生元素行为
+```
+
+这个非常重要。
+
+---
+## 再回到 disabled
+假设我们原来：
+
+```tsx
+<button
+  disabled={disabled}
+  onClick={handleClick}
+/>
+```
+
+如果 `disabled=true`，浏览器帮我们兜底。
+
+但是：
+
+```tsx
+<Tabs.Trigger disabled asChild>
+  <a href="/account" />
+</Tabs.Trigger>
+```
+
+我们可能就得自己补：
+
+```tsx
+aria-disabled={true}
+```
+
+然后点击时：
+
+```tsx
+onClick={(event) => {
+  if (disabled) {
+    event.preventDefault();
+    return;
+  }
+
+  setValue(value);
+}}
+```
+
+可能还要考虑：
+
+```tsx
+tabIndex={disabled ? -1 : ...}
+```
+
+这时候组件库实际上是在**模拟 disabled 行为**。
+
+但是要注意：
+
+```html
+aria-disabled="true"
+```
+
+只是告诉辅助技术：
+
+> “这个元素语义上不可用。”
+
+它自己不会阻止点击。
+
+所以：
+
+```text
+disabled
+→ 原生行为 + 语义
+
+aria-disabled
+→ 主要提供语义
+→ 行为仍然需要 JS 处理
+```
+
+---
+## 这就是 `asChild` 的代价
+不用 `asChild`：
+
+```tsx
+<Tabs.Trigger>
+```
+
+组件库完全掌控 DOM：
+
+```text
+我知道它一定是 button
+↓
+我可以依赖 button 的原生行为
+```
+
+使用：
+
+```tsx
+<Tabs.Trigger asChild>
+```
+
+以后：
+
+```text
+用户可能给：
+
+a
+div
+span
+自定义组件
+...
+```
+
+于是组件库失去了一部分控制权。
+
+所以 `asChild` 本质上是一种：
+
+> **用更大的结构自由度，换取更高的语义和行为复杂度。**
+
+
+你可以先记一个特别重要的例子：
+
+```text
+<button disabled>
+```
+
+浏览器真的禁用了它。
+
+但：
+
+```text
+<a aria-disabled="true">
+```
+
+浏览器并不会真的阻止它。
+
+所以如果 Tabs.Trigger 支持 `asChild`，我们就不能只想：
+
+```text
+“props 有没有 merge 过去？”
+```
+
+还必须想：
+
+```text
+“底层元素换了以后，
+原来的语义和浏览器行为还存在吗？”
+```
+
+这个就是 polymorphic / `asChild` 组件真正麻烦的地方。
