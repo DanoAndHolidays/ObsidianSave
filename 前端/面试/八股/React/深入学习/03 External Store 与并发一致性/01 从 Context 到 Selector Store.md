@@ -1,5 +1,8 @@
-# 4 store
-> Last Format Time：8/24/2026 15:33:00
+# 01 从 Context 到 Selector Store
+> Last Format Time：8/27/2026 15:20:25
+
+> Last Format Time：8/27/2026
+> 笔记说明：从 Context 的粗粒度订阅演进到 Selector Store 的细粒度订阅。
 
 ---
 ## Context 拆分解决的是什么
@@ -981,3 +984,4 @@ selected slice 真变了吗？
 > **Store update ≠ subscriber notification ≠ React render。**
 
 三者是三个不同阶段。
+

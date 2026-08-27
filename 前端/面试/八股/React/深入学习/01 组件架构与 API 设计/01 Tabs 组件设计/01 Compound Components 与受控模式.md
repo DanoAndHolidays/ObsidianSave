@@ -1,5 +1,8 @@
-# 1 Compound Components
-> Last Format Time：8/24/2026 15:30:16
+# 01 Compound Components 与受控模式
+> Last Format Time：8/27/2026 15:20:25
+
+> Last Format Time：8/27/2026
+> 笔记说明：Compound Components、Controlled / Uncontrolled 模式，以及 Tabs 状态所有权的基础模型。
 
 ---
 ## 简单Tab组件
@@ -184,7 +187,7 @@ value="security"
 Tabs 更新
 ```
 
-所以 Controlled 模式的核心是value 是唯一真相来源（source of truth）。
+所以 Controlled 模式的核心是：`value` 是唯一真相来源（source of truth）。〔CR-001〕
 
 ---
 ## 正确写法
@@ -320,11 +323,7 @@ account → security
 
 ---
 ## disabled
-你的判断：
-
-> 应该属于 Tabs.Trigger，因为它和 Trigger 强关联。
-
-✅ 我同意。
+`disabled` 应属于 `Tabs.Trigger`，因为它与单个 Trigger 的交互行为强关联。〔CR-002〕
 
 ```tsx
 <Tabs.Trigger
@@ -397,4 +396,22 @@ Trigger 自己拥有 disabled prop
 
 > **prop 的所有权可以属于 Trigger，但 Root 仍然可能需要知道它。**
 
-这个 distinction 很重要。
+这个区别很重要。
+
+---
+## 内容审核变更记录
+### CR-001｜流畅性
+- 日期：8/25/2026
+- 位置：`Controlled / Uncontrolled` 中 Controlled 小节
+- 原内容：所以 Controlled 模式的核心是value 是唯一真相来源（source of truth）。
+- 调整后：所以 Controlled 模式的核心是：`value` 是唯一真相来源（source of truth）。
+- 原因：补齐标点并明确代码变量边界。
+- 依据：无需外部依据（措辞调整）
+### CR-002｜流畅性
+- 日期：8/25/2026
+- 位置：`disabled` 开头
+- 原内容：你的判断：应该属于 Tabs.Trigger，因为它和 Trigger 强关联。✅ 我同意。
+- 调整后：`disabled` 应属于 `Tabs.Trigger`，因为它与单个 Trigger 的交互行为强关联。
+- 原因：移除对话式审批语气，使笔记可以独立阅读。
+- 依据：无需外部依据（措辞调整）
+

@@ -1,5 +1,8 @@
-# 3 context
-> Last Format Time：8/24/2026 15:30:15
+# 01 Context 更新传播与拆分
+> Last Format Time：8/27/2026 15:20:25
+
+> Last Format Time：8/27/2026
+> 笔记说明：Context 更新传播、Provider value identity，以及拆分 Context 降低无效重渲染。
 
 ---
 ## `useContext` 订阅的是整个 Context
@@ -423,3 +426,4 @@ const actions = useMemo(
 所以还要再记一句：
 
 > **函数引用稳定，不代表包含这个函数的新对象也稳定。**
+

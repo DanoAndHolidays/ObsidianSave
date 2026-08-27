@@ -1,5 +1,8 @@
-# 2 组件库实现
-> Last Format Time：8/24/2026 15:33:00
+# 02 Tabs 组件库实现
+> Last Format Time：8/27/2026 15:20:25
+
+> Last Format Time：8/27/2026
+> 笔记说明：从 Root、List、Trigger、Content 到焦点与选择状态，完整拆解 Tabs 组件库实现。
 
 ---
 ## 当前 Tabs 的整体职责划分
@@ -300,123 +303,75 @@ Activation
 ```
 
 ---
-## 不一定需要 `focusedValue` React state
-最开始容易想到：
+## Manual 模式需要单独维护 roving tab stop
+在 automatic 模式中，方向键移动焦点时会同时更新 selection，因此可以由：
 
 ```ts
-const [focusedValue, setFocusedValue] = useState(...)
+currentValue
 ```
 
-但浏览器其实已经维护了一套真实 focus：
+推导唯一的：
 
 ```ts
-document.activeElement
+tabIndex = 0
 ```
 
-以及：
+但 manual 模式允许：
+
+```text
+Account selected
+Password focused
+```
+
+此时 `aria-selected` 仍属于 Account，而 roving tab stop 应已经移动到 Password。因此需要单独记录最近的焦点项目，例如：
+
+```ts
+const [tabStopValue, setTabStopValue] =
+  useState(currentValue)
+```
+
+方向键导航时同时执行：
+
+```ts
+setTabStopValue(nextItem.value)
+nextItem.element.focus()
+```
+
+也可以直接通过 collection 命令式更新各 Trigger 的 `tabIndex`，但无论采用哪种实现，都必须保证组内只有一个 `tabIndex=0`，并让它跟随最近的组内焦点。浏览器维护真实 focus，组件维护下一次 Tab 键进入该复合控件时的入口；两者职责不同。〔CR-001〕
+
+---
+## `tabIndex` 不等于“当前是否 selected”
+在 roving tabindex 模式中：
+
+```text
+aria-selected
+→ 当前激活、对应面板可见的 Tab
+
+tabIndex = 0
+→ 这组 Tabs 在页面 Tab 顺序中的入口
+```
+
+automatic 模式下二者通常相同。manual 模式下可能出现：
+
+```text
+Account
+selected
+aria-selected = true
+tabIndex = -1
+
+Password
+focused
+aria-selected = false
+tabIndex = 0
+```
+
+`tabIndex={-1}` 仍允许：
 
 ```ts
 element.focus()
 ```
 
-如果 React 再维护：
-
-```ts
-focusedValue
-```
-
-就可能产生双 source of truth：
-
-```text
-React:
-focusedValue = password
-
-DOM:
-activeElement = account
-```
-
-因此当前 Tabs 中没有必要单独保存：
-
-```ts
-focusedValue
-```
-
-方向键直接：
-
-```ts
-nextItem.element.focus();
-```
-
-即可。
-
-当前 focused Trigger 可以在键盘事件中通过：
-
-```ts
-event.target
-```
-
-找到。
-
----
-## `tabIndex` 不等于“当前是否 focused”
-这是容易混淆的一点。
-
-我们现在使用：
-
-```tsx
-tabIndex={isActive ? 0 : -1}
-```
-
-其中：
-
-```ts
-const isActive =
-  currentValue === value;
-```
-
-所以 `tabIndex=0` 跟随的是 selected Tab。
-
-manual 模式可能出现：
-
-```text
-Account
-selected
-tabIndex = 0
-
-Password
-focused
-tabIndex = -1
-```
-
-这是完全合法的。
-
-因为：
-
-```tsx
-tabIndex={-1}
-```
-
-意味着：
-
-> 不能通过普通 Tab 键自然进入这个元素。
-
-但它仍然可以：
-
-```ts
-element.focus();
-```
-
-程序化获得焦点。
-
-所以：
-
-```text
-tabIndex
-≠ 当前 DOM focus
-
-tabIndex
-= 浏览器 Tab 顺序中的入口资格
-```
+程序化获得焦点，但移动焦点后应同步转移组内的 `tabIndex=0`，使 roving tab stop 与最近焦点保持一致。〔CR-002〕
 
 ---
 ## 为什么不能简单根据 `document.activeElement` 设置 tabIndex
@@ -457,7 +412,7 @@ tabIndex = -1
 
 因此：
 
-> DOM focus 和“Tabs 的键盘入口”是两个不同概念。
+> `document.activeElement` 只描述此刻的真实焦点；Tabs 仍需保留最近的组内 tab stop，供焦点离开后再次通过 Tab 键进入。
 
 ---
 ## `activationMode`
@@ -886,7 +841,7 @@ React 会把它当 DOM 属性值处理，并不是裸字符串拼 HTML。
   aria-selected={isActive}
   id={triggerId}
   aria-controls={contentId}
-  tabIndex={isActive ? 0 : -1}
+  tabIndex={isTabStop ? 0 : -1}
 />
 ```
 
@@ -902,6 +857,8 @@ aria-selected
 aria-controls
 → 我控制哪个 TabPanel
 ```
+
+在 automatic 模式下，`isTabStop` 可以和 `isActive` 同步；在 manual 模式下，`isTabStop` 必须跟随最近焦点，而 `isActive` 继续跟随 selection。〔CR-003〕
 
 ### Tabs.Content
 应该：
@@ -1030,7 +987,6 @@ effect 重新执行
 ```text
 hidden
 ≠ 不重新 render
-≠ 一定不发生 layout
 ```
 
 因为：
@@ -1043,11 +999,13 @@ currentValue
 
 `hidden` 的核心优势不是：
 
-> 避免 render / reflow
+> 避免 React render
 
 而是：
 
 > **不卸载组件，从而保留内部状态和生命周期。**
+
+浏览器通常不会渲染带普通 `hidden` 属性的元素，因此它不参与布局；但 CSS 可以覆盖这种默认呈现。无论是否被 CSS 覆盖，React 组件仍保持 mounted，已有 effect 也不会仅因切换 `hidden` 而 cleanup。〔CR-004〕
 
 ---
 ## `useControllableState` 当前还有一个小问题
@@ -1159,7 +1117,7 @@ ARIA
 
 > **2. 不要为了方便重复维护两个 source of truth。**
 
-> **3. `tabIndex=0` 表示 Tab navigation 的入口，不等于当前一定 focused。**
+> **3. `aria-selected` 跟随 selection；roving `tabIndex=0` 跟随最近的组内焦点。**〔CR-005〕
 
 > **4. Keyboard navigation 和 activation 是两种行为。**
 
@@ -1174,3 +1132,42 @@ ARIA
 > **9. Root 非常适合承担“组件实例级 identity”和共享状态的所有权。**
 
 到这里，你这一轮实际上已经把一个简单 Tabs 推进到了一个相当接近真实 Headless UI / Component Library 内部设计的模型。
+
+---
+## 内容审核变更记录
+### CR-001｜事实纠错
+- 日期：8/25/2026
+- 位置：`Manual 模式需要单独维护 roving tab stop`
+- 原内容：浏览器已经维护真实 focus，因此当前 Tabs 没有必要单独保存 `focusedValue`。
+- 调整后：automatic 模式可由 selection 推导 tab stop；manual 模式需要以 state 或命令式 DOM 更新单独维护最近的 roving tab stop。
+- 原因：manual 模式下 focus 与 selection 可以分离，仅依赖 selection 会让 `tabIndex=0` 留在旧的选中项。
+- 依据：[WAI-ARIA APG：Managing Focus in Composites Using a Roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex)
+### CR-002｜事实纠错
+- 日期：8/25/2026
+- 位置：`tabIndex 不等于“当前是否 selected”`
+- 原内容：manual 模式中焦点移到 Password 后，Account 仍为 `tabIndex=0`、Password 为 `tabIndex=-1`，并称其完全合法。
+- 调整后：`aria-selected` 继续跟随 Account，但 `tabIndex=0` 应转移到获得焦点的 Password。
+- 原因：roving tabindex 要求移动焦点时同步更新组内唯一的 Tab 顺序入口。
+- 依据：[WAI-ARIA APG：Managing Focus in Composites Using a Roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex)
+### CR-003｜代码修正
+- 日期：8/25/2026
+- 位置：`Tabs 的 ARIA 语义` 中 `Tabs.Trigger`
+- 原内容：`tabIndex={isActive ? 0 : -1}`
+- 调整后：`tabIndex={isTabStop ? 0 : -1}`，并说明 automatic 与 manual 模式的推导差异。
+- 原因：原代码把 Tab 顺序入口永久绑定到 selection，无法正确表达 manual activation。
+- 依据：[WAI-ARIA APG：Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)；[WAI-ARIA APG：Managing Focus in Composites Using a Roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex)
+### CR-004｜事实纠错
+- 日期：8/25/2026
+- 位置：`return null 和 hidden`
+- 原内容：`hidden` 不一定不发生 layout。
+- 调整后：普通 `hidden` 元素通常不渲染且不参与布局，但 CSS 可以覆盖默认呈现；React 组件仍保持 mounted。
+- 原因：原描述混淆了 HTML 的默认渲染行为与 React 组件是否卸载。
+- 依据：[MDN：HTML hidden 全局属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/hidden)
+### CR-005｜事实纠错
+- 日期：8/25/2026
+- 位置：`这一阶段最重要的整体认知` 第 3 条
+- 原内容：`tabIndex=0` 表示 Tab navigation 的入口，不等于当前一定 focused。
+- 调整后：`aria-selected` 跟随 selection，roving `tabIndex=0` 跟随最近的组内焦点。
+- 原因：原总结遗漏了 manual activation 下必须分离 selection 与 roving tab stop 的约束。
+- 依据：[WAI-ARIA APG：Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
+

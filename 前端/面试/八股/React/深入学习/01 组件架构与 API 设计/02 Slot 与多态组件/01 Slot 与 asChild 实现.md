@@ -1,5 +1,8 @@
-# Slot
-> Last Format Time：8/24/2026 15:33:00
+# 01 Slot 与 asChild 实现
+> Last Format Time：8/27/2026 15:20:25
+
+> Last Format Time：8/27/2026
+> 笔记说明：Slot / asChild 的子元素合并、事件处理、ref 传递和组件组合模型。
 
 ```tsx
 import React, { cloneElement, forwardRef, ReactElement } from 'react'
@@ -27,7 +30,7 @@ export const Slot = forwardRef<HTMLElement, SlotProps>(function Slot(
 
 ```
 
-可以，给你整理成适合直接记笔记的版本。
+下面从 DOM 所有权、props 合并、事件与 ref 组合几个方面梳理 `Slot` / `asChild` 的实现。〔CR-001〕
 
 ---
 ## React Slot / asChild
@@ -637,3 +640,14 @@ ref
 > **如何在不控制 DOM 类型的情况下，仍然把组件库的行为和语义组合到用户元素上。**
 
 这也是 Radix `Slot` / `asChild` 这类设计最核心的价值。
+
+---
+## 内容审核变更记录
+### CR-001｜流畅性
+- 日期：8/25/2026
+- 位置：开头代码示例后的引言
+- 原内容：可以，给你整理成适合直接记笔记的版本。
+- 调整后：下面从 DOM 所有权、props 合并、事件与 ref 组合几个方面梳理 `Slot` / `asChild` 的实现。
+- 原因：移除对话残留，并让引言直接说明笔记覆盖范围。
+- 依据：无需外部依据（措辞调整）
+
