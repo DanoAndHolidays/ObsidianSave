@@ -28,11 +28,11 @@ python .claude/skills/obsidian-organize/scripts/normalize.py --write <file.md> [
 # JSON 输出供其他工具消费
 python .claude/skills/obsidian-organize/scripts/normalize.py --json <file.md>
 
-# 校验语义调整的 CR-xxx 锚点与变更记录
+# 校验局部语义修改标记与旧协议残留
 python .claude/skills/obsidian-organize/scripts/validate_content_review.py --json <file.md>
 ```
 
-`normalize.py` 只做**纯正则可解的机械修复**（H4→H5、文件无 H2 时 H3 升 H2、H1 元信息块时间戳、`---` 分隔符、代码块空行等）。语义审核由 Agent 完整阅读后执行；每个改变表达、事实、代码含义或顺序的调整，都必须在新内容旁添加可见 `〔CR-xxx〕` 锚点，并在文末记录日期、位置、原内容、调整后、原因与依据。`validate_content_review.py` 负责校验标记一一对应和字段完整性。
+`normalize.py` 只做**纯正则可解的机械修复**（H4→H5、文件无 H2 时 H3 升 H2、H1 元信息块时间戳、`---` 分隔符、代码块空行等）。语义审核由 Agent 完整阅读后执行；每个改变表达、事实、代码含义或顺序的调整，都必须在修改位置附近添加 `*已修改*`、`*已补充*` 或 `*已纠正*`。不要使用 `〔CR-xxx〕`，不要追加文末变更记录。`validate_content_review.py` 负责检查旧协议残留与代码块内非法标记。
 
 整理时**跳过**以下路径：`.obsidian/`、`attachments/`、`docs/superpowers/specs/`。
 

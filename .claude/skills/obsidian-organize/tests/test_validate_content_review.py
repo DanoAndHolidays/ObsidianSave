@@ -16,55 +16,24 @@ class ValidateContentReviewTests(unittest.TestCase):
         self.assertEqual(result['entry_count'], 0)
         self.assertEqual(result['issues'], [])
 
-    def test_valid_marker_and_log(self):
-        source = (
-            '# Note\n'
-            '修正后的描述。〔CR-001〕\n\n'
-            '---\n'
-            '## 内容审核变更记录\n'
-            '### CR-001｜事实纠错\n'
-            '- 日期：8/13/2026\n'
-            '- 位置：第一段\n'
-            '- 原内容：旧描述。\n'
-            '- 调整后：修正后的描述。\n'
-            '- 原因：旧描述不准确。\n'
-            '- 依据：[官方文档](https://example.com/docs)\n'
-        )
+    def test_inline_markers_are_valid(self):
+        source = '# Note\n修正后的描述。 *已修改*\n新增重点。 *已补充*\n类型纠正。 *已纠正*\n'
         result = review.validate_content_review(source)
-        self.assertEqual(result['entry_count'], 1)
-        self.assertEqual(result['anchor_count'], 1)
+        self.assertEqual(result['entry_count'], 3)
+        self.assertEqual(result['anchor_count'], 3)
         self.assertEqual(result['issues'], [])
 
-    def test_reports_orphans_missing_fields_and_invalid_evidence(self):
-        source = (
-            '# Note\n'
-            '修改一。〔CR-001〕\n'
-            '修改二。〔CR-002〕\n\n'
-            '---\n'
-            '## 内容审核变更记录\n'
-            '### CR-001｜代码修正\n'
-            '- 日期：2026-08-13\n'
-            '- 位置：示例代码\n'
-            '- 原内容：old()\n'
-            '- 调整后：new()\n'
-            '- 原因：旧调用无效。\n'
-            '- 依据：无需外部依据（明显错误）\n'
-            '### CR-003｜未知类型\n'
-            '- 日期：8/13/2026\n'
-        )
+    def test_legacy_protocol_is_rejected(self):
+        source = '# Note\n修改一。〔CR-001〕\n## 内容审核变更记录\n### CR-001｜事实纠错\n'
         result = review.validate_content_review(source)
         kinds = {item['kind'] for item in result['issues']}
-        self.assertIn('invalid_date', kinds)
-        self.assertIn('evidence_required', kinds)
-        self.assertIn('orphan_anchor', kinds)
-        self.assertIn('orphan_entry', kinds)
-        self.assertIn('unsupported_type', kinds)
-        self.assertIn('missing_field', kinds)
+        self.assertIn('legacy_review_marker', kinds)
+        self.assertIn('legacy_review_protocol', kinds)
 
-    def test_anchor_inside_code_is_rejected(self):
-        source = '# Note\n```text\n〔CR-001〕\n```\n'
+    def test_marker_inside_code_is_rejected(self):
+        source = '# Note\n```text\n*已修改*\n```\n'
         result = review.validate_content_review(source)
-        self.assertEqual(result['issues'][0]['kind'], 'anchor_in_code')
+        self.assertEqual(result['issues'][0]['kind'], 'marker_in_code')
 
 
 if __name__ == '__main__':

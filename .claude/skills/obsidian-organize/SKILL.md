@@ -1,11 +1,11 @@
 ---
 name: obsidian-organize
-description: Review, organize, and diagnose Markdown notes in this Obsidian vault. Use when the user asks to整理、清理、规范化、审核、复查或检查 Obsidian 笔记. Mechanical formatting is enforced automatically for staged notes by the repository pre-commit hook; when invoked, collect changes since the latest obsidian-reviewed-* tag, verify formatting, review fluency/correctness/order, and add validated audit markers for semantic adjustments.
+description: Review, organize, and diagnose Markdown notes in this Obsidian vault. Use when the user asks to整理、清理、规范化、审核、复查或检查 Obsidian 笔记. Mechanical formatting is enforced automatically for staged notes by the repository pre-commit hook; when invoked, collect changes since the latest obsidian-reviewed-* tag, verify formatting, review fluency/correctness/order, and add concise inline markers for semantic adjustments.
 ---
 
 # Obsidian 笔记整理
 
-仓库采用两层流程：Git 提交时由确定性脚本自动完成机械格式化；用户调用本技能时，Agent 才逐篇完整阅读并审核内容。Agent 不手工重复脚本能确定的格式任务；凡是改变表达、事实、代码含义或章节顺序的语义调整，都必须按 `CR-xxx` 协议留下可见锚点和完整变更记录。
+仓库采用两层流程：Git 提交时由确定性脚本自动完成机械格式化；用户调用本技能时，Agent 才逐篇完整阅读并审核内容。Agent 不手工重复脚本能确定的格式任务；凡是改变表达、事实、代码含义或章节顺序的语义调整，都必须在修改位置附近留下简洁的局部标记。默认使用 `*已修改*`；新增内容可用 `*已补充*`，事实纠错可用 `*已纠正*`。不使用 `〔CR-xxx〕`，也不追加文末审核变更记录。
 
 ## 日常提交自动化
 
@@ -52,14 +52,14 @@ python .claude/skills/obsidian-organize/scripts/organize_changed_notes.py --writ
 5. 再运行一次预览。要求 `changed_count=0`；未闭合围栏等硬错误必须解决。未知语言、空标题等判断项可记录后进入 Agent 审核。
 6. 按候选列表逐篇完整阅读，依照 [内容审核与变更标记规则](reference/content-review-rules.md) 检查流畅性、事实、代码、顺序、完整性、去重和术语。不能只读脚本报告的行号。
 7. 高把握问题直接修复；事实与代码调整先用官方/一手来源验证。低把握或来源冲突的问题不猜测，向用户说明。
-8. 每个语义调整添加唯一可见锚点 `〔CR-xxx〕`，并在笔记末尾的 `## 内容审核变更记录` 中逐项记录日期、位置、原内容、调整后、原因和依据。
-9. 语义调整后再次执行写回与预览，直到以下计数全部为 0：
+8. 每个语义调整在修改位置附近添加局部标记：`*已修改*`、`*已补充*` 或 `*已纠正*`。大段重写可在小节标题下一行标记一次；纯机械格式化不添加标记。不要使用 `〔CR-xxx〕`，不要追加 `## 内容审核变更记录`。
+9. 语义调整后再次执行写回与预览；要求机械问题和非法旧标记计数为 0。局部标记本身是合规结果，不要求计数为 0：
 
 ```text
 changed_count
 code_issue_count
 manual_issue_count
-review_marker_issue_count
+review_marker_issue_count（仅表示旧协议残留或非法标记）
 ```
 
 最终报告候选篇数、实际完整审核篇数、语义调整数（`review_entry_count`）及未解决问题。候选篇数与审核篇数不一致时不得声称完成。
@@ -102,11 +102,9 @@ python .claude/skills/obsidian-organize/scripts/organize_changed_notes.py --writ
 
 `validate_content_review.py` 自动：
 
-- 校验 `〔CR-xxx〕` 可见锚点与 `### CR-xxx｜类型` 记录一一对应
-- 拒绝重复编号、孤立锚点、孤立记录和代码块内锚点
-- 要求日期、位置、原内容、调整后、原因、依据字段完整
-- 校验允许的审核类型、日期格式和事实/代码纠错的依据要求
-- 要求内容审核变更记录位于笔记末尾
+- 拒绝遗留 `〔CR-xxx〕`、`### CR-xxx｜类型` 和文末 `## 内容审核变更记录`
+- 拒绝把 `*已修改*`、`*已补充*`、`*已纠正*` 写进代码块
+- 保留 `review_marker_issue_count` 字段供整理脚本兼容；它只表示旧协议残留或非法标记
 
 单文件审核标记排查：
 

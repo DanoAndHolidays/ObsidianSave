@@ -1,29 +1,17 @@
 #!/usr/bin/env python3
-"""校验 Obsidian 笔记中的内容审核锚点与变更记录。"""
+"""校验 Obsidian 笔记中的局部内容审核标记。"""
 
 import argparse
 import json
 import re
 import sys
-from collections import Counter
 from pathlib import Path
 
 
-REVIEW_HEADING = '## 内容审核变更记录'
-ANCHOR_RE = re.compile(r'〔(CR-\d{3})〕')
-ENTRY_RE = re.compile(r'^### (CR-\d{3})｜(.+?)\s*$', re.MULTILINE)
-DATE_RE = re.compile(r'^\d{1,2}/\d{1,2}/\d{4}$')
-FIELD_NAMES = ('日期', '位置', '原内容', '调整后', '原因', '依据')
-ALLOWED_TYPES = {
-    '流畅性',
-    '事实纠错',
-    '顺序调整',
-    '补充说明',
-    '删减去重',
-    '代码修正',
-    '术语统一',
-}
-EVIDENCE_REQUIRED_TYPES = {'事实纠错', '代码修正'}
+LEGACY_HEADING = '## 内容审核变更记录'
+LEGACY_MARKER_RE = re.compile(r'〔CR-\d{3}〕')
+LEGACY_ENTRY_RE = re.compile(r'^### CR-\d{3}｜', re.MULTILINE)
+LOCAL_MARKER_RE = re.compile(r'\*(?:已修改|已补充|已纠正)\*')
 
 
 def configure_console_output() -> None:
@@ -38,101 +26,35 @@ def issue(kind: str, **details) -> dict:
     return {'kind': kind, **details}
 
 
-def anchors_outside_code(content: str) -> tuple[list[str], list[dict]]:
-    anchors: list[str] = []
+def scan_markers(content: str) -> tuple[list[str], list[dict], list[dict]]:
+    """返回局部标记、旧协议问题和代码块内标记问题。"""
+    markers: list[str] = []
     issues: list[dict] = []
     in_code = False
     for line_number, line in enumerate(content.splitlines(), 1):
         if re.match(r'^\s*```', line):
             in_code = not in_code
             continue
-        for anchor in ANCHOR_RE.findall(line):
-            if in_code:
-                issues.append(issue('anchor_in_code', id=anchor, line=line_number))
-            else:
-                anchors.append(anchor)
-    return anchors, issues
-
-
-def parse_fields(block: str) -> dict[str, str]:
-    fields: dict[str, str] = {}
-    for line in block.splitlines():
-        match = re.match(r'^- (日期|位置|原内容|调整后|原因|依据)：(.*)$', line)
-        if match:
-            fields[match.group(1)] = match.group(2).strip()
-    return fields
+        legacy_matches = LEGACY_MARKER_RE.findall(line)
+        if LEGACY_HEADING in line or LEGACY_ENTRY_RE.search(line):
+            issues.append(issue('legacy_review_protocol', line=line_number))
+        local_matches = LOCAL_MARKER_RE.findall(line)
+        if in_code and (legacy_matches or local_matches):
+            for marker in legacy_matches + local_matches:
+                issues.append(issue('marker_in_code', marker=marker, line=line_number))
+        elif not in_code:
+            markers.extend(local_matches)
+        if legacy_matches and not in_code:
+            issues.append(issue('legacy_review_marker', marker=legacy_matches[0], line=line_number))
+    return markers, issues, []
 
 
 def validate_content_review(content: str) -> dict:
-    issues: list[dict] = []
-    heading_count = content.count(REVIEW_HEADING)
-    all_anchors, anchor_issues = anchors_outside_code(content)
-    issues.extend(anchor_issues)
-
-    if heading_count == 0:
-        if all_anchors:
-            issues.append(issue('missing_review_log'))
-        return {'entry_count': 0, 'anchor_count': len(all_anchors), 'issues': issues}
-
-    if heading_count > 1:
-        issues.append(issue('duplicate_review_log', count=heading_count))
-
-    body, log = content.split(REVIEW_HEADING, 1)
-    body_anchors, _ = anchors_outside_code(body)
-    log_anchors = ANCHOR_RE.findall(log)
-    for anchor in log_anchors:
-        issues.append(issue('anchor_in_review_log', id=anchor))
-
-    anchor_counts = Counter(body_anchors)
-    for anchor, count in anchor_counts.items():
-        if count > 1:
-            issues.append(issue('duplicate_anchor', id=anchor, count=count))
-
-    entries = list(ENTRY_RE.finditer(log))
-    if not entries:
-        issues.append(issue('empty_review_log'))
-
-    entry_ids = [match.group(1) for match in entries]
-    entry_counts = Counter(entry_ids)
-    for entry_id, count in entry_counts.items():
-        if count > 1:
-            issues.append(issue('duplicate_entry', id=entry_id, count=count))
-
-    for index, match in enumerate(entries):
-        entry_id, review_type = match.groups()
-        end = entries[index + 1].start() if index + 1 < len(entries) else len(log)
-        block = log[match.end():end]
-        fields = parse_fields(block)
-
-        if review_type not in ALLOWED_TYPES:
-            issues.append(issue('unsupported_type', id=entry_id, value=review_type))
-
-        for field in FIELD_NAMES:
-            if not fields.get(field):
-                issues.append(issue('missing_field', id=entry_id, field=field))
-
-        date = fields.get('日期')
-        if date and not DATE_RE.fullmatch(date):
-            issues.append(issue('invalid_date', id=entry_id, value=date))
-
-        evidence = fields.get('依据', '')
-        if review_type in EVIDENCE_REQUIRED_TYPES and '无需外部依据' in evidence:
-            issues.append(issue('evidence_required', id=entry_id, type=review_type))
-
-    anchor_ids = set(anchor_counts)
-    entry_id_set = set(entry_ids)
-    for anchor in sorted(anchor_ids - entry_id_set):
-        issues.append(issue('orphan_anchor', id=anchor))
-    for entry_id in sorted(entry_id_set - anchor_ids):
-        issues.append(issue('orphan_entry', id=entry_id))
-
-    trailing_h2 = re.search(r'^## (?!内容审核变更记录).+$', log, re.MULTILINE)
-    if trailing_h2:
-        issues.append(issue('review_log_not_last', heading=trailing_h2.group(0)))
-
+    markers, issues, _ = scan_markers(content)
     return {
-        'entry_count': len(entries),
-        'anchor_count': len(body_anchors),
+        # 保留 entry_count/anchor_count 字段，兼容整理脚本；现在表示局部标记数量。
+        'entry_count': len(markers),
+        'anchor_count': len(markers),
         'issues': issues,
     }
 
