@@ -571,9 +571,9 @@ def remove_spurious_separators(content: str) -> tuple[str, int]:
 
 def remove_blank_after_headings(content: str) -> tuple[str, int]:
     """
-    删除 H2-H6 标题后紧接的空行。
+    删除 H2-H6 标题后紧接的连续空行（单轮内全部删除）。
     规则：标题 → 正文/列表/代码块/下一级标题 均不空行。
-    唯一例外：标题 → `> 引用块` 空一行（保留空行）。
+    唯一例外：标题 → `> 引用块` 空一行（保留恰好一个空行）。
     H1 跳过（其元信息块由 update_h1_metadata 处理）。
     须跟踪代码块状态。
     """
@@ -590,23 +590,23 @@ def remove_blank_after_headings(content: str) -> tuple[str, int]:
         if not HEADING_H2_H6.match(line):
             continue
 
-        # 下一行必须是空行才有得删
-        if i + 1 >= len(lines):
-            continue
-        if lines[i + 1].strip() != '':
-            continue  # 不空行，合规
+        # 定位标题后连续空行区间 [i + 1, j)
+        j = i + 1
+        while j < len(lines) and lines[j].strip() == '':
+            j += 1
 
-        # 下一行是空行，看再下一行决定
-        if i + 2 >= len(lines):
+        if j == i + 1:
+            continue  # 不空行，合规
+        if j >= len(lines):
             # split('\n') 会把文件末尾换行表示成一个空字符串；
             # 这不是标题后的空白行，应保留 POSIX 末尾换行。
             continue
 
-        next_content = lines[i + 2]
-        if next_content.strip().startswith('> '):
-            continue  # 引用块，保留空行
-
-        to_remove.add(i + 1)
+        if lines[j].strip().startswith('> '):
+            # 引用块例外：保留恰好一个空行，删除多余空行
+            to_remove.update(range(i + 2, j))
+        else:
+            to_remove.update(range(i + 1, j))
 
     if not to_remove:
         return content, 0

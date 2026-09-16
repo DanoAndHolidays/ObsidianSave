@@ -1,8 +1,11 @@
 # AbortController ⌚️
+> Last Format Time：9/16/2026 19:24:50
+
 > Last Format Time：6/12/2026 19:46:43
 
 在 JavaScript 中，`AbortController` 是一个用于中止一个或多个异步操作（如 `fetch` 请求、事件监听器等）的控制器对象。它通过关联的 `AbortSignal` 对象来传递中止信号。
 
+---
 ## 核心使用步骤
 1. **创建控制器**：使用 `new AbortController()` 创建一个实例。
 2. **获取信号**：通过控制器的 `.signal` 属性获取 `AbortSignal` 对象。

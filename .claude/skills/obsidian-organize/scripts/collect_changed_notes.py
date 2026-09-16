@@ -12,7 +12,7 @@ DEFAULT_EXCLUDES = (
     '.obsidian/',
     'attachments/',
     'docs/superpowers/specs/',
-    '.claude/skills/',
+    '.claude/',
     '.agents/',
     '.codex/',
 )
@@ -130,7 +130,8 @@ def collect_changed_notes(root: Path, baseline: str | None = None) -> dict:
     )
     working = working_tree_paths(root)
     files = list(dict.fromkeys(
-        path for path in [*committed, *working] if is_note_path(path)
+        path for path in [*committed, *working]
+        if is_note_path(path) and (root / path).is_file()
     ))
     return {
         'baseline': baseline,

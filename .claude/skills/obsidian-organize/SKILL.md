@@ -76,7 +76,7 @@ python .claude/skills/obsidian-organize/scripts/organize_changed_notes.py --writ
 
 - 选择最新 `obsidian-reviewed-*` tag；不存在时兼容旧 `obsidian-organized-*`
 - 合并 `<tag>..HEAD` 与 staged、unstaged、untracked Markdown 文件
-- 跳过删除、重命名、`.obsidian/`、`attachments/`、`docs/superpowers/specs/`、`.claude/skills/`、`.agents/`、`.codex/`
+- 跳过删除、重命名、已不在磁盘上的路径、`.obsidian/`、`attachments/`、`docs/superpowers/specs/`、`.claude/`、`.agents/`、`.codex/`
 - 去重并执行 20 文件阈值
 
 `normalize.py` 自动：

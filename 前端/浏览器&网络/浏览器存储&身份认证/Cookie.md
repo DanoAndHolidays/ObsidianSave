@@ -1,4 +1,35 @@
 # Cookie
+> Last Format Time：9/16/2026 19:24:50
+
+==一条 Cookie = 一个键值对 + 一组控制这条 Cookie 如何存储和发送的属性。==
+
+服务器设置 Cookie：
+
+```text
+HTTP/1.1 200 OK
+Set-Cookie: sessionId=abc123; HttpOnly; Secure; Path=/
+```
+
+浏览器之后访问这个网站，会自动发：
+
+```text
+GET /user HTTP/1.1
+Host: example.com
+Cookie: sessionId=abc123
+```
+
+注意：
+
+```text
+Cookie: sessionId=abc123
+```
+
+浏览器**不会把 `HttpOnly`、`Secure`、`Path` 这些属性发送给服务器**。
+
+因为这些属性是给**浏览器自己看的规则**，告诉浏览器：
+
+> 什么时候应该发送这条 Cookie。
+
 用于在前端对后端发送请求时会带上cookie中的内容，但其存储在本地且可以直接访问查看的特性，使其不能存储用户的私密信息与账密
 **单个 Cookie 的大小不能超过 4KB（即 4096 字节）**。
 
@@ -8,14 +39,16 @@ cookie 没有设置 Expires 和 Max-Age 时，被当作**会话 Cookie（Session
 1. 不区分端口号（共享）根据 RFC 6265 规范，Cookie 的作用域仅由 Domain（域名）和 Path（路径）决定，端口号不参与 Cookie 的匹配逻辑。这意味着，只要域名相同，无论端口是否不同，Cookie 都是共享的。例如，在 http://localhost:8080 设置的 Cookie，在访问 http://localhost:3000 时同样会被携带发送。如果两个端口的服务使用了相同的 Cookie 键名和 Path，后写入的值会直接覆盖前面的值，这在多应用部署时极易引发登录态错乱等安全问题。
 2. 严格区分协议（隔离）浏览器为 http 和 https 维护了完全独立的 Cookie 容器。即使域名和端口完全相同，只要协议不同，Cookie 也是相互隔离、无法共享的。例如，http://localhost:8080 写入的 Cookie，在 https://localhost:8080 中是完全不可见的。此外，如果 Cookie 被设置了 Secure 属性，则它只能在 HTTPS 协议的请求中被发送；若目标地址是 HTTP 协议，浏览器会直接拒绝发送该 Cookie。
 
-### 属性详解
+---
+## 属性详解
 ```javascript
 // Cookie 格式：key=value; attributes
 document.cookie = "username=john; domain=.example.com; path=/; max-age=3600; secure; samesite=strict";
 ```
 
 Cookie 主要属性包括：
-- **key=value**：键值对
+- **key**：键
+- **value**：值
 - **domain**：作用域名
 	  - 设置为 `.a.com` 与`a.com`可作用于 a.com 及其所有子域名
 	  - 不设置和设置则仅作用于当前域名

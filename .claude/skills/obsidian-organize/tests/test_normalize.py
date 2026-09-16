@@ -189,6 +189,42 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(second, first)
         self.assertEqual(stats['blank_after_heading_removed'], 0)
 
+    def test_multiple_blank_lines_after_heading_converge_in_single_call(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## Section\n'
+            '\n\n\n\n\n\n\n\n'
+            '正文\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        self.assertIn('## Section\n正文\n', normalized)
+        self.assertEqual(stats['blank_after_heading_removed'], 8)
+        self.assertEqual(stats['normalization_passes'], 1)
+
+    def test_blank_lines_before_blockquote_collapse_to_one(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## Section\n'
+            '\n\n\n\n'
+            '> 引用\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        self.assertIn('## Section\n\n> 引用\n', normalized)
+        self.assertNotIn('\n\n\n\n> 引用', normalized)
+        self.assertEqual(stats['blank_after_heading_removed'], 3)
+
     def test_single_call_reaches_fixed_point_after_pseudo_heading_conversion(self):
         source = (
             '# Note\n'
