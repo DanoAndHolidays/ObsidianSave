@@ -8,6 +8,7 @@ from pathlib import Path
 
 from collect_changed_notes import collect_changed_notes
 from normalize import configure_console_output, process_file
+from validate_content_review import validate_content_review
 
 
 def summarize(results: list[dict]) -> dict:
@@ -41,16 +42,25 @@ def run(
 
     collected['limit'] = limit
     collected['over_limit'] = collected['count'] > limit
-    results = [
-        process_file(root / path, write=write)
-        for path in collected['files']
-    ]
+    results = []
+    for path in collected['files']:
+        note_path = root / path
+        result = process_file(note_path, write=write)
+        review = validate_content_review(note_path.read_text(encoding='utf-8'))
+        result['review_entry_count'] = review['entry_count']
+        result['review_anchor_count'] = review['anchor_count']
+        result['review_marker_issues'] = review['issues']
+        results.append(result)
     report = {
         'mode': 'write' if write else 'preview',
         'collection': collected,
         'changed_count': sum(1 for result in results if result['changed']),
         'code_issue_count': sum(len(result['code_issues']) for result in results),
         'manual_issue_count': sum(len(result['manual_issues']) for result in results),
+        'review_entry_count': sum(result['review_entry_count'] for result in results),
+        'review_marker_issue_count': sum(
+            len(result['review_marker_issues']) for result in results
+        ),
         'results': results,
         'totals': summarize(results),
     }
@@ -61,7 +71,7 @@ def main() -> int:
     configure_console_output()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', default='.', help='Obsidian 仓库根目录')
-    parser.add_argument('--baseline', help='覆盖自动发现的整理 tag')
+    parser.add_argument('--baseline', help='覆盖自动发现的内容审核 tag')
     parser.add_argument('--limit', type=int, default=20, help='需确认的文件数阈值')
     parser.add_argument('--write', action='store_true', help='写回机械修复')
     parser.add_argument(

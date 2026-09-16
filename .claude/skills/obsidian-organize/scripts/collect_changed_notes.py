@@ -12,10 +12,14 @@ DEFAULT_EXCLUDES = (
     '.obsidian/',
     'attachments/',
     'docs/superpowers/specs/',
-    '.claude/skills/',
+    '.claude/',
     '.agents/',
     '.codex/',
 )
+DEFAULT_EXCLUDE_FILES = {
+    'CLAUDE.md',
+    'README.md',
+}
 
 
 def configure_console_output() -> None:
@@ -34,14 +38,22 @@ def run_git(root: Path, *args: str) -> bytes:
 
 
 def latest_baseline(root: Path) -> str | None:
-    output = run_git(
-        root,
-        'tag',
-        '--list',
-        'obsidian-organized-*',
-        '--sort=-creatordate',
-    ).decode('utf-8', 'surrogateescape')
-    return next((line.strip() for line in output.splitlines() if line.strip()), None)
+    """优先使用内容审核 tag；没有时兼容旧的整理 tag。"""
+    for pattern in ('obsidian-reviewed-*', 'obsidian-organized-*'):
+        output = run_git(
+            root,
+            'tag',
+            '--list',
+            pattern,
+            '--sort=-creatordate',
+        ).decode('utf-8', 'surrogateescape')
+        baseline = next(
+            (line.strip() for line in output.splitlines() if line.strip()),
+            None,
+        )
+        if baseline:
+            return baseline
+    return None
 
 
 def decode_nul_paths(output: bytes) -> list[str]:
@@ -89,6 +101,7 @@ def is_note_path(path: str) -> bool:
     return (
         normalized.lower().endswith('.md')
         and not any(normalized.startswith(prefix) for prefix in DEFAULT_EXCLUDES)
+        and normalized not in DEFAULT_EXCLUDE_FILES
     )
 
 
@@ -117,7 +130,8 @@ def collect_changed_notes(root: Path, baseline: str | None = None) -> dict:
     )
     working = working_tree_paths(root)
     files = list(dict.fromkeys(
-        path for path in [*committed, *working] if is_note_path(path)
+        path for path in [*committed, *working]
+        if is_note_path(path) and (root / path).is_file()
     ))
     return {
         'baseline': baseline,
@@ -130,7 +144,7 @@ def main() -> int:
     configure_console_output()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', default='.', help='Obsidian 仓库根目录')
-    parser.add_argument('--baseline', help='覆盖自动发现的整理 tag')
+    parser.add_argument('--baseline', help='覆盖自动发现的内容审核 tag')
     parser.add_argument('--limit', type=int, default=20, help='需确认的文件数阈值')
     parser.add_argument('--paths-only', action='store_true', help='每行输出一个路径')
     args = parser.parse_args()

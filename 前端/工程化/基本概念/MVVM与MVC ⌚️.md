@@ -1,7 +1,80 @@
-# MVVM与MVC
-## 1 MVC
+# MVVM与MVC ⌚️
+> Last Format Time：9/16/2026 19:24:50
 
+---
+## 1 MVC
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56662504fb1b43de86e6b663697945da~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=743&h=382&s=66496&e=png&b=fdfafa)
+这里的 **MVC** 指的是：**Model - View - Controller**，一种经典的 Web 应用分层设计模式。
+
+放到 Spring 里，通常就是 **Spring MVC**，主要负责处理 HTTP 请求这一套东西。
+
+你可以先这样理解：
+- **Model（模型）**：业务数据，比如用户信息、商品信息
+- **View（视图）**：最终展示给用户的页面，比如 Thymeleaf/JSP 渲染出的 HTML
+- **Controller（控制器）**：接收请求、调用业务逻辑、返回结果
+
+比如：
+```java
+@RestController
+public class UserController {
+
+    @GetMapping("/user")
+    public User getUser() {
+        return new User("Dano", 22);
+    }
+}
+```
+
+这里 `UserController` 就属于 **Controller**。
+
+请求大概经过：
+```text
+浏览器
+  ↓
+GET /user
+  ↓
+Spring MVC
+  ↓
+Controller
+  ↓
+Service / 业务逻辑
+  ↓
+返回 User
+  ↓
+Spring MVC 转成 JSON
+  ↓
+浏览器
+```
+
+所以你看到：
+```text
+spring-boot-starter-webmvc
+```
+
+可以粗暴理解为：
+
+> **给 Spring Boot 项目装上“传统 Servlet Web + Spring MVC”这一整套 Web 开发能力。**
+
+它里面会涉及你后面经常见到的：
+```java
+@Controller
+@RestController
+@RequestMapping
+@GetMapping
+@PostMapping
+@RequestParam
+@PathVariable
+@RequestBody
+@ResponseBody
+```
+
+另外有一点很重要：现在写前后端分离项目时，**MVC 里的 View 往往不是 HTML 页面了**，而是直接返回 JSON。
+
+所以虽然名字还叫 MVC，实际你日常写 Spring Boot 后端时，最常接触的是：
+
+> **Controller 接收 HTTP 请求 → 调 Service → 返回 JSON。**
+
+你现阶段把 **Spring MVC ≈ Spring 用来做 Web 接口的核心框架** 来理解就够了。
 
 ### MVC组成
 **MVC思想** ：Controller负责将Model的数据用View显示出来。
@@ -22,8 +95,9 @@
 - 不适合小型项目开发
 - **视图与控制器联系过于紧密**，妨碍了它们的独立重用
 - 控制器所承担的责任太过重大，没有办法应付日益复杂的交互场景
-## 2 MVVM——视图模型双向绑定（谈谈你对MVVM开发模式的理解）
 
+---
+## 2 MVVM——视图模型双向绑定（谈谈你对MVVM开发模式的理解）
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86732b9278e74d6c857d72ea77995d2d~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=796&h=411&s=20174&e=png&b=fefdfd)
 ### MVVM 组成：
 MVVM由Model，View，ViewModel三部分构成。
@@ -54,8 +128,9 @@ MVVM由Model，View，ViewModel三部分构成。
 
 MVC 和 MVVM 都是前端用来**分离关注点、组织代码**的架构模式。简单说，就是让代码分成几块，各自负责不同的事，避免一团乱麻。
 
+---
 ## 简述
-### 1. MVC（Model-View-Controller）
+### MVC（Model-View-Controller）
 - **Model（模型）**：管理数据、业务逻辑和状态。比如从服务器获取的用户列表。
 - **View（视图）**：负责界面展示，把 Model 的数据渲染出来。在 Web 前端里就是 HTML/CSS。
 - **Controller（控制器）**：作为中间人，处理用户交互。它接收 View 发出的操作（如点击按钮），去更新 Model，然后让 View 重新渲染。
@@ -67,7 +142,7 @@ MVC 和 MVVM 都是前端用来**分离关注点、组织代码**的架构模式
 
 **前端典型代表**：Backbone.js（早期）、AngularJS（早期也自称为 MVC，但其实更接近 MVVM）。
 
-### 2. MVVM（Model-View-ViewModel）
+### MVVM（Model-View-ViewModel）
 它是 MVC 的变体，专为**数据绑定**而生。
 - **Model**：与 MVC 一样，管数据和业务逻辑。
 - **View**：用户看到的界面，和 MVC 的 View 类似。
@@ -82,7 +157,6 @@ MVC 和 MVVM 都是前端用来**分离关注点、组织代码**的架构模式
 
 
 ### 二者的核心区别
-
 | | **MVC** | **MVVM** |
 |------|--------|----------|
 | **核心中介** | Controller 手动处理事件，手动更新 View | ViewModel 通过绑定自动同步 View |

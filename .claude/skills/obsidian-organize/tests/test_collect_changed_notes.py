@@ -2,6 +2,7 @@ import importlib.util
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 
@@ -46,6 +47,71 @@ class CollectChangedNotesTests(unittest.TestCase):
 
         self.assertEqual(result['baseline'], 'obsidian-organized-2026-07-14')
         self.assertEqual(result['files'], ['tracked.md', '新笔记.md'])
+
+    def test_prefers_reviewed_baseline_over_legacy_organized_tag(self):
+        with mock.patch.object(
+            collector,
+            'run_git',
+            return_value=b'obsidian-reviewed-2026-08-14\n',
+        ) as run_git:
+            baseline = collector.latest_baseline(Path('.'))
+
+        self.assertEqual(baseline, 'obsidian-reviewed-2026-08-14')
+        self.assertEqual(run_git.call_count, 1)
+
+    def test_excludes_whole_claude_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.git(root, 'init')
+            (root / 'base.md').write_text('# base\n', encoding='utf-8')
+            self.git(root, 'add', 'base.md')
+            self.git(
+                root,
+                '-c', 'user.name=Test',
+                '-c', 'user.email=test@example.com',
+                'commit', '-m', 'initial',
+            )
+            self.git(root, 'tag', 'obsidian-organized-2026-07-14')
+
+            for scratch in ('.claude/tmp', '.claude/tmp_5ai', '.claude/worktrees/wt'):
+                target = root / scratch
+                target.mkdir(parents=True, exist_ok=True)
+                (target / 'draft.md').write_text('# draft\n', encoding='utf-8')
+
+            result = collector.collect_changed_notes(root)
+
+        self.assertEqual(result['files'], [])
+        self.assertEqual(result['count'], 0)
+
+    def test_skips_committed_note_deleted_from_worktree(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.git(root, 'init')
+            (root / 'base.md').write_text('# base\n', encoding='utf-8')
+            self.git(root, 'add', 'base.md')
+            self.git(
+                root,
+                '-c', 'user.name=Test',
+                '-c', 'user.email=test@example.com',
+                'commit', '-m', 'initial',
+            )
+            self.git(root, 'tag', 'obsidian-organized-2026-07-14')
+
+            moved = root / '旧笔记.md'
+            moved.write_text('# 旧笔记\n', encoding='utf-8')
+            self.git(root, 'add', '旧笔记.md')
+            self.git(
+                root,
+                '-c', 'user.name=Test',
+                '-c', 'user.email=test@example.com',
+                'commit', '-m', 'add note',
+            )
+            moved.unlink()
+
+            result = collector.collect_changed_notes(root)
+
+        self.assertEqual(result['files'], [])
+        self.assertEqual(result['count'], 0)
 
 
 if __name__ == '__main__':

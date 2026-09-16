@@ -1,0 +1,6 @@
+#!/bin/sh
+
+repo_root=$(git rev-parse --show-toplevel) || exit 1
+exec python "$repo_root/.claude/skills/obsidian-organize/scripts/format_staged_notes.py" \
+  --root "$repo_root" \
+  --quiet

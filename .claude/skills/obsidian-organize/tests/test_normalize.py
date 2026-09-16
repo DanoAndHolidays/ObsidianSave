@@ -89,6 +89,12 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(stats['closing_fences_fixed'], 1)
         self.assertEqual(stats['code_issues'], [])
 
+    def test_mermaid_language_is_valid(self):
+        source = '# Note\n```mermaid\nflowchart LR\n  A --> B\n```\n'
+        result, stats = normalize.normalize_content(source, now=self.now)
+        self.assertIn('```mermaid\nflowchart LR\n  A --> B\n```', result)
+        self.assertEqual(stats['code_issues'], [])
+
     def test_more_than_ten_code_blocks_restore_without_token_collisions(self):
         blocks = '\n\n'.join(
             f'```typescript\nconst value{i} = {i};\n```'
@@ -167,6 +173,94 @@ class NormalizeTests(unittest.TestCase):
         self.assertNotIn('## ', result)
         self.assertEqual(stats['trailing_empty_headings_removed'], 1)
         self.assertEqual(stats['manual_issues'], [])
+
+    def test_trailing_newline_after_heading_is_preserved_and_idempotent(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## First\n'
+            '---\n'
+            '## Last\n'
+        )
+        first, _ = normalize.normalize_content(source, now=self.now)
+        second, stats = normalize.normalize_content(first, now=self.now)
+        self.assertTrue(first.endswith('## Last\n'))
+        self.assertEqual(second, first)
+        self.assertEqual(stats['blank_after_heading_removed'], 0)
+
+    def test_multiple_blank_lines_after_heading_converge_in_single_call(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## Section\n'
+            '\n\n\n\n\n\n\n\n'
+            '正文\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        self.assertIn('## Section\n正文\n', normalized)
+        self.assertEqual(stats['blank_after_heading_removed'], 8)
+        self.assertEqual(stats['normalization_passes'], 1)
+
+    def test_blank_lines_before_blockquote_collapse_to_one(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## Section\n'
+            '\n\n\n\n'
+            '> 引用\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        self.assertIn('## Section\n\n> 引用\n', normalized)
+        self.assertNotIn('\n\n\n\n> 引用', normalized)
+        self.assertEqual(stats['blank_after_heading_removed'], 3)
+
+    def test_single_call_reaches_fixed_point_after_pseudo_heading_conversion(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/1/2026 09:00:00\n\n'
+            '**1. Section：**\n'
+            '正文\n'
+        )
+        normalized, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        repeated, _ = normalize.normalize_content(
+            normalized,
+            now=datetime.datetime(2026, 7, 15, 11, 0, 0),
+            expected_title='Note',
+        )
+        self.assertIn('\n---\n## Section\n', normalized)
+        self.assertNotIn('### 1. Section', normalized)
+        self.assertGreaterEqual(stats['normalization_passes'], 2)
+        self.assertEqual(repeated, normalized)
+
+    def test_known_code_languages_are_canonicalized_without_false_issues(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '```TypeScript\nconst value = 1\n```\n\n'
+            '```Plain\nplain text\n```\n\n'
+            '```latex\nx^2\n```\n'
+        )
+        normalized, stats = normalize.normalize_content(source, now=self.now)
+        self.assertIn('```typescript\n', normalized)
+        self.assertIn('```text\n', normalized)
+        self.assertIn('```latex\n', normalized)
+        self.assertEqual(stats['code_languages_canonicalized'], 2)
+        self.assertEqual(stats['code_issues'], [])
 
 
 if __name__ == '__main__':

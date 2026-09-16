@@ -1,24 +1,26 @@
 # HTTP缓存（强缓存&协商缓存）
+> Last Format Time：9/16/2026 19:24:50
+
 [B站视频详解](https://www.bilibili.com/video/BV1Yb421B7Vg/?buvid=YA42DFA5A2C477DE4765996C4F2779201672&from_spmid=search.search-result.0.0&is_story_h5=false&mid=SJWPVQBk8Es5O8sHoXsqQg%3D%3D&plat_id=116&share_from=ugc&share_medium=iphone&share_plat=ios&share_session_id=9C5E44C0-B84F-4D64-A2CB-29EC18427AE9&share_source=WEIXIN&share_tag=s_i&spmid=united.player-video-detail.0.0&timestamp=1778555772&unique_k=xoLjQuK&up_id=31452330&vd_source=47c9acd507be61251cd2bb730416395c)
 HTTP缓存主要分为强缓存和协商缓存两种机制
 
-==所有的缓存策略仅仅针对`GET`生效==
+==所有的缓存策略仅仅针对 GET 生效==
 ![[Pasted image 20260610104321.png]]
 
 首先看一个真实的GET响应头：
 ![[Pasted image 20260610104121.png]]
 
 ---
-### 强缓存
+## 强缓存
 ![[Pasted image 20260610101731.png]]
 
 强缓存流程，当浏览器请求资源时，会==先检查强缓存==是否有效：
-1. 检查Cache-Control的max-age或s-maxage
-2. 如果不存在，检查Expires字段
+1. 检查Cache-Control的==max-age==或s-maxage
+2. 如果不存在，检查==Expires==字段
 3. 如果缓存有效，在缓存的有效期内，直接使用缓存资源，不发送请求到服务器
 
 ---
-### 协商缓存
+## 协商缓存
 使用Last-Modified的例子：
 ![[Pasted image 20260610102100.png]]
 
@@ -35,7 +37,7 @@ Last-Modified与Etag值的例子：
 上述流程结束后，强缓存的时间就重置了
 
 ---
-### HTTP缓存相关头部
+## HTTP缓存相关头部
 `Expires`：绝对过期时间（HTTP/1.0）【已逐渐被Cache-Control取代】
 `Cache-Control`：缓存控制指令（HTTP/1.1）【现代浏览器首选】，这里可以组合多种的属性，实现更细致的控制
 - `max-age`：资源最大存活时间（秒）`max-age`优先级高于`expires`
@@ -53,7 +55,7 @@ Last-Modified与Etag值的例子：
 - `no-transform`：禁止代理服务器对资源进行转换（如压缩图片）
 
 ---
-### 推荐缓存策略
+## 推荐缓存策略
 ```http
 # 静态资源（可长期缓存）
 Cache-Control: public, max-age=31536000, immutable

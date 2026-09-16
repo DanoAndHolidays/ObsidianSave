@@ -310,7 +310,7 @@ const x = 1;
 ```
 ````
 
-**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、html、bash、sh、shell、powershell、pwsh、cmd、batch、json、yaml、yml、md、markdown、text、py、python、go、java、c、cpp、rust、sql、xml。
+**合法标签**：jsx、tsx、ts、typescript、js、javascript、vue、css、scss、less、html、xhtml、bash、sh、shell、powershell、pwsh、cmd、batch、json、jsonc、yaml、yml、md、markdown、text、mermaid、py、python、go、java、c、cpp、rust、sql、xml、latex、tex、http、markup、nginx、apache、haproxy、node、php。已知标签会转为小写，`plain`、`plaintext`、`txt` 会统一为 `text`。
 
 ## 链接
 ✅ 内部笔记用 `[[双链]]`：
@@ -333,3 +333,9 @@ const x = 1;
 原内容：# 旧标题
 修改点：保持 H1 与文件名一致，移除原 H1*
 ```
+
+## 内容审核标记
+
+机械格式化完成后还要审核表达、事实、代码和顺序。语义调整应在修改位置附近添加简洁局部标记：`*已修改*`、`*已补充*` 或 `*已纠正*`。大段重写可在小节标题下一行标记一次，纯机械格式变化不加标记。
+
+不要使用 `〔CR-xxx〕` 或追加文末审核变更记录。详细要求见 [内容审核与变更标记规则](content-review-rules.md)。
