@@ -1,5 +1,5 @@
 # 06 input type 与原生行为
-> Last Format Time：9/16/2026 19:24:51
+> Last Format Time：9/18/2026 00:43:42
 
 [[form和input]]
 
@@ -138,17 +138,18 @@ on
 建议显式写 `value`。
 
 ### checked
+这是个布尔属性，你写了就是是，不写就是不是，展开写全就是 `checked="checked"`
+
 ```html
 <input type="checkbox" checked>
 ```
 
-表示默认选中。
+表示默认选中
 
 ```js
 input.checked
 ```
 
-表示当前是否选中。
 
 ### radio
 ```html

@@ -2,27 +2,25 @@
 > Last Format Time：9/16/2026 19:24:55
 
 ```java
-@Autowired  
-private UserMapper userMapper;  
+@Mapper // 在运行时会自动的创建代理对象（动态代理），会自动的将对象自动的存入IOC容器中  
+public interface UserMapper {  
   
-@Test  
-public void testFindAll(){  
-    List<User> userList = userMapper.findAll();  
-    userList.forEach(System.out::println);  
-}  
+    @Select("select * from user2")  
+    public List<User> findAll();  
   
-@Test  
-public void testDeleteById(){  
-    Integer i = userMapper.deleteById(1);  
-    System.out.println(i);  
-    /*  
-    ==>  Preparing: delete from user2 where id = ? 预编译的  
-    ==> Parameters: 1(Integer)    <==    Updates: 1    */}  
+    @Delete("delete from user2 where id = #{id}")  
+    public Integer deleteById(Integer id);  
   
-@Test  
-public void testInsert(){  
-    User user = new User(null, "Dano66", "shit", 34, "男");  
-    userMapper.insert(user);  
+    @Insert("insert into user2(username, name, age, gender) values(#{username}, #{name}, #{age}, #{gender})")  
+    public void insert(User user);  
+    // 这里就不用一个一个写，直接传入对应的对象  
+  
+    @Update("update user2 set username = #{username} where id = #{id}")  
+    public void update(User user);  
+  
+    // 这里要加个@Param，有点诡异了，多个参数要使用这注解，一个就不用了  
+    @Select("select * from user2 where username = #{username}")  
+    public User select(@Param("username") String username);  
 }
 ```
 
@@ -34,4 +32,9 @@ public void testInsert(){
 ---
 ## insert
 ![[Pasted image 20260916004407.png]]
+剩下的先不写了，以后再说
+
+---
+## XML 映射配置
+![[Pasted image 20260917011310.png]]
 
