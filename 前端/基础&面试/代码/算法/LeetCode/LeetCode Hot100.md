@@ -1923,7 +1923,6 @@ var diameterOfBinaryTree = function(root) {
 这题和上一道很像
 
 ```js
-
 var maxPathSum = function(root) {
     let ans = -Infinity;
     function dfs(node) {
@@ -1939,7 +1938,6 @@ var maxPathSum = function(root) {
     dfs(root);
     return ans;
 };
-
 ```
 
 ---

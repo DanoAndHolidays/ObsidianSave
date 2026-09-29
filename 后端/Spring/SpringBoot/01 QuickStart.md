@@ -129,6 +129,10 @@ java -jar .\target\demo-0.0.1-SNAPSHOT.jar
 
 JAR 文件名以 `target` 中实际产物为准。普通 Maven JAR 不一定能直接用 `java -jar` 启动；这里依靠 Boot 插件的重新打包能力。参见 [Boot Maven Plugin](https://docs.spring.io/spring-boot/maven-plugin/using.html)。
 
+### 配置文件
+可以使用 application.properties 也可以使用 yaml/yml 的：
+![[Pasted image 20260917014631.png]]
+
 ---
 ## 三层架构
 *已修改*

@@ -548,5 +548,3 @@ controls 属于谁
 → 提交哪些 name=value
 → 是否执行默认 submission
 ```
-
-### 原生表单验证
