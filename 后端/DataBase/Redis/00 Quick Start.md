@@ -1,5 +1,9 @@
 # 00 Quick Start
-> Last Format Time：9/30/2026 01:00:03
+> Last Format Time：10/6/2026 02:27:25
+
+[https://www.bilibili.com/video/BV1cr4y1671t](https://www.bilibili.com/video/BV1cr4y1671t)
+
+*目前只学到了实战篇，后面的再说吧*
 
 Redis 是一种 NoSQL（非关系型数据库）
 
@@ -16,7 +20,7 @@ Redis (Remote Dictionary Server)，特点：
 
 *这玩意还得学Linux，绕了一圈又回来了*
 
-[[后端/Linux/00 Quick Start]]
+[[后端/DevOps/Linux/00 Quick Start]]
 
 
 使用 Docker 来运行：
