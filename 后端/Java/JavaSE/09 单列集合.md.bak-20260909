@@ -1,0 +1,726 @@
+# 09 单列集合
+
+![[Pasted image 20260908161120.png]]
+
+如果我们在使用集合的时候没有使用泛型，集合中的对象的类型默认是 `Object`
+
+---
+## Collection
+![[Pasted image 20260908161034.png]]![[caced4f2789b338cb33e21902734686f.png]]
+
+### 迭代器
+不依赖索引，Iterator。迭代器是集合专用的遍历方式
+```java
+public class test {
+    public static void main(){
+        Collection<String> arr = new ArrayList<>();
+        boolean shit = arr.add("1");
+        boolean fuck = arr.add("2");
+        boolean t = arr.add("3");
+        arr.add("shit");
+
+        Iterator<String> it = arr.iterator();
+
+        while (it.hasNext()){
+	        // 获取元素，并移动指针
+            System.out.println(it.next());
+        }
+//        1
+//        2
+//        3
+//        shit
+    }
+
+}
+```
+
+迭代器遍历完毕，指针是不会复位的，一次性的，获取新的迭代器对象来进行遍历
+
+![[Pasted image 20260908165244.png]]
+
+删除要使用迭代器中的方法来删除:
+```java
+import java.util.Collection;
+import java.util.Iterator;
+
+public class test {
+    public static void main(){
+        Collection<String> arr = new ArrayList<>();
+        arr.add("1");
+        arr.add("2");
+        arr.add("3");
+        arr.add("4");
+
+        Iterator<String> it = arr.iterator();
+
+        while (it.hasNext()){
+            String str = it.next();
+            if(str.equals("3")){
+                arr.remove(str);
+            }
+            System.out.println(str);
+        }
+//        1
+//        2
+//        3
+    }
+}
+```
+
+有点怪异，这里为什么是4没了？
+```java
+        while (it.hasNext()){
+            String str = it.next();
+            if(str.equals("2")){
+                arr.remove(str);
+            }
+            System.out.println(str);
+        }
+```
+
+```bash
+1
+2
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1096)
+	at java.base/java.util.ArrayList$Itr.next(ArrayList.java:1050)
+	at com.app.uuuu.test.main(test.java:18)
+
+进程已结束，退出代码为 1
+```
+
+对，这个现象确实有点反直觉。**`4` 并没有被删除，而是 Iterator 提前结束遍历了。**
+
+关键在于 `ArrayList` 的 `Iterator` 内部有一个 `cursor`（游标）。
+
+你的过程实际上是：
+```text
+arr = [1, 2, 3, 4]
+
+读取 1 → cursor = 1
+读取 2 → cursor = 2
+读取 3 → cursor = 3
+```
+
+这时执行：
+```java
+arr.remove("3");
+```
+
+`ArrayList` 变成：
+```text
+[1, 2, 4]
+```
+
+因为数组元素会前移：
+```text
+删除前：
+index   0  1  2  3
+        1  2  3  4
+              ↑
+            cursor = 3
+
+删除后：
+index   0  1  2
+        1  2  4
+
+cursor 还是 3
+size 变成了 3
+```
+
+而 `ArrayList.Iterator` 的 `hasNext()` 核心判断基本就是：
+```java
+public boolean hasNext() {
+    return cursor != size;
+}
+```
+
+此时：
+```java
+cursor == 3
+size   == 3
+```
+
+所以：
+```java
+hasNext() → false
+```
+
+循环直接结束，`4` 就没有机会被访问。
+
+那为什么没有抛 `ConcurrentModificationException`？这才是这里最骚的地方。Iterator 检查集合有没有被外部修改，主要是在 `next()` 里面：
+```java
+public E next() {
+    checkForComodification();
+    ...
+}
+```
+
+但你的代码在删除 `"3"` 后：
+```java
+while (it.hasNext())
+```
+
+`hasNext()` 已经直接返回 `false` 了，**根本没有再执行一次 `next()`**，所以连异常都没机会抛。
+
+如果你改成删除 `"2"`：
+```java
+if (str.equals("2")) {
+    arr.remove(str);
+}
+```
+
+通常就会得到：
+
+```text
+1
+2
+Exception in thread "main"
+java.util.ConcurrentModificationException
+```
+
+因为删除 `"2"` 后：
+
+```text
+cursor = 2
+size = 3
+```
+
+`hasNext()`：
+
+```java
+2 != 3 → true
+```
+
+然后继续调用 `next()`，这时候才发现 `modCount` 不对，于是抛出 `ConcurrentModificationException`。
+
+**Iterator 遍历时，要通过 Iterator 自己删除：**
+```java
+Iterator<String> it = arr.iterator();
+
+while (it.hasNext()) {
+    String str = it.next();
+
+    if (str.equals("3")) {
+        it.remove();
+    }
+
+    System.out.println(str);
+}
+```
+
+这样最后：
+```java
+arr = [1, 2, 4]
+```
+
+而且遍历会正常打印：
+```text
+1
+2
+3
+4
+```
+
+你可以记住一个规则：
+
+> **使用 Iterator 遍历集合时，不要直接调用集合的 `remove()` 修改结构；需要删除当前元素时，用 `Iterator.remove()`。**
+
+你这个例子尤其值得记住：**错误修改集合不一定立刻抛 `ConcurrentModificationException`。`fail-fast` 只是“尽力检测”，并不是绝对保证。**
+
+### 增强for遍历
+底层是==迭代器==，==单列集合==和==数组==使用增强for遍历，格式：
+```java
+for (String str : arr) {
+    System.out.println(str);
+}
+```
+
+改了也没用，修改第三方的变量s，不会影响原来的集合
+```java
+        for (String s : arr) {
+            s = "333";
+            System.out.println(s);
+//            333
+//            333
+//            333
+        }
+
+        for (String s : arr) {
+            System.out.println(s);
+//            1
+//            3
+//            4
+        }
+```
+
+增强 `for` 适合“只关心元素、不关心下标”的遍历。
+```java
+for (String str : list) {
+    System.out.println(str);
+}
+```
+
+可以理解为：
+```java
+Iterator<String> it = list.iterator();
+while (it.hasNext()) {
+    String str = it.next();
+}
+```
+
+所以对于 `Collection`，增强 `for` 底层本质上依赖 `Iterable -> iterator() -> Iterator`。数组也支持增强 `for`：
+```java
+for (int num : nums) {}
+```
+
+但数组不是 `Iterable`，数组的增强 `for` 可以理解为编译器按下标遍历。
+
+增强 `for` 中的变量只是“当前元素的临时变量”：
+```java
+for (String str : list) {
+    str = "x";
+}
+```
+
+不会修改集合里的元素引用。
+
+但如果元素是对象：
+```java
+for (User user : users) {
+    user.name = "Tom";
+}
+```
+
+会修改原对象，因为 `user` 和集合中的引用指向同一个对象。
+
+增强 `for` 的主要限制：
+```text
+拿不到 index
+不方便精细控制遍历过程
+遍历 Collection 时不能直接通过 list.remove() 修改集合结构
+```
+
+遍历时删除元素应使用 `Iterator.remove()`，否则可能抛 `ConcurrentModificationException`，也可能出现遍历异常结束。
+
+选择：
+```text
+只关心元素 → 增强 for
+需要下标 → 普通 for
+需要遍历时安全删除 → Iterator
+```
+
+另外：
+```java
+for (String str : list) {}
+```
+
+是增强 `for` 语法；
+```java
+list.forEach(str -> {})
+```
+
+是 `forEach()` 方法，两者不是一回事。
+
+### forEach
+```java
+arr.forEach(s -> System.out.println(s));
+arr.forEach(System.out::println);
+```
+
+这两句做的事情一样：
+
+```java
+arr.forEach(s -> System.out.println(s));
+arr.forEach(System.out::println);
+```
+
+第一种：
+
+```java
+s -> System.out.println(s)
+```
+
+叫 Lambda 表达式（Lambda Expression），可以理解成“传进去一个匿名函数”。
+
+`forEach` 会依次把集合里的元素传给这个 Lambda：
+
+```java
+s -> System.out.println(s)
+```
+
+相当于：
+
+```text
+拿到一个 s
+然后执行 System.out.println(s)
+```
+
+所以：
+
+```java
+arr.forEach(s -> System.out.println(s));
+```
+
+可以近似理解成：
+
+```java
+for (String s : arr) {
+    System.out.println(s);
+}
+```
+
+第二种：
+
+```java
+System.out::println
+```
+
+叫方法引用（Method Reference）。
+
+因为这个 Lambda：
+
+```java
+s -> System.out.println(s)
+```
+
+只是单纯把 `s` 原样传给：
+
+```java
+System.out.println(...)
+```
+
+所以 Java 允许简写成：
+
+```java
+System.out::println
+```
+
+其中：
+
+```text
+::
+```
+
+就是方法引用运算符。
+
+所以这两句：
+
+```java
+arr.forEach(s -> System.out.println(s));
+
+arr.forEach(System.out::println);
+```
+
+完全可以理解成：
+
+```text
+第一种：自己写“收到 s 后调用 println(s)”
+第二种：直接告诉 forEach：“你去调用这个 println 方法”
+```
+
+它们背后和 `Consumer<T>` 有关。`forEach` 大致需要的是：
+
+```java
+Consumer<String>
+```
+
+也就是一个“接收一个参数，没有返回值”的函数：
+
+```java
+void accept(String s)
+```
+
+所以：
+
+```java
+s -> System.out.println(s)
+```
+
+符合这个形状；
+
+```java
+System.out::println
+```
+
+也符合这个形状。
+
+你现在可以先记成：
+
+```text
+s -> System.out.println(s)
+        ↓ 可以简写
+System.out::println
+```
+
+只有当 Lambda 基本只是“调用已有方法”时，才比较适合改成方法引用。
+
+---
+## List
+有序，有索引，可重复。其具有Collection 接口中的所有方法的实现，增加了很多操作索引的方法
+
+![[Pasted image 20260908190700.png]]
+
+```java
+        List<Integer> arr = new ArrayList<>();  
+        arr.add(1);  
+        arr.add(2);  
+        arr.add(3);  
+        arr.add(4);  
+        
+        arr.remove(3);  
+        arr.remove(Integer.valueOf(2));  
+  
+        System.out.printf(String.valueOf(arr));  
+//        [1, 3]
+```
+
+### remove
+
+这是 Java `List.remove()` 的**重载（overload）**导致的一个很经典的坑。
+
+你的代码：
+
+```java
+List<Integer> arr = new ArrayList<>();
+arr.add(1);
+arr.add(2);
+arr.add(3);
+arr.add(4);
+
+arr.remove(3);
+arr.remove(Integer.valueOf("2"));
+```
+
+`List` 有两个 `remove`：
+
+```java
+remove(int index)     // 按下标删除
+remove(Object o)      // 按元素删除
+```
+
+所以第一句：
+
+```java
+arr.remove(3);
+```
+
+这里的 `3` 是基本类型 `int`，调用的是：
+
+```java
+remove(int index)
+```
+
+也就是**删除下标 3 的元素**：
+
+```text
+[1, 2, 3, 4]
+          ↑
+        index 3
+```
+
+删掉的是 `4`：
+
+```text
+[1, 2, 3]
+```
+
+而：
+
+```java
+arr.remove(Integer.valueOf("2"));
+```
+
+`Integer.valueOf("2")` 返回的是一个：
+
+```java
+Integer
+```
+
+值为 `2`。
+
+因此这里会匹配：
+
+```java
+remove(Object o)
+```
+
+意思变成了删除值等于 `2` 的元素。
+
+于是：
+```text
+[1, 2, 3]
+    ↑ 删除
+
+=> [1, 3]
+```
+
+所以最终结果：
+```text
+[1, 3]
+```
+
+这个坑你可以直接记成：
+```java
+List<Integer> list = ...
+
+list.remove(2);                  // 删除 index = 2
+list.remove(Integer.valueOf(2)); // 删除 value = 2
+```
+
+这也是 `List<Integer>` 比较特殊、非常容易踩坑的地方，因为 `int` 既可能表示**下标**，又可能经过自动装箱成为 `Integer`。
+
+`Integer` 和 `Object` 有继承关系：
+
+```java
+Object
+  ↑
+Number
+  ↑
+Integer
+```
+
+所以：
+
+```java
+Integer n = 2;
+Object obj = n;
+```
+
+是合法的，这叫向上转型。因此：
+
+```java
+remove(Object o)
+```
+
+可以接收 `Integer`。
+
+Java 里 `int` 和 `Integer` 不是一种类型：
+
+```java
+int      // 基本类型
+Integer  // 包装类，对象
+```
+
+自动装箱就是 Java 自动把基本类型转成对应包装类：
+
+```java
+Integer a = 10;
+```
+
+近似等于：
+
+```java
+Integer a = Integer.valueOf(10);
+```
+
+反过来叫自动拆箱：
+
+```java
+Integer a = 10;
+int b = a;
+```
+
+近似等于：
+
+```java
+int b = a.intValue();
+```
+
+所以：
+
+```java
+List<Integer> arr = new ArrayList<>();
+arr.add(1);
+```
+
+这里 `1` 是 `int`，会自动装箱成 `Integer`。
+
+而：
+
+```java
+arr.remove(2);
+```
+
+`2` 是 `int`，优先匹配：
+
+```java
+remove(int index)
+```
+
+表示删除下标。
+
+```java
+arr.remove(Integer.valueOf(2));
+```
+
+参数是 `Integer`，可以向上转型成 `Object`，所以匹配：
+
+```java
+remove(Object o)
+```
+
+表示删除值。
+
+记住：
+
+```text
+int 不是 Object 的子类
+Integer 是 Object 的子类
+
+int → Integer：自动装箱
+Integer → int：自动拆箱
+Integer → Object：向上转型
+```
+
+### ListIterator
+```java
+List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+
+        Iterator<Integer> it = list.iterator();
+
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        for (Integer i : list) {
+            System.out.println(i);
+        }
+
+        list.forEach(i->System.out.println(i));
+
+        for (int i =0; i<list.size(); i++){
+            System.out.println(list.get(i));
+        }
+
+//      列表迭代器
+
+        ListIterator<Integer> listIterator = list.listIterator();
+
+        while(listIterator.hasNext()){
+//          得到数据并向后移动
+            int shit = listIterator.next();
+            if(shit == 1){
+                listIterator.add(0);
+            }
+            System.out.println(shit);
+        }
+
+        System.out.println(list);
+```
+
+### ArrayList
+![[Pasted image 20260908200016.png]]
+### LinkedList
+
+### Vector
+
+---
+## Set
+
+![[9fa90a1fc65f62a6e3852f01abefdfbb.png]]
+

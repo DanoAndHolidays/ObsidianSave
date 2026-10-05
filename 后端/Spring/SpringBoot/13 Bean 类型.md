@@ -1,0 +1,11 @@
+# 13 Bean 类型
+> Last Format Time：10/6/2026 02:27:25
+
+[https://ocn8gnorkt9i.feishu.cn/docx/JjrCdGixIoeFi1xpuk8cgnWSnuf](https://ocn8gnorkt9i.feishu.cn/docx/JjrCdGixIoeFi1xpuk8cgnWSnuf)
+
+|**名称**|**说明**|
+|---|---|
+|Entity|实体，通常和数据库中的表对应|
+|DTO|数据传输对象，通常用于程序中各层之间传递数据|
+|VO|视图对象，为前端展示数据提供的对象|
+|POJO|普通Java对象，只有属性和对应的getter和setter|

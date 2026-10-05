@@ -1,5 +1,5 @@
 # 03 HTML 文档结构与 Heading
-> Last Format Time：9/16/2026 19:24:51
+> Last Format Time：10/6/2026 02:27:25
 
 ---
 ## HTML 文档骨架
@@ -82,16 +82,42 @@ body
 → 文档实际内容
 ```
 
-### `<meta>`
-`<meta>` 是 HTML 中用于声明 document metadata（文档元数据）的元素，通常放在 `<head>` 中。它不会作为页面正文直接渲染，而是向浏览器、搜索引擎等提供关于当前文档的信息，例如字符编码、viewport、description、robots 等。
+```text
+charset
+→ 字符解码
 
-按照什么字符编码解释 HTML 字节，编码错误可能产生乱码。通常尽早声明 UTF-8
+viewport
+→ 布局视口
+
+title
+→ 文档标题
+
+description
+→ 页面摘要
+
+canonical
+→ 规范 URL
+
+icon
+→ 页面图标
+
+stylesheet
+→ 外部样式资源
+
+og:*
+→ 社交分享 metadata
+```
+
+### `<meta>`
+是 HTML 中用于声明 document metadata（文档元数据）的元素（元数据容器），通常放在 `<head>` 中。它不会作为页面正文直接渲染，而是向浏览器、搜索引擎等提供关于当前文档的信息，例如字符编码、viewport、description、robots 等。
+
+`charset` 按照什么字符编码解释 HTML 字节，编码错误可能产生乱码。通常尽早声明 UTF-8
 
 ```html
 <meta charset="UTF-8" />
 ```
 
-用于配置移动端 viewport（视口）
+`viewport` 用于配置移动端 viewport（视口）
 
 ```text
 width=device-width
@@ -108,11 +134,27 @@ initial-scale=1.0
 />
 ```
 
-它是现代响应式页面的基础配置，但不是“自动实现移动端适配”。
-
-```html
-<meta name="description" content="...">
+`description` 用来描述当前页面的大致内容：
+```text
+<meta
+  name="description"
+  content="系统学习 HTML、CSS、JavaScript 和 React 的前端开发笔记。"
+>
 ```
+
+它主要提供给：
+
+- 搜索引擎
+- 分享平台
+- 某些爬虫和工具
+
+它不会直接显示在页面正文里，搜索结果中你经常看到，下面那段摘要，有时就可能参考：
+```text
+React Hooks 教程 | Dano Blog
+系统介绍 useState、useEffect、useMemo……
+```
+
+搜索引擎不保证一定使用你写的 description。
 
 ### `<title>`
 ```html
@@ -133,6 +175,80 @@ initial-scale=1.0
 <h1>
 → body 内容中的主标题
 ```
+
+### `<link>`
+用来描述当前 HTML 文档和另一个外部资源之间的==关系==，最常见的是 CSS：
+```text
+<link rel="stylesheet" href="/styles.css">
+```
+
+这里：
+```text
+rel
+→ relationship
+→ 两个资源之间是什么关系
+
+href
+→ 外部资源在哪里
+```
+
+`rel` 是 `<link>` 最关键的属性之一，例如：
+```text
+<link rel="stylesheet" href="/style.css">
+```
+
+```text
+rel="stylesheet"
+```
+
+告诉浏览器这个资源是样式表，再例如：
+```text
+<link rel="icon" href="/favicon.ico">
+```
+
+表示这个资源是当前页面的图标：
+```text
+rel="icon"
+```
+
+所以 `<link>` 可以建立很多不同的资源关系
+
+`<link>` 还有一个前端工程中比较重要的用途：
+```text
+<link
+  rel="preload"
+  href="/font.woff2"
+  as="font"
+>
+```
+
+告诉浏览器，这个资源马上会被使用，可以提前加载。
+[[preload 和 prefetch]]
+
+### `<base>`
+这是一个平时很少写，但是很容易出题的标签：
+```text
+<head>
+  <base href="https://example.com/docs/">
+</head>
+```
+
+然后页面中：
+```text
+<a href="react">React</a>
+```
+
+原本 `react` 是相对 URL：
+```text
+<base href="https://example.com/docs/">
+```
+
+以后它会按照这个地址进行解析：
+```text
+https://example.com/docs/react
+```
+
+而不是按照当前页面 URL
 
 ---
 ## Heading 的核心 mental model
