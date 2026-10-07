@@ -1,6 +1,7 @@
 # 00 Quick Start
-> Last Format Time：9/12/2026 23:49:51
+> Last Format Time：10/7/2026 22:01:26
 
+[https://www.bilibili.com/video/BV1Kr4y1i7ru](https://www.bilibili.com/video/BV1Kr4y1i7ru)
 ---
 ## 概念
 MySQL 是==关系型数据库管理系统（DBMS）==，用表组织结构化数据，使用 SQL 查询与修改数据。本篇以 MySQL 8.0 / 8.4 的基础语法为范围。

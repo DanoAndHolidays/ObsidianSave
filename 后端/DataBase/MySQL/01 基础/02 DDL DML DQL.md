@@ -1,5 +1,5 @@
 # 02 DDL DML DQL
-> Last Format Time：10/6/2026 02:27:25
+> Last Format Time：10/7/2026 22:01:26
 
 ---
 ## DDL
@@ -31,6 +31,8 @@ drop table [if exists] 表名; -- 删除表
 
 ---
 ## DML
+数据的增删改
+
 ```sql
 --指定字段添加数据[批量]
 insert into 表名(字段名1,字段名2) values (值1,值2)[, (值1,值2)];
@@ -51,7 +53,7 @@ delete from 表名 [where 条件];
 
 ---
 ## DQL
-查询语法
+数据的查询
 
 ```sql
 select
