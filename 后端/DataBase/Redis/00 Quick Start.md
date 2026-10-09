@@ -24,7 +24,7 @@ Redis (Remote Dictionary Server)，特点：
 
 
 使用 Docker 来运行：
-[[基础]]
+[[Docker]]
 
 ```shell
 docker exec -it redis redis-cli

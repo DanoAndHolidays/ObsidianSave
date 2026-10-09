@@ -1,17 +1,18 @@
-# MVVM与MVC ⌚️
-> Last Format Time：9/16/2026 19:24:50
+# MVVM 与 MVC ⌚️
+> Last Format Time：10/10/2026 01:16:05
 
 ---
-## 1 MVC
+## MVC
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56662504fb1b43de86e6b663697945da~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=743&h=382&s=66496&e=png&b=fdfafa)
-这里的 **MVC** 指的是：**Model - View - Controller**，一种经典的 Web 应用分层设计模式。
+==MVC = Model（模型）+ View（视图）+ Controller（控制器）==，是一种经典的软件架构模式，主要用于将业务数据、界面展示和请求处理进行分离
 
-放到 Spring 里，通常就是 **Spring MVC**，主要负责处理 HTTP 请求这一套东西。
+放到 Spring 里，通常就是 ==Spring MVC==，主要负责处理 HTTP 请求这一套东西
 
-你可以先这样理解：
-- **Model（模型）**：业务数据，比如用户信息、商品信息
-- **View（视图）**：最终展示给用户的页面，比如 Thymeleaf/JSP 渲染出的 HTML
-- **Controller（控制器）**：接收请求、调用业务逻辑、返回结果
+|组成|中文|职责|Spring 项目中的例子|
+|---|---|---|---|
+|Model|模型|管理业务数据、状态及相关逻辑|User、DTO、Service 等|
+|View|视图|将数据展示给用户|Thymeleaf、JSP 等|
+|Controller|控制器|接收请求、调用业务逻辑、决定响应|`@RestController`|
 
 比如：
 ```java
@@ -76,6 +77,30 @@ spring-boot-starter-webmvc
 
 你现阶段把 **Spring MVC ≈ Spring 用来做 Web 接口的核心框架** 来理解就够了。
 
+你做的是典型的前后端分离架构
+
+```java
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getById(id);
+    }
+}
+```
+
+这种情况下：
+
+- Model：用户数据、业务逻辑，通常分布在 Entity、Service 等部分。
+- Controller：Spring MVC 的 Controller 接收请求。
+- View：通常由前端 React 负责界面展示。
+
+与经典服务端 MVC 不同，后端一般返回 JSON，而不是渲染 HTML。
+
+需要注意，React 并不是 Spring MVC 框架内部的 View 组件，只是从整个系统的展示职责来看，它承担了视图层的工作。
+
 ### MVC组成
 **MVC思想** ：Controller负责将Model的数据用View显示出来。
 
@@ -97,7 +122,7 @@ spring-boot-starter-webmvc
 - 控制器所承担的责任太过重大，没有办法应付日益复杂的交互场景
 
 ---
-## 2 MVVM——视图模型双向绑定（谈谈你对MVVM开发模式的理解）
+## MVVM——视图模型双向绑定（谈谈你对MVVM开发模式的理解）
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86732b9278e74d6c857d72ea77995d2d~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=796&h=411&s=20174&e=png&b=fefdfd)
 ### MVVM 组成：
 MVVM由Model，View，ViewModel三部分构成。
