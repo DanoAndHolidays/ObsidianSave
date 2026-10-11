@@ -1,30 +1,15 @@
 ---
 name: obsidian-organize
-description: Review, organize, and diagnose Markdown notes in this Obsidian vault. Use when the user asks to整理、清理、规范化、审核、复查或检查 Obsidian 笔记. Mechanical formatting is enforced automatically for staged notes by the repository pre-commit hook; when invoked, collect changes since the latest obsidian-reviewed-* tag, verify formatting, review fluency/correctness/order, and add concise inline markers for semantic adjustments.
+description: Review, organize, and diagnose Markdown notes in this Obsidian vault. Use when the user asks to整理、清理、规范化、审核、复查或检查 Obsidian 笔记. Formatting runs only when explicitly requested; collect relevant notes, verify mechanical formatting, review fluency/correctness/order when requested, and add concise inline markers for semantic adjustments.
 ---
 
 # Obsidian 笔记整理
 
-仓库采用两层流程：Git 提交时由确定性脚本自动完成机械格式化；用户调用本技能时，Agent 才逐篇完整阅读并审核内容。Agent 不手工重复脚本能确定的格式任务；凡是改变表达、事实、代码含义或章节顺序的语义调整，都必须在修改位置附近留下简洁的局部标记。默认使用 `*已修改*`；新增内容可用 `*已补充*`，事实纠错可用 `*已纠正*`。不使用 `〔CR-xxx〕`，也不追加文末审核变更记录。
+机械格式化和内容审核都只在用户明确调用本技能时执行。仓库不安装、不依赖 Git hook，`git add` 与 `git commit` 不会自动修改笔记。Agent 不手工重复脚本能确定的格式任务；凡是改变表达、事实、代码含义或章节顺序的语义调整，都必须在修改位置附近留下简洁的局部标记。默认使用 `*已修改*`；新增内容可用 `*已补充*`，事实纠错可用 `*已纠正*`。不使用 `〔CR-xxx〕`，也不追加文末审核变更记录。
 
-## 日常提交自动化
+## 按需机械格式化
 
-仓库使用 `.githooks/pre-commit`。首次克隆后安装一次：
-
-```bash
-git config --local core.hooksPath .githooks
-```
-
-之后正常执行 `git add` 和 `git commit` 即可。hook 自动：
-
-- 只收集暂存区中的新增、复制、修改或重命名笔记
-- 在内存中运行机械规则直到固定点，再一次性写回并重新暂存
-- 跳过 `CLAUDE.md`、`README.md`、技能目录、附件目录和 Obsidian 配置
-- 对空标题、未知代码语言等 Agent 问题只警告，不阻止提交
-- 对未闭合代码围栏、不收敛、文件在运行中变化等硬错误阻止提交
-- 发现同一笔记同时有已暂存与未暂存修改时停止，避免误提交未暂存内容
-
-hook 不调用 Agent、不访问网络、不做语义调整，也不受 20 文件审核阈值限制。直接排查暂存笔记时运行：
+仅当用户明确要求处理暂存笔记时，才手动运行：
 
 ```bash
 python .claude/skills/obsidian-organize/scripts/format_staged_notes.py --json
@@ -83,19 +68,19 @@ python .claude/skills/obsidian-organize/scripts/organize_changed_notes.py --writ
 
 - 完整保留 YAML frontmatter
 - 用带边界的定长占位符保护任意数量的 fenced code 内容
-- 让 H1 存在并与文件名一致，维护时间戳和 H1 区域空行
+- 让 H1 存在并与文件名一致，将额外 H1 降为 H2，维护时间戳和 H1 区域空行
 - 修复 H2-H6 数字前缀、H4/H6、无 H2 时的 H3、短粗体伪标题
 - 自动删除文件末尾无内容的空标题；仅报告后面仍有内容的空标题
-- 修复 H2 分隔符、标题空行、代码块周边空行、中文标点空格和 H1 裸 URL
+- 修复 H2 分隔符、标题空行、代码块周边空行、中文标点空格、中英文空格和 H1 裸 URL
 - 为缺失代码块标签自动使用 `text`，规范化已知语言标签大小写与别名，修复带后缀的闭合围栏
 - 报告未知、未闭合代码围栏和空标题
 - 单次调用在内存中运行到固定点；循环或超过 5 轮时拒绝写回
 - 保证重复运行幂等；写回必须使用预览时的同一份计算结果
 - CLI 只在入口配置 Windows UTF-8，模块导入不得修改全局输出流
 
-`format_staged_notes.py` 自动：
+`format_staged_notes.py` 在被明确调用时：
 
-- 只机械格式化暂存笔记，并自动重新暂存实际发生变化的文件
+- 只机械格式化暂存笔记，并重新暂存实际发生变化的文件
 - 预览所有目标后再写回，避免某篇硬错误导致半批次修改
 - 拒绝部分暂存笔记，防止扩大用户本次提交范围
 - 将需要 Agent 判断的问题作为软警告留待本技能按需处理
@@ -143,7 +128,7 @@ Agent 负责下列脚本无法可靠推断的内容：
 python -m unittest discover -s .claude/skills/obsidian-organize/tests -v
 ```
 
-回归测试至少覆盖 frontmatter、超过 10 个代码块、占位符碰撞、代码围栏、语言标签规范化、H1/文件名、伪标题、空标题、链接幂等、单次调用固定点、Git 候选收集、暂存区自动重写、部分暂存保护、“预览→写回→零改动预览”，以及有效/无效内容审核标记。
+回归测试至少覆盖 frontmatter、超过 10 个代码块、占位符碰撞、代码围栏、语言标签规范化、H1/文件名、伪标题、空标题、中英文空格、链接幂等、单次调用固定点、Git 候选收集、暂存区自动重写、部分暂存保护、“预览→写回→零改动预览”，以及有效/无效内容审核标记。
 
 - 允许在完整审核后修改笔记表达、事实、代码和顺序，但每个语义调整必须可追溯。
 - 不静默改变作者核心观点；不确定时先询问用户。
@@ -152,4 +137,4 @@ python -m unittest discover -s .claude/skills/obsidian-organize/tests -v
 - 不自动 commit 或打 tag。
 - 没有候选文件时直接报告。
 
-用户审阅并自行提交后，才建议创建 `obsidian-reviewed-YYYY-MM-DD` tag。机械格式化由提交 hook 保证，不再为它创建单独 tag。
+用户审阅并自行提交后，才建议创建 `obsidian-reviewed-YYYY-MM-DD` tag。不要为机械格式化单独创建 tag。

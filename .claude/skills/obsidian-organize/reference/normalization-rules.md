@@ -105,7 +105,23 @@
 
 ---
 
-## 6. 例外说明
+## 6. 中英文空格
+
+- 汉字与相邻的 ASCII 英文字母之间必须保留**一个半角空格**，双向都适用。
+- `ES7`、`C++`、`request.source()` 等以数字或 ASCII 符号结尾的英文技术表达式，与后续汉字之间也保留一个空格。
+- 行内代码、加粗/删除线英文、英文链接与中文相邻时，在 Markdown 片段外侧补空格。
+- Markdown 链接目标、Obsidian 双链目标、HTML 标签、URL、YAML frontmatter 和 fenced code 内容保持原样。
+- 纯数字不视作英文，不修改章节号、版本号或文件名中的数字边界。
+- 重复运行必须幂等；已有一个半角空格时不改，多个水平空格规范为一个。
+
+```markdown
+❌ Elasticsearch是一个Java搜索引擎，使用`RestClient`调用ES7版本。
+✅ Elasticsearch 是一个 Java 搜索引擎，使用 `RestClient` 调用 ES7 版本。
+```
+
+---
+
+## 7. 例外说明
 
 任何规则都允许有例外。例外必须**用斜体**在文档中标注，斜体里必须包含：
 
@@ -144,7 +160,7 @@
 
 ---
 
-## 7. 内容审核的边界
+## 8. 内容审核的边界
 
 机械规范化结束后，按 [内容审核与变更标记规则](content-review-rules.md) 审核流畅性、事实正确性、代码、顺序、完整性、去重和术语。每个语义调整必须在修改位置附近使用 `*已修改*`、`*已补充*` 或 `*已纠正*` 局部标记，不能静默修改；不要使用 `CR-xxx` 或文末变更记录。
 
@@ -164,8 +180,9 @@
 | 违规类型 | 由谁处理 | 工具 |
 |----------|---------|------|
 | Git 基线与工作区候选收集 | 脚本 | `collect_changed_notes.py` |
-| 暂存笔记提交前机械格式化 | Git hook | `format_staged_notes.py` |
+| 暂存笔记按需机械格式化 | 手动脚本 | `format_staged_notes.py` |
 | H1 缺失/与文件名不一致 | 脚本 | `ensure_h1_title` |
+| 额外 H1 降为 H2 | 脚本 | `demote_extra_h1s` |
 | H1 时间戳和区域空行 | 脚本 | `update_h1_metadata`、`normalize_h1_spacing` |
 | H2-H6 数字/中文标号 | 脚本 | `remove_number_prefixes` |
 | H4 标题 | 脚本 | `h4_to_h5` |
@@ -178,6 +195,7 @@
 | 标题后多余空行 | 脚本 | `remove_blank_after_headings` |
 | 代码块前/后空行 | 脚本 | `fix_code_block_blank_lines` |
 | 中文标点空格 | 脚本 | `fix_punct_space` |
+| 汉字与 ASCII 英文字母间空格 | 脚本 | `fix_cjk_latin_spacing` |
 | 代码块缺标签/异常闭合 | 脚本 | `set_missing_code_languages` |
 | 已知代码语言大小写/别名 | 脚本 | `canonicalize_code_languages` |
 | 未知标签/未闭合围栏 | 脚本报告 | `check_code_blocks` |

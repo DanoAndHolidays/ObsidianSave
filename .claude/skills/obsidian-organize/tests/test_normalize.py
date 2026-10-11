@@ -46,6 +46,51 @@ class NormalizeTests(unittest.TestCase):
         code = result.split('```markdown\n', 1)[1].split('\n```', 1)[0]
         self.assertEqual(code, '## 1. 代码里的标题\n中文： 空格必须保留\n---')
 
+    def test_cjk_latin_spacing_uses_one_space_and_ignores_plain_numbers(self):
+        source = '中文English和JSON  中文；第2章有3种。'
+        result, count = normalize.fix_cjk_latin_spacing(source)
+        self.assertEqual(result, '中文 English 和 JSON 中文；第2章有3种。')
+        self.assertEqual(count, 4)
+
+    def test_cjk_latin_spacing_handles_technical_tokens_ending_in_symbols(self):
+        source = '调用request.source()解析ES7.17版本，并学习C++语言。'
+        result, count = normalize.fix_cjk_latin_spacing(source)
+        self.assertEqual(
+            result,
+            '调用 request.source() 解析 ES7.17 版本，并学习 C++ 语言。',
+        )
+        self.assertEqual(count, 6)
+
+    def test_cjk_latin_spacing_handles_inline_markdown_without_changing_targets(self):
+        source = (
+            '使用`List<String>`处理，学习**Spring Cloud**框架，'
+            '参考[Elastic中文文档](https://example.com/中文Path)继续，'
+            '访问https://example.com/path然后查看[[React指南]]。'
+        )
+        result, _ = normalize.fix_cjk_latin_spacing(source)
+        self.assertEqual(
+            result,
+            '使用 `List<String>` 处理，学习 **Spring Cloud** 框架，'
+            '参考 [Elastic 中文文档](https://example.com/中文Path) 继续，'
+            '访问 https://example.com/path 然后查看 [[React指南]]。',
+        )
+
+    def test_cjk_latin_spacing_is_idempotent_and_preserves_fenced_code(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '正文English内容。\n\n'
+            '```text\n'
+            '代码English内容保持原样\n'
+            '```\n'
+        )
+        first, _ = normalize.normalize_content(source, now=self.now)
+        second, stats = normalize.normalize_content(first, now=self.now)
+        self.assertIn('正文 English 内容。', first)
+        self.assertIn('代码English内容保持原样', first)
+        self.assertEqual(second, first)
+        self.assertEqual(stats['cjk_latin_spacing_fixed'], 0)
+
     def test_second_run_is_idempotent(self):
         source = '# Note\n## 1. Section\n正文\n'
         first, _ = normalize.normalize_content(source, now=self.now)
@@ -139,6 +184,26 @@ class NormalizeTests(unittest.TestCase):
             expected_title='1. Note',
         )
         self.assertTrue(result.startswith('# 1. Note\n'))
+
+    def test_extra_h1s_are_demoted_and_hierarchical_prefixes_are_removed(self):
+        source = (
+            '# Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '# 0.学习目标\n'
+            '# 1.DSL 查询\n'
+            '### 1.2.3.精确查询\n'
+        )
+        result, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='Note',
+        )
+        self.assertEqual(len([line for line in result.splitlines() if line.startswith('# ')]), 1)
+        self.assertIn('\n---\n## 学习目标\n', result)
+        self.assertIn('\n---\n## DSL 查询\n', result)
+        self.assertIn('\n### 精确查询\n', result)
+        self.assertEqual(stats['extra_h1s_demoted'], 2)
+        self.assertEqual(stats['number_prefixes_removed'], 3)
 
     def test_scripted_heading_fixes_and_empty_heading_report(self):
         source = (

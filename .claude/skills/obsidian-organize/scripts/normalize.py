@@ -28,9 +28,9 @@ def configure_console_output() -> None:
         if hasattr(sys.stderr, 'reconfigure'):
             sys.stderr.reconfigure(encoding='utf-8')
 
-# 数字标号：## 1. xxx / ## 1、xxx / ### 一、 xxx / ### 1) xxx
+# 数字标号：## 1. xxx / ## 1.1.xxx / ## 1、xxx / ### 一、 xxx / ### 1) xxx
 NUMBER_PREFIX = re.compile(
-    r'^(#{2,6})\s+([一二三四五六七八九十]+|\d+)[.、．\)]\s+',
+    r'^(#{2,6})\s+(?:[一二三四五六七八九十]+|\d+(?:\.\d+)*)[.、．\)]\s*',
     re.MULTILINE,
 )
 
@@ -70,6 +70,28 @@ class NormalizationConvergenceError(RuntimeError):
 
 # 中英文标点之间多余空格（如 "。 **" → "。**"），不跨换行
 PUNCT_SPACE = re.compile(r'([。！？，：；])[ \t]+(?=\*\*|[一-龥])')
+
+# 汉字与 ASCII 英文字母的排版边界。纯数字不视作英文，避免改动版本号、
+# 章节号与文件名中的数字；URL、行内代码和链接目标由占位符保护。
+HAN_CHAR = r'[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]'
+ASCII_LETTER = r'[A-Za-z]'
+HAN_BEFORE_LATIN = re.compile(rf'({HAN_CHAR})({ASCII_LETTER})')
+LATIN_BEFORE_HAN = re.compile(rf'({ASCII_LETTER})({HAN_CHAR})')
+HAN_EXCESS_BEFORE_LATIN = re.compile(rf'({HAN_CHAR})[ \t]{{2,}}({ASCII_LETTER})')
+LATIN_EXCESS_BEFORE_HAN = re.compile(rf'({ASCII_LETTER})[ \t]{{2,}}({HAN_CHAR})')
+LATIN_TECH_TOKEN = r'[A-Za-z][A-Za-z0-9._+#/@<>{}\[\]():-]*[0-9+#)>\]}]'
+LATIN_TECH_BEFORE_HAN = re.compile(rf'({LATIN_TECH_TOKEN})({HAN_CHAR})')
+LATIN_TECH_EXCESS_BEFORE_HAN = re.compile(
+    rf'({LATIN_TECH_TOKEN})[ \t]{{2,}}({HAN_CHAR})'
+)
+INLINE_PROTECTED = re.compile(
+    r'(?P<code>(?P<ticks>`+)[^`\n]*?(?P=ticks))'
+    r'|(?P<image>!\[[^\]\n]*\]\([^\n)]*\))'
+    r'|(?P<link>\[(?P<label>[^\]\n]*)\]\((?P<destination>[^\n)]*)\))'
+    r'|(?P<wikilink>!?\[\[[^\]\n]*\]\])'
+    r'|(?P<html><[^>\n]+>)'
+    r'|(?P<url>https?://[A-Za-z0-9._~:/?#@!$&\'()*+,;=%-]+)',
+)
 
 # 标题行
 H1 = re.compile(r'^#\s+\S')
@@ -202,6 +224,25 @@ def ensure_h1_title(content: str, expected_title: str) -> tuple[str, int]:
     return restore_fenced_code('\n'.join(lines), blocks), 1
 
 
+def demote_extra_h1s(content: str) -> tuple[str, int]:
+    """保留首个 H1，把代码块外的其余 H1 机械降为 H2。"""
+    masked, blocks = mask_fenced_code(content)
+    lines = masked.split('\n')
+    seen_h1 = False
+    changed = 0
+    for index, line in enumerate(lines):
+        if not re.match(r'^#\s+\S', line):
+            continue
+        if not seen_h1:
+            seen_h1 = True
+            continue
+        lines[index] = '#' + line
+        changed += 1
+    if not changed:
+        return content, 0
+    return restore_fenced_code('\n'.join(lines), blocks), changed
+
+
 def check_code_blocks(content: str) -> list[dict]:
     """检查所有代码块的围栏：缺标签/非法标签。"""
     issues = []
@@ -330,6 +371,94 @@ def canonicalize_code_languages(content: str) -> tuple[str, int]:
 def fix_punct_space(content: str) -> tuple[str, int]:
     """中文标点后跟粗体/汉字时的多余空格。"""
     return PUNCT_SPACE.subn(r'\1', content)
+
+
+def _fix_direct_cjk_latin_spacing(content: str) -> tuple[str, int]:
+    """把汉字与 ASCII 英文字母之间规范为一个半角空格。"""
+    content, left_count = HAN_BEFORE_LATIN.subn(r'\1 \2', content)
+    content, right_count = LATIN_BEFORE_HAN.subn(r'\1 \2', content)
+    content, left_excess = HAN_EXCESS_BEFORE_LATIN.subn(r'\1 \2', content)
+    content, right_excess = LATIN_EXCESS_BEFORE_HAN.subn(r'\1 \2', content)
+    content, tech_count = LATIN_TECH_BEFORE_HAN.subn(r'\1 \2', content)
+    content, tech_excess = LATIN_TECH_EXCESS_BEFORE_HAN.subn(r'\1 \2', content)
+    return (
+        content,
+        left_count + right_count + left_excess + right_excess
+        + tech_count + tech_excess,
+    )
+
+
+def _space_around_inline_spans(content: str, pattern: re.Pattern) -> tuple[str, int]:
+    """当行内 Markdown 片段包含英文时，补齐它与相邻汉字的外侧空格。"""
+    matches = list(pattern.finditer(content))
+    if not matches:
+        return content, 0
+
+    changes = 0
+    for match in reversed(matches):
+        start, end = match.span()
+        if not re.search(ASCII_LETTER, match.group(0)):
+            continue
+        left_start = start
+        while left_start > 0 and content[left_start - 1] in ' \t':
+            left_start -= 1
+        right_end = end
+        while right_end < len(content) and content[right_end] in ' \t':
+            right_end += 1
+        add_left = left_start > 0 and re.fullmatch(HAN_CHAR, content[left_start - 1])
+        add_right = right_end < len(content) and re.fullmatch(HAN_CHAR, content[right_end])
+        if add_right and content[end:right_end] != ' ':
+            content = content[:end] + ' ' + content[right_end:]
+            changes += 1
+        if add_left and content[left_start:start] != ' ':
+            content = content[:left_start] + ' ' + content[start:]
+            changes += 1
+    return content, changes
+
+
+def fix_cjk_latin_spacing(content: str) -> tuple[str, int]:
+    """
+    在汉字与 ASCII 英文字母之间补一个半角空格。
+
+    围栏代码由调用方保护；本函数额外保护行内代码、图片、链接目标、
+    Obsidian 双链、HTML 标签与 URL。Markdown 链接的可见文本仍会格式化。
+    """
+    protected: dict[str, str] = {}
+    protected_changes = 0
+
+    def protect(match: re.Match) -> str:
+        nonlocal protected_changes
+        value = match.group(0)
+        if match.group('link') is not None:
+            label = match.group('label')
+            fixed_label, count = _fix_direct_cjk_latin_spacing(label)
+            protected_changes += count
+            value = f'[{fixed_label}]({match.group("destination")})'
+        token = f'\x00INLINE{len(protected):08d}\x00'
+        protected[token] = value
+        return token
+
+    masked = INLINE_PROTECTED.sub(protect, content)
+    masked, direct_changes = _fix_direct_cjk_latin_spacing(masked)
+    for token, value in protected.items():
+        masked = masked.replace(token, value)
+
+    # 行内代码、英文链接和英文强调片段在视觉上也是英文文本，需处理外侧边界。
+    span_patterns = (
+        re.compile(r'(?P<ticks>`+)[^`\n]*[A-Za-z][^`\n]*?(?P=ticks)'),
+        re.compile(r'\[[^\]\n]*[A-Za-z][^\]\n]*\]\([^\n)]*\)'),
+        re.compile(r'\*\*(?=[^*\n]*[A-Za-z])[^*\n]*\*\*'),
+        re.compile(r'__(?=[^_\n]*[A-Za-z])[^_\n]*__'),
+        re.compile(r'~~(?=[^~\n]*[A-Za-z])[^~\n]*~~'),
+        re.compile(r'(?<!\]\()https?://[A-Za-z0-9._~:/?#@!$&\'()*+,;=%-]+'),
+        re.compile(r'(?<!!)\[\[[^\]\n]*[A-Za-z][^\]\n]*\]\]'),
+    )
+    outer_changes = 0
+    for pattern in span_patterns:
+        masked, count = _space_around_inline_spans(masked, pattern)
+        outer_changes += count
+
+    return masked, protected_changes + direct_changes + outer_changes
 
 
 def h3_to_h2_if_loose(content: str) -> tuple[str, int]:
@@ -691,6 +820,7 @@ def _normalize_content_once(
     original_body = body
 
     body, n_h1_title = ensure_h1_title(body, expected_title)
+    body, n_extra_h1 = demote_extra_h1s(body)
     body, n_prefix = apply_outside_fenced_code(body, remove_number_prefixes)
     body, n_h4 = apply_outside_fenced_code(body, h4_to_h5)
     body, n_h6 = apply_outside_fenced_code(body, h6_to_h5)
@@ -703,6 +833,7 @@ def _normalize_content_once(
     body, n_blank_after = remove_blank_after_headings(body)
     body, n_code_blanks = fix_code_block_blank_lines(body)
     body, n_punct = apply_outside_fenced_code(body, fix_punct_space)
+    body, n_cjk_latin = apply_outside_fenced_code(body, fix_cjk_latin_spacing)
 
     body, n_lang_canonicalized = canonicalize_code_languages(body)
     body, n_lang_added, n_closing_fixed = set_missing_code_languages(
@@ -720,6 +851,7 @@ def _normalize_content_once(
 
     stats = {
         'h1_title_fixed': n_h1_title,
+        'extra_h1s_demoted': n_extra_h1,
         'number_prefixes_removed': n_prefix,
         'h4_to_h5': n_h4,
         'h6_to_h5': n_h6,
@@ -734,6 +866,7 @@ def _normalize_content_once(
         'blank_after_heading_removed': n_blank_after,
         'code_block_blanks_fixed': n_code_blanks,
         'punct_space_fixed': n_punct,
+        'cjk_latin_spacing_fixed': n_cjk_latin,
         'code_languages_canonicalized': n_lang_canonicalized,
         'code_languages_added': n_lang_added,
         'closing_fences_fixed': n_closing_fixed,
@@ -844,6 +977,7 @@ def main() -> int:
     results = []
     totals = {
         'h1_title_fixed': 0,
+        'extra_h1s_demoted': 0,
         'number_prefixes_removed': 0,
         'h4_to_h5': 0,
         'h6_to_h5': 0,
@@ -858,6 +992,7 @@ def main() -> int:
         'blank_after_heading_removed': 0,
         'code_block_blanks_fixed': 0,
         'punct_space_fixed': 0,
+        'cjk_latin_spacing_fixed': 0,
         'code_languages_canonicalized': 0,
         'code_languages_added': 0,
         'closing_fences_fixed': 0,
@@ -892,6 +1027,8 @@ def main() -> int:
             print(f'{r["file"]}: {status}')
             if r['h1_title_fixed']:
                 print(f'  H1 标题修复: {r["h1_title_fixed"]}')
+            if r['extra_h1s_demoted']:
+                print(f'  额外 H1 → H2: {r["extra_h1s_demoted"]}')
             if r['number_prefixes_removed']:
                 print(f'  数字标号去除: {r["number_prefixes_removed"]}')
             if r['h4_to_h5']:
@@ -920,6 +1057,8 @@ def main() -> int:
                 print(f'  代码块空行: {r["code_block_blanks_fixed"]}')
             if r['punct_space_fixed']:
                 print(f'  标点空格修复: {r["punct_space_fixed"]}')
+            if r['cjk_latin_spacing_fixed']:
+                print(f'  中英文空格修复: {r["cjk_latin_spacing_fixed"]}')
             if r['code_languages_canonicalized']:
                 print(f'  代码块语言规范化: {r["code_languages_canonicalized"]}')
             if r['code_languages_added']:
@@ -944,6 +1083,7 @@ def main() -> int:
                     )
         print(
             f'\n合计: H1 标题 {totals["h1_title_fixed"]}, '
+            f'额外 H1→H2 {totals["extra_h1s_demoted"]}, '
             f'数字标号 {totals["number_prefixes_removed"]}, '
             f'H4→H5 {totals["h4_to_h5"]}, '
             f'H6→H5 {totals["h6_to_h5"]}, '
@@ -958,6 +1098,7 @@ def main() -> int:
             f'标题后空行 {totals["blank_after_heading_removed"]}, '
             f'代码块空行 {totals["code_block_blanks_fixed"]}, '
             f'标点空格 {totals["punct_space_fixed"]}, '
+            f'中英文空格 {totals["cjk_latin_spacing_fixed"]}, '
             f'代码语言规范化 {totals["code_languages_canonicalized"]}, '
             f'代码块语言 {totals["code_languages_added"]}, '
             f'闭合围栏 {totals["closing_fences_fixed"]}, '

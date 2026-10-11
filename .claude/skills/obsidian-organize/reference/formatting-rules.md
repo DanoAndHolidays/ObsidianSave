@@ -325,6 +325,21 @@ const x = 1;
 参考 [React 官方文档](https://react.dev)。
 ```
 
+## 中英文空格
+汉字与相邻的 ASCII 英文字母之间统一保留一个半角空格；`ES7`、`C++`、`request.source()` 等英文技术表达式以数字或符号结尾时，后面也留空格。纯数字不按英文处理。行内代码、加粗英文和英文链接与中文相邻时，也在 Markdown 片段外侧留空格。链接目标、双链目标、URL、frontmatter 和 fenced code 内容不改。
+
+❌ **错误**：中英文直接相连
+
+```markdown
+Elasticsearch是一个Java搜索引擎，使用`RestClient`调用。
+```
+
+✅ **正确**：中英文边界保留一个半角空格
+
+```markdown
+Elasticsearch 是一个 Java 搜索引擎，使用 `RestClient` 调用。
+```
+
 ## 例外说明
 任何规则都允许例外，例外必须用斜体记录日期、理由和原内容。
 

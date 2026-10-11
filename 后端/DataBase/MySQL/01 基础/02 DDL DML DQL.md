@@ -1,9 +1,16 @@
 # 02 DDL DML DQL
 > Last Format Time：10/7/2026 22:01:26
 
+除了上面三个，通常还有两个：
+
+|分类|英文全称|作用|常见关键字|
+|---|---|---|---|
+|DCL|Data Control Language|数据控制语言|`GRANT`、`REVOKE`|
+|TCL|Transaction Control Language|事务控制语言|`COMMIT`、`ROLLBACK`、`SAVEPOINT`|
+
 ---
 ## DDL
-![[Pasted image 20260913001334.png]]
+**D**ata **D**efinition **L**anguage
 
 ```sql
 CREATE TABLE USER2(
@@ -31,8 +38,7 @@ drop table [if exists] 表名; -- 删除表
 
 ---
 ## DML
-数据的增删改
-
+**D**ata **M**anipulation **L**anguage 数据的增删改
 ```sql
 --指定字段添加数据[批量]
 insert into 表名(字段名1,字段名2) values (值1,值2)[, (值1,值2)];
@@ -53,8 +59,7 @@ delete from 表名 [where 条件];
 
 ---
 ## DQL
-数据的查询
-
+**D**ata **Q**uery **L**anguage 数据的查询
 ```sql
 select
 	字段列表
@@ -119,4 +124,3 @@ SELECT *
 FROM user
 LIMIT 10, 10;
 ```
-

@@ -149,7 +149,7 @@ def run(root: Path) -> tuple[dict, int]:
 
 
 def print_human_report(report: dict, quiet: bool = False) -> None:
-    """输出适合 pre-commit 的简短结果。"""
+    """输出适合命令行手动调用的简短结果。"""
     error = report.get('error')
     if error == 'partially_staged_notes':
         print(

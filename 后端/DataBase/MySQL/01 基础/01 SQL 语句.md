@@ -12,9 +12,7 @@
 
 ---
 ## SQL 分类与基本约定
-*已补充*
-
-SQL 有标准，但各数据库仍存在方言和实现差异，例如 MySQL 的 `AUTO_INCREMENT`、`LIMIT` 和反引号用法不能直接照搬到所有数据库。
+SQL 有标准，但各数据库仍存在方言和实现差异，例如 MySQL 的 `AUTO_INCREMENT`、`LIMIT` 和反引号用法不能直接照搬到所有数据库
 
 | 学习分类 | 用途 | 常见语句 |
 |---|---|---|
@@ -26,24 +24,24 @@ SQL 有标准，但各数据库仍存在方言和实现差异，例如 MySQL 的
 
 这些分类便于记忆，不是所有文档都采用相同分组。MySQL 官方将 `SELECT` 归在 Data Manipulation Statements 中，将账户管理与事务控制另列。参见 [SQL Statements](https://dev.mysql.com/doc/refman/8.4/en/sql-statements.html)。
 
-- 语句使用英文半角分号 `;`，不能写成中文 `；`。
-- 关键字大小写通常不影响含义，笔记统一大写以便阅读；数据库名、表名的大小写行为与平台和配置有关，不要据此推断所有名称都不区分大小写。
-- 字符串使用单引号，如 `'Dano'`；需要引用标识符时，MySQL 使用反引号。
-- `-- ` 单行注释中，两条横线后需要空白；也可使用 `/* 注释 */`。
+- 语句使用英文半角分号 `;`，不能写成中文 `；`
+
+- 关键字大小写通常不影响含义，笔记统一大写以便阅读；数据库名、表名的大小写行为与平台和配置有关，不要据此推断所有名称都不区分大小写
+
+- 字符串使用单引号，如 `'Dano'`；需要引用标识符时，MySQL 使用反引号
+
+- `-- ` 单行注释中，两条横线后需要空白；也可使用 `/* 注释 */`
+
 
 注释语法见 [MySQL Comments](https://dev.mysql.com/doc/refman/8.4/en/comments.html)。
 
 ---
 ## 数据库操作
-*已纠正*
-
-原例中的 `[IF NOT EXISTS]`、`[DEFAULT ...]` 是语法说明里的可选部分，方括号不应出现在实际 SQL 中。语法模板如下，`数据库名` 也需要替换：
 ```text
 CREATE DATABASE [IF NOT EXISTS] 数据库名 [DEFAULT CHARACTER SET utf8mb4];
 DROP DATABASE [IF EXISTS] 数据库名;
 ```
 
-以下为可执行示例，使用独立练习库 `sql_syntax_demo`。如果同名库已存在，先确认用途或换名，不继续修改已有数据：
 ```sql
 -- 查询当前账户可见的数据库
 SHOW DATABASES;
@@ -65,8 +63,6 @@ SHOW CREATE DATABASE sql_syntax_demo;
 
 ---
 ## 表结构操作
-*已补充*
-
 在前面的练习库中按顺序运行：
 ```sql
 CREATE TABLE products (
@@ -97,8 +93,6 @@ DESC products;
 
 ---
 ## 操作数据与查询顺序
-*已补充*
-
 ```sql
 INSERT INTO products (title, price, stock)
 VALUES ('Notebook', 12.50, 10), ('Pen', 3.00, 30);
@@ -130,7 +124,6 @@ LIMIT 返回行数 OFFSET 跳过行数;
 
 ---
 ## 删除操作的区别
-*已补充*
 
 | 操作 | 影响 | 事务边界 |
 |---|---|---|
@@ -155,4 +148,4 @@ SELECT COUNT(*) AS after_rollback FROM products;
 DROP DATABASE IF EXISTS sql_syntax_demo;
 ```
 
-`IF EXISTS` 只控制目标不存在时的处理，不会提供误删保护或恢复能力。参见 [隐式提交语句](https://dev.mysql.com/doc/refman/8.4/en/implicit-commit.html)。
+`IF EXISTS` 只控制目标不存在时的处理，不会提供误删保护或恢复能力。参见 [隐式提交语句](https://dev.mysql.com/doc/refman/8.4/en/implicit-commit.html)
