@@ -1,10 +1,9 @@
-# First ⌚️ 一会看看类型体操里有没有
+# First ⌚️
 > Last Format Time：9/16/2026 19:24:52
 
 实现一个函数first()，其返回值类型是其输入的数组或元组的第一个类型
 
 简单实现
-
 ```ts
 // 使用泛型 T 约束输入必须是至少包含一个元素的元组或数组
 function first<T extends readonly unknown[]>(arr: T): T[0] {

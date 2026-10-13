@@ -597,7 +597,7 @@ Docker Compose 是一个编排多容器分布式部署的工具，提供命令�
 3. 运行 docker-compose up 启动应用
 
 ### 功能实现
-1. 安装Docker Compose
+1. 安装 Docker Compose
 
 2. 创建 docker-compose 目录
 

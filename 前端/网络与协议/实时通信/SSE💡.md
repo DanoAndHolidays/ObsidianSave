@@ -1,9 +1,9 @@
 # SSE💡
-SSE 全称 Server-Sent Events（服务器发送事件）
+**S**erver-**S**ent **E**vents（服务器发送事件）
 
 https://www.bilibili.com/video/BV15F7J6dEdm
 
-浏览器发起一次 HTTP 请求，服务器在==同一个响应==中持续向浏览器推送事件
+浏览器发起一次 HTTP 请求，服务器在==同一个响应==中持续向浏览器推送事件，支持==自动断线重连==
 
 比如 AI 聊天的流式输出，用户提交一句话后，服务端逐步生成文字，并持续发送给前端，不必等完整答案生成后才返回
 ![[Pasted image 20261011182723.png]]

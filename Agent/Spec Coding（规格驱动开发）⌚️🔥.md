@@ -1,4 +1,4 @@
-# ⌚️🔥 Spec Coding（规格驱动开发）
+# Spec Coding（规格驱动开发）
 > Last Format Time：10/6/2026 02:27:25
 
 Spec Coding = 先定义规格，再实现代码。不要直接告诉 Agent“帮我实现这个功能”，而是先明确这个功能应该满足什么要求，再让 Agent 按规格实现。
