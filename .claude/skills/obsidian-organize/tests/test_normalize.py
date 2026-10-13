@@ -176,14 +176,45 @@ class NormalizeTests(unittest.TestCase):
         self.assertTrue(missing_result.startswith('# 目标标题\n'))
         self.assertTrue(wrong_result.startswith('# 正确标题\n'))
 
-    def test_h1_numeric_prefix_is_preserved_when_it_is_in_filename(self):
-        source = '# 1. Note\n正文\n'
+    def test_all_heading_levels_remove_number_prefixes(self):
+        source = (
+            '# 01 Note\n'
+            '> Last Format Time：7/14/2026 10:30:00\n\n'
+            '---\n'
+            '## 1. 章节\n'
+            '正文\n'
+            '### 1.2.3. 子章节\n'
+            '内容\n'
+            '#### 一、深层标题\n'
+            '##### 5) 更深标题\n'
+            '###### 第八章 最深标题\n'
+        )
+        result, stats = normalize.normalize_content(
+            source,
+            now=self.now,
+            expected_title='01 Note',
+        )
+        heading_lines = [
+            line for line in result.splitlines()
+            if line.startswith('#') and not line.startswith('```')
+        ]
+        self.assertEqual(heading_lines[0], '# Note')
+        self.assertIn('## 章节', heading_lines)
+        self.assertIn('### 子章节', heading_lines)
+        self.assertIn('##### 深层标题', heading_lines)
+        self.assertIn('##### 更深标题', heading_lines)
+        self.assertIn('##### 最深标题', heading_lines)
+        self.assertTrue(all(not normalize.NUMBER_PREFIX.match(line) for line in heading_lines))
+        self.assertEqual(stats['number_prefixes_removed'], 5)
+
+    def test_filename_chapter_prefix_is_removed_from_h1(self):
+        source = '# 第八章 记忆与检索\n正文\n'
         result, _ = normalize.normalize_content(
             source,
             now=self.now,
-            expected_title='1. Note',
+            expected_title='第八章 记忆与检索',
         )
-        self.assertTrue(result.startswith('# 1. Note\n'))
+        self.assertTrue(result.startswith('# 记忆与检索\n'))
 
     def test_extra_h1s_are_demoted_and_hierarchical_prefixes_are_removed(self):
         source = (

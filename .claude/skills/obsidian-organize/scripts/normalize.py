@@ -28,11 +28,23 @@ def configure_console_output() -> None:
         if hasattr(sys.stderr, 'reconfigure'):
             sys.stderr.reconfigure(encoding='utf-8')
 
-# 数字标号：## 1. xxx / ## 1.1.xxx / ## 1、xxx / ### 一、 xxx / ### 1) xxx
+# 标题序号：H1-H6 均移除章节号、数字/中文数字标号。
+# 例如：# 01 初识智能体、# 第八章 记忆与检索、## 1.2.3. 子标题、### 一、子标题。
+CHINESE_NUMBER_CHARS = '一二三四五六七八九十百千万零〇两'
+TITLE_NUMBER_BODY = (
+    rf'(?:'
+    rf'第\s*(?:\d+|[{CHINESE_NUMBER_CHARS}]+)\s*[章节篇]'
+    rf'|(?:[{CHINESE_NUMBER_CHARS}]+|\d+(?:\.\d+)*)(?:[.、．\)])'
+    rf'|\d+(?:\.\d+)+(?=\s+)'
+    rf'|0*\d{{1,2}}(?=\s+)'
+    rf'|[{CHINESE_NUMBER_CHARS}]+(?=\s+)'
+    rf')'
+)
 NUMBER_PREFIX = re.compile(
-    r'^(#{2,6})\s+(?:[一二三四五六七八九十]+|\d+(?:\.\d+)*)[.、．\)]\s*',
+    rf'^(#{{1,6}})\s+{TITLE_NUMBER_BODY}\s*',
     re.MULTILINE,
 )
+FILENAME_NUMBER_PREFIX = re.compile(rf'^\s*{TITLE_NUMBER_BODY}\s*')
 
 # H4 标题行
 H4_PATTERN = re.compile(r'^####(\s)', re.MULTILINE)
@@ -170,8 +182,13 @@ def apply_outside_fenced_code(content: str, transform) -> tuple[str, int]:
     return restore_fenced_code(transformed, blocks), count
 
 
+def strip_title_number_prefix(title: str) -> str:
+    """从文件名或标题文本开头去除章节号及数字/中文数字序号。"""
+    return FILENAME_NUMBER_PREFIX.sub('', title, count=1).strip()
+
+
 def remove_number_prefixes(content: str) -> tuple[str, int]:
-    """去除标题前的数字/中文数字标号。"""
+    """去除 H1-H6 标题前的章节号、数字/中文数字标号。"""
     count = 0
 
     def repl(m: re.Match) -> str:
@@ -204,7 +221,8 @@ def bold_pseudo_headings_to_h3(content: str) -> tuple[str, int]:
 
 
 def ensure_h1_title(content: str, expected_title: str) -> tuple[str, int]:
-    """确保正文第一个 H1 存在且与文件名一致，不触碰代码块。"""
+    """确保正文第一个 H1 存在且与去除序号后的文件名一致，不触碰代码块。"""
+    expected_title = strip_title_number_prefix(expected_title or '')
     if not expected_title:
         return content, 0
 
