@@ -301,17 +301,18 @@ Content-Length: 55
 304 不表示“跳转到另一个 URL”，也不是所有缓存命中都会产生 304：缓存仍新鲜时，浏览器可能直接使用本地响应。
 
 ### 4xx：客户端错误
-| 状态码 | 含义 |
-| --- | --- |
-| `400 Bad Request` | 服务器认为请求存在错误，如语法或消息格式无效 |
-| `401 Unauthorized` | 缺少有效认证凭证，通常需要登录或更新凭证 |
-| `403 Forbidden` | 服务器理解请求但拒绝执行，常见于权限不足 |
-| `404 Not Found` | 未找到资源，或服务器不愿透露资源是否存在 |
-| `405 Method Not Allowed` | 目标资源不支持该方法，响应带 `Allow` |
-| `413 Content Too Large` | 请求内容过大；旧资料也称 Payload Too Large |
-| `414 URI Too Long` | 请求 URI 过长 |
-| `415 Unsupported Media Type` | 请求内容的媒体类型或编码不受支持 |
-| `429 Too Many Requests` | 请求过于频繁，可能带 `Retry-After` |
+| 状态码                          | 含义                             |
+| ---------------------------- | ------------------------------ |
+| `400 Bad Request`            | 服务器认为请求存在错误，如语法或消息格式无效         |
+| `401 Unauthorized`           | 缺少有效认证凭证，通常需要登录或更新凭证           |
+| 402                          | 需要收费                           |
+| `403 Forbidden`              | 服务器理解请求但拒绝执行，常见于权限不足           |
+| `404 Not Found`              | 未找到资源，或服务器不愿透露资源是否存在           |
+| `405 Method Not Allowed`     | 目标资源不支持该方法，响应带 `Allow`         |
+| `413 Content Too Large`      | 请求内容过大；旧资料也称 Payload Too Large |
+| `414 URI Too Long`           | 请求 URI 过长                      |
+| `415 Unsupported Media Type` | 请求内容的媒体类型或编码不受支持               |
+| `429 Too Many Requests`      | 请求过于频繁，可能带 `Retry-After`       |
 
 `418 I'm a teapot` 来自愚人节协议；HTTP 核心规范将 418 标为保留的 Unused，了解背景即可。
 
