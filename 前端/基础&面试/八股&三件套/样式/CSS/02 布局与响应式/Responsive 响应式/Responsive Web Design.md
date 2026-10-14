@@ -14,85 +14,7 @@
 
 **核心策略：优先使用流式布局，必要时通过条件查询改变布局规则。**
 
-### Mobile First
-[[Mobile First 移动端优先 ⌚️]]
-默认先编写适用于窄视口的样式，再逐步增强宽屏布局。
-```
-.layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (width >= 64rem) {
-  .layout {
-    grid-template-columns: 16rem minmax(0, 1fr);
-  }
-}
-```
-
-断点（Breakpoint）不应机械地按照手机、平板、电脑分类，而应根据内容何时无法保持合理布局来确定。
-
 ---
-## Media Queries
-[[Media Queries]]
-媒体查询根据视口尺寸、用户偏好等条件应用 CSS。
-```
-/* 视口至少 1024px */
-@media (width >= 1024px) {
-  /* ... */
-}
-
-/* 范围查询 */
-@media (600px <= width < 1024px) {
-  /* ... */
-}
-
-/* 用户偏好减少动画 */
-@media (prefers-reduced-motion: reduce) {
-  .animated {
-    animation: none;
-    transition: none;
-  }
-}
-```
-
-媒体查询中的宽度指 CSS 视口宽度，而不是设备的物理像素宽度。
-
----
-## Container Queries
-[[Container Queries]]
-容器查询主要用于组件级响应式，根据符合要求的祖先查询容器的尺寸调整样式。
-```
-.wrapper {
-  container: card / inline-size;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-}
-
-@container card (width >= 400px) {
-  .card {
-    flex-direction: row;
-  }
-}
-```
-
-- `container-type: inline-size`：允许查询容器的行内轴尺寸。
-
-- `container-type: size`：允许查询两个轴的尺寸，但尺寸约束更强。
-
-- `container-name`：命名查询容器。
-
-- `cqi`、`cqw` 等容器查询单位：根据符合条件的祖先查询容器尺寸计算长度。
-
-
-尺寸容器查询作用于查询容器的后代，不能直接查询元素自己的尺寸来修改自身。
-
-**Media Queries 适合页面级布局，Container Queries 适合可复用组件。**
-
 ## 流式尺寸（Fluid Sizing）
 流式尺寸允许元素在不同空间下连续变化，而不需要为每种屏幕尺寸编写媒体查询
 ### 自适应容器
@@ -106,9 +28,7 @@
 效果：
 
 - 容器最大宽度为 `75rem`。
-
 - 在较窄空间下自动收缩。
-
 - 保留左右留白并水平居中。
 
 ### clamp() 实现流式尺寸
@@ -121,9 +41,7 @@
 `clamp(最小值, 理想值, 最大值)`：
 
 - 视口变化时字号可以连续变化。
-
 - 不会小于最小值或大于最大值。
-
 - 字体尺寸尽量结合 `rem` 等单位，兼顾用户的字体设置与缩放需求。
 
 
@@ -137,7 +55,6 @@
 |`vh` / `lvh`|大视口高度|工具栏展开时可能超出可见区域|
 |`svh`|小视口高度|稳定、保守|
 |`dvh`|动态视口高度|随动态工具栏变化|
-
 
 ---
 ## 响应式布局常见问题

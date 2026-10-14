@@ -164,7 +164,7 @@ HTML 元素的默认 display 取决于元素类型：
 - **隐藏元素**：`display: none`（head、script、style、meta 等）
 
 ### 【Q281】响应式布局需要注意哪一些
-[[Mobile First 移动端优先 ⌚️]]
+[[Mobile First⌚️]]
 1. **视口 meta 标签**：`<meta name="viewport" content="width=device-width, initial-scale=1">`
 2. **媒体查询断点**：移动优先设计（min-width），合理断点（576, 768, 992, 1200）
 3. **弹性单位**：使用 %/vw/vh/rem/em，避免固定 px 宽度

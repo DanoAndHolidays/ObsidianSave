@@ -1,5 +1,5 @@
 # Container Queries
-允许 CSS 根据祖先查询容器的尺寸等条件，为后代元素应用不同样式
+允许 CSS 根据祖先查询容器的尺寸等条件，为后代元素应用不同样式，
 
 与媒体查询（Media Queries）的区别：
 
@@ -16,7 +16,7 @@
 1. 使用 `container-type` 声明查询容器
 2. 使用 `@container` 根据容器尺寸调整后代样式
 
-```
+```css
 .wrapper {
   container-type: inline-size;
 }
@@ -52,8 +52,8 @@
 
 ---
 ## 查询容器的选择
-对于未指定名称的尺寸查询，浏览器会选择==最近的、满足查询==所需尺寸能力的祖先查询容器
-```
+对于未指定名称的尺寸查询，浏览器会选择==最近的==、==满足查询所需尺寸能力==的祖先查询容器
+```css
 .outer {
   container-type: inline-size;
   width: 1000px;
@@ -75,7 +75,7 @@
 
 ### container-name
 可以给查询容器命名，以指定要查询的祖先容器
-```
+```css
 .outer {
   container-name: dashboard;
   container-type: inline-size;
@@ -89,7 +89,7 @@
 ```
 
 还可以使用简写：
-```
+```css
 .outer {
   container: dashboard / inline-size;
 }
@@ -111,7 +111,7 @@
 |`cqmax`|`cqi`、`cqb` 中较大的值|
 
 例如：
-```
+```css
 .wrapper {
   container-type: inline-size;
 }
@@ -128,7 +128,7 @@
 ---
 ## 常见注意事项
 ### 不能直接根据自身尺寸查询自身
-```
+```css
 .card {
   container-type: inline-size;
 }
@@ -143,7 +143,7 @@
 上面的查询不会使用 `.card` 自身的尺寸，而是尝试寻找其符合要求的祖先查询容器。
 
 正确的组件结构：
-```
+```html
 <div class="wrapper">
   <div class="card">Content</div>
 </div>
@@ -155,7 +155,6 @@
 
 - **Container Queries**：CSS 声明式响应，适合调整布局和视觉样式
 - **ResizeObserver**：通过 JavaScript 监听元素尺寸变化，适合需要执行 JS 逻辑的场景，例如重新绘制 Canvas 图表
-
 
 ### 不是所有容器查询都查询尺寸
 现代容器查询还包括 Style Queries（样式查询）等能力。`container-type: normal` 不支持尺寸查询，但不代表该元素完全不能作为其他类型的查询容器
