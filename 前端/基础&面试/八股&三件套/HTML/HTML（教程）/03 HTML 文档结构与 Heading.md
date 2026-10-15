@@ -223,7 +223,7 @@ rel="icon"
 ```
 
 告诉浏览器，这个资源马上会被使用，可以提前加载。
-[[preload 和 prefetch]]
+[[preload & prefetch]]
 
 ### `<base>`
 这是一个平时很少写，但是很容易出题的标签：

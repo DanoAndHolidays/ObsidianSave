@@ -1,11 +1,13 @@
-# preload 和 prefetch
+# preload & prefetch
 > Last Format Time：9/16/2026 19:24:51
 
 前端中的 `preload` 和 `prefetch`。它们是两种非常重要的资源提示（Resource Hints），用于优化页面加载性能和用户体验，但目的和应用场景有显著区别。
 
 核心概念就一句话：
-*   **Preload：加载当前页面必定需要的资源。**（高优先级，当前用）
-*   **Prefetch：加载未来页面可能需要的资源。**（低优先级，未来用）
+
+*   **preload：加载当前页面必定需要的资源。**（高优先级，当前用）
+*   **prefetch：加载未来页面可能需要的资源。**（低优先级，未来用）
+
 ![[Pasted image 20260619220138.png]]
 
 可以看到，第一个红框中的是preload，第二个是prefetch的结果

@@ -1,5 +1,6 @@
-# Git 提交规范详解
-Git 提交规范（Commit Convention）是团队协作中保持代码历史清晰、可追溯的重要实践。以下是业界广泛采用的 **Conventional Commits** 规范的详细介绍。
+# Commit Convention
+Git 提交规范（Commit Convention）是团队协作中保持代码历史清晰、可追溯的重要实践。以下是业界广泛采用的 **Conventional Commits** 规范的详细介绍
+
 ### 提交信息的基本结构
 一条标准的 Git Commit Message 由三部分组成：
 ```Plain

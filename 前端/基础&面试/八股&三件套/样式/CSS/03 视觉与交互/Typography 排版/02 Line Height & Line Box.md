@@ -32,7 +32,7 @@
 
 ---
 ## Inline Box 和 Line Box
-[[Display 与 Box]]
+[[Display & Box]]
 ### display 模型
 之前学习过 `display = Outer + Inner`：
 
