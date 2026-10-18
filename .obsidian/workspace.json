@@ -36,17 +36,17 @@
             }
           },
           {
-            "id": "6a5401143660cb4a",
+            "id": "52550cac7f4f4ab7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前端/基础&面试/八股&三件套/CSS/CSS 八股.md",
+                "file": "后端/Database/数据库自增主键💡.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CSS 八股"
+              "title": "数据库自增主键💡"
             }
           }
         ],
@@ -123,13 +123,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前端/基础&面试/八股&三件套/CSS/CSS 八股.md",
+                "file": "后端/Database/数据库自增主键💡.md",
                 "followCursor": true,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "CSS 八股 的大纲"
+              "title": "数据库自增主键💡 的大纲"
             }
           },
           {
@@ -138,7 +138,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前端/基础&面试/八股&三件套/CSS/CSS 八股.md",
+                "file": "后端/Database/数据库自增主键💡.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -148,7 +148,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "CSS 八股 的反向链接列表"
+              "title": "数据库自增主键💡 的反向链接列表"
             }
           },
           {
@@ -197,53 +197,53 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "6a5401143660cb4a",
+  "active": "52550cac7f4f4ab7",
   "lastOpenFiles": [
-    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/画三角⌚️.md",
-    "前端/基础&面试/八股&三件套/CSS/CSS 八股.md",
-    "前端/基础&面试/八股&三件套/CSS/02 布局与响应式/水平垂直居中⌚️.md",
-    "前端/基础&面试/八股&三件套/CSS/02 布局与响应式/布局.md",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/06 CSS Nesting 与现代 CSS 样式组织.md",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/05 Utility-first & Atomic CSS.md",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/04 CSS-in-JS.md",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/03 CSS Modules.md",
-    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/01 Selector.md",
-    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/4 关系选择器.md",
-    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Specificty 权重.md",
-    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/03 伪类和伪元素💡.md",
-    "attachments/Pasted image 20261017220811.png",
+    "后端/Database/唯一约束与唯一索引💡.md",
+    "前端/工程化/版本管理工具/Git.md",
+    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Transform & Transition & Animation/03 Animation 动画.md",
+    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Transform & Transition & Animation/02 Transition 过度.md",
+    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Transform & Transition & Animation/01 Transform 变换.md",
     "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/02 属性选择器.md",
+    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/01 Selector.md",
+    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/03 伪类和伪元素💡.md",
+    "前端/网络与协议/实时通信/WebSocket💡.md",
+    "前端/网络与协议/实时通信/SSE💡.md",
+    "前端/网络与协议/实时通信/轮询与长轮询💡.md",
+    "前端/浏览器/浏览器安全策略/常见网络攻击.md",
+    "前端/浏览器/浏览器安全策略/浏览器安全策略（校验补充版）.md",
+    "前端/浏览器/浏览器安全策略/浏览器安全策略.md",
+    "前端/浏览器/浏览器存储&身份认证/Cookie.md",
+    "前端/浏览器/浏览器存储&身份认证/身份认证.md",
+    "前端/浏览器/浏览器存储&身份认证/缓存的实现.md",
+    "后端/SpringBoot/@Data💡.md",
+    "后端/SpringBoot/Validation 参数校验.md",
+    "后端/00 学习路线.md",
+    "后端/SystemsDesign/数据库迁移/数据库迁移【未整理】.md",
+    "后端/SystemsDesign/幂等行/Persistent Idempotency Key 持久化幂等键⌚️.md",
+    "后端/SpringBoot/注解 & 构造函数注入💡.md",
+    "后端/Database/数据库自增主键💡.md",
+    "后端/Java/JavaSE/02 基础.md",
+    "后端/Database/MySQL/01 基础/01 SQL 语句.md",
+    "attachments/Pasted image 20261018165624.png",
+    "attachments/Pasted image 20261018164846.png",
+    "attachments/Pasted image 20261018164221.png",
+    "attachments/Pasted image 20261018161201.png",
+    "后端/SpringBoot/基础",
+    "attachments/Pasted image 20261017220811.png",
     "attachments/Pasted image 20261017220346.png",
-    "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector/1 CSS 选择器.md",
     "前端/基础&面试/八股&三件套/CSS/01 CSS 核心/Selector",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/02 BEM.md",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/01 CSS 工程化.md",
-    "Agent/Hello Agents/08 记忆与检索.md",
-    "Agent/Hello Agents/07 构建框架.md",
-    "Agent/Hello Agents/06 框架开发.md",
-    "Agent/RAG/RAG.md",
-    "前端/基础&面试/简历/前端/最新简历/最新简历.md",
-    "前端/浏览器/垃圾回收机制 v8.md",
-    "前端/基础&面试/八股&三件套/JS/JS（教程）/ECMAScript/01 JavaScript基础🍂.md",
-    "前端/基础&面试/八股&三件套/JS/JS（教程）/ECMAScript/00 JavaScript学习地图.md",
-    "前端/基础&面试/八股&三件套/JS/JS（教程）/ECMAScript/16 JSDoc.md",
-    "前端/基础&面试/八股&三件套/JS/JS（教程）/ECMAScript/闭包是绑定.md",
     "attachments/Pasted image 20261016180704.png",
     "attachments/Pasted image 20261016161136.png",
     "attachments/Pasted image 20261015212959.png",
     "attachments/Pasted image 20261015174013.png",
-    "attachments/Pasted image 20261015173346.png",
-    "attachments/Pasted image 20261015173322.png",
     "前端/基础&面试/八股&三件套/CSS/04 工程化",
     "前端/基础&面试/八股&三件套/样式/CSS/01 CSS 核心/Rendering & Performance",
     "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Transform & Transition & Animation",
-    "attachments/Pasted image 20261015115059.png",
-    "attachments/Pasted image 20261015114945.png",
     "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Visual Styling",
     "Agent/Harness",
     "Agent/Prompt",
     "Agent/RAG",
-    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Typography 排版",
-    "前端/基础&面试/八股&三件套/CSS/04 工程化/TailwindCSS"
+    "前端/基础&面试/八股&三件套/CSS/03 视觉与交互/Typography 排版"
   ]
 }

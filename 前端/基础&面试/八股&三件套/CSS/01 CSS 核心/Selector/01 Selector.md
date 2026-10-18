@@ -7,7 +7,7 @@ CSS 选择器（Selector）是一种用于描述哪些 DOM 元素应被匹配的
 ## Basic Selectors
 
 ### Type Selector
-也叫元素选择器，根据 HTML 元素名称匹配
+类型/元素选择器，根据 HTML 元素名称匹配
 
 ### Class Selector
 根据元素的 `class` 属性匹配
@@ -64,7 +64,7 @@ button:hover { }         /* button 元素，且处于 hover 状态 */
 
 例如 `.body + .hint` 选中紧跟 `.body` 的 `.hint`；`.hint:has(+ .action)` 则选中**后面紧跟 `.action` 的 `.hint`**。`+` 判断元素是否相邻时，不把两者间的文字或换行当作隔开的元素。
 
-### Descendant Combinator 子代组合器
+### Descendant Combinator 后代组合器
 空格
 ```
 .card h3 {
@@ -192,36 +192,6 @@ h3 ~ p {
 匹配条件更严格，不代表特指度更高
 
 ---
-
-这个选择器组，第一个是指向了所有 HTML 元素 `<h1>`。
-
-cssCopy
-
-```text
-h1 {
-}
-```
-
-它也包含了一个 class 的选择器：
-
-cssCopy
-
-```text
-.box {
-}
-```
-
-亦或，一个 id 选择器：
-
-cssCopy
-
-```text
-#unique {
-}
-```
-
-
-
 ## 选择器列表
 ```text
 h1 {
@@ -251,21 +221,6 @@ h1,
 ```
 
 
+---
 
 ---
-## 函数伪类（Functional pseudo-classes）
-- `:is(A, B)`：匹配符合 `A` 或 `B` 的元素。
-- `:where(A, B)`：匹配语义与 `:is()` 相同，但自身及参数对 specificity 的贡献为零，适合容易被覆盖的基础样式。
-- `:not(A)`：匹配不符合 `A` 的元素。
-- `:has(关系)`：根据关联元素是否存在来匹配**当前元素**。
-
-例如 `.field:has(> input[aria-invalid="true"])` 给含有错误输入框的 `.field` 加样式；其中 `>` 要求输入框是直接子元素。`:is()`、`:not()`、`:has()` 的 specificity 由参数中最高者决定；`!important` 和 `@layer` 不属于 specificity。
-
----
-## 状态、结构与伪元素
-- `.field:focus-within`：自身或内部元素获得焦点时匹配外层。
-- `button:focus-visible`：浏览器判断需要显示焦点提示时匹配按钮，不能简单等同于“键盘操作”。
-- `li:nth-child(2)`：检查元素在**所有同级元素**中的位置。
-- `li:nth-child(2 of :not([hidden]))`：先限定参与计数的同级元素，再取第二个。
-
-伪类用 `:` 表示匹配条件；伪元素通常用 `::` 表示元素的特定部分或生成内容。例如 `.hint::before` 可添加装饰，重要信息仍应写在 HTML 中。

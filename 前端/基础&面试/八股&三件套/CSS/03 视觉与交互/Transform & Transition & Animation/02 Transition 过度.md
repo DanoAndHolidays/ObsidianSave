@@ -6,7 +6,7 @@
 注意：
 
 - Transition 本身不负责触发样式变化，`:hover`、class 切换等才是触发来源
-- Transition 负责计算中间值，不需要 JavaScript 每帧手动更新
+- Transition 负责==计算中间值==，不需要 JavaScript 每帧手动更新
 - 不是所有 CSS 属性都支持连续插值
 
 ```
@@ -61,8 +61,7 @@
 ### cubic-bezier()
 ```
 .box {
-  transition: transform 300ms
-    cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 ```
 

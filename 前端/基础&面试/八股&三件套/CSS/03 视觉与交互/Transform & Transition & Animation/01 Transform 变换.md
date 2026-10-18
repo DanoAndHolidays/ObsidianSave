@@ -124,15 +124,16 @@ transform: translateX(100px) rotate(90deg);
 transform: rotate(90deg) translateX(100px);
 ```
 
-两者结果不同，因为变换组合通常不满足交换律
+两者结果不同，因为变换组合==通常不满足交换律==
 
 ---
 ## Transform 对布局和定位的影响
+
 ### 不改变布局占位
 `translate`、`scale` 等不会让 Flex/Grid 根据变换后的视觉尺寸重新排列元素。
 
 ### 创建 Stacking Context
-当 `transform` 不为 `none` 时，会创建新的层叠上下文
+当 `transform` 不为 `none` 时，会创建新的==层叠上下文==
 ```
 .parent {
   transform: translateX(0);
