@@ -6,8 +6,24 @@
 注意：
 
 - Transition 本身不负责触发样式变化，`:hover`、class 切换等才是触发来源
+
 - Transition 负责==计算中间值==，不需要 JavaScript 每帧手动更新
-- 不是所有 CSS 属性都支持连续插值
+
+- 不是所有 CSS 属性都支持连续插值，**不能被 transition/animation 动画化的属性**：
+	
+	- `display`（从 none→block 无动画）
+	- `visibility`（可以动画，但是离散的）
+	- `background-image`（渐变→渐变不能平滑过渡，但可用多个/伪元素模拟）
+	- `font-family`
+	- `position`
+	- `overflow`
+	- `white-space`
+	- `text-align`
+	- `flex-direction`、`grid-template-*`
+
+
+**可动画的属性类型**：数值（opacity, width, color, transform）、颜色（color, background-color）、变换（transform 函数的矩阵计算）。
+
 
 ```
 .box {

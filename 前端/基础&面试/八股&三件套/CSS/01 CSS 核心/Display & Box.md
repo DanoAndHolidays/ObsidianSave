@@ -20,6 +20,21 @@ DOM Tree ≠ Box Tree
 
 一个元素通常会生成 Box，但并非严格一一对应，例如后续的 `display: contents`
 
+### HTML元素的默认 display 属性
+HTML 元素的默认 display 取决于元素类型：
+
+- **块级元素**（div、p、h1-h6、section、header、footer、ul、ol、form 等）：`display: block`
+
+- **行内元素**（span、a、strong、em、i、b、label 等）：`display: inline`
+
+- **行内块元素**（img、input、textarea、select、button 等）：`display: inline-block`
+
+- **表格类**：`display: table`、`table-row`、`table-cell` 等
+
+- **列表项**：`display: list-item`
+
+- **隐藏元素**：`display: none`（head、script、style、meta 等）
+
 ### 常见 display 与 Box 类型的完整对应表
 浏览器根据 DOM、CSS 等信息生成用于布局的 Box Tree（盒树）
 一个普通元素通常会生成一个 Principal Box（主盒子），这个盒子可以从两个角度描述：
@@ -292,12 +307,16 @@ width / height
 
 但不能简单说 inline 不能设置 margin / padding / border，更准确：
 
+- **margin**：左右生效，上下**不生效**
+- **padding**：左右生效且占据空间，上下**部分生效**——元素内容的背景/边框扩展但**不占据实际布局空间**（即不会撑开父元素的行高，可能会和相邻行重叠）
+- **border**：与 padding 行为类似
+
 - 水平方向 padding / margin 可以影响布局
 - padding / border 可以绘制
 - vertical margin 不会像 block margin 那样正常推动行布局
 - width / height 对普通 non-replaced inline 不按 block sizing 方式生效
 
-具体原因后续结合 IFC 学习。
+具体原因后续结合 IFC 学习
 
 ---
 ##  `inline-block`
@@ -354,12 +373,9 @@ inline-grid
 
 ---
 ## `display: none`
-`display: none` 的核心不是“盒子被隐藏”，而是：
-
-> 元素及其后代不生成用于布局的 Box。
+`display: none` 的核心不是“盒子被隐藏”，而是==元素及其后代==不生成==用于布局的 Box==
 
 mental model：
-
 ```text
 DOM Tree
    ↓
@@ -371,7 +387,6 @@ Layout
 ```
 
 `display: none`：
-
 ```text
 DOM 中存在
 Box Tree 中不存在
@@ -380,7 +395,6 @@ Box Tree 中不存在
 ```
 
 因此父元素 `display: none` 时，即使子元素写：
-
 ```text
 .child {
   display: block;
@@ -390,7 +404,6 @@ Box Tree 中不存在
 子元素仍不会生成布局盒。
 
 和其他隐藏方式区别：
-
 ```text
 display: none
 DOM 有

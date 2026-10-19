@@ -2,7 +2,7 @@
 > Last Format Time：10/6/2026 02:27:25
 
 CSS 嵌套语法：
-```text
+```css
 .home-page {
   .home-page-btn {
     color: red;
@@ -11,7 +11,7 @@ CSS 嵌套语法：
 ```
 
 它表达的选择关系相当于：
-```text
+```css
 .home-page .home-page-btn {
   color: red;
 }
@@ -19,7 +19,7 @@ CSS 嵌套语法：
 
 意思是：选中 `.home-page` **里面的后代元素** `.home-page-btn`。
 
-Specificity 用于 Cascade 中继续判断多个候选声明谁获胜，它只是 Cascade 的一个阶段，不等于完整的“CSS 优先级”。
+Specificity 用于 Cascade 中继续判断多个候选声明谁获胜，它只是 Cascade 的一个阶段，不等于完整的“CSS 优先级”
 
 整体位置：
 ```text
@@ -116,7 +116,7 @@ ID selector：
 ### TYPE
 以下属于 TYPE：
 
-- element/type selector 元素/类型选择器
+- element (type) selector 元素（类型）选择器
 - pseudo-element 伪元素
 
 例如：

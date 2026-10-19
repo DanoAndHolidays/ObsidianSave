@@ -11,13 +11,18 @@
 ---
 ## 常见的触发条件
 并非所有元素都会创建层叠上下文，以下情况会触发新的层叠上下文：
-1. ==根==元素：文档的 `<html>` 元素会自动创建根层叠上下文。
-2. ==定位==元素 + ==z-index==：`position` 属性为 `relative`、`absolute`、`fixed` 或 `sticky`，且 `z-index` 的值不为 `auto` 的元素。
-3. Flex/Grid ==容器==及其==子项==（当子项 `z-index` 非 `auto` 时）。
+
+1. ==根==元素：文档的 `<html>` 元素会自动创建根层叠上下文
+
+2. ==定位==元素 + ==z-index==：`position` 属性为 `relative`、`absolute`、`fixed` 或 `sticky`，且 `z-index` 的值不为 `auto` 的元素
+
+3. Flex/Grid ==容器==及其==子项==（当子项 `z-index` 非 `auto` 时）
+
 4. CSS3 特定属性：
-    - `opacity` 小于 1（例如 `opacity: 0.9`）。
-    - `isolation: isolate`（专门用于强制创建独立层叠上下文）。
-    - `transform` 不为 `none`（例如 `transform: scale(1.2)`）。
+	
+    - `opacity` 小于 1（例如 `opacity: 0.9`）
+    - `isolation: isolate`（专门用于强制创建独立层叠上下文）
+    - `transform` 不为 `none`（例如 `transform: scale(1.2)`）
     - `filter`、`backdrop-filter`、`perspective`、`clip-path`、`mask` 等属性不为 `none`。
     - `mix-blend-mode` 不为 `normal`。
     - `will-change` 指定了上述可能触发层叠上下文的属性。

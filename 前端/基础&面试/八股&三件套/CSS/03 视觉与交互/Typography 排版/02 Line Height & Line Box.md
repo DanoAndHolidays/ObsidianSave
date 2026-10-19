@@ -181,6 +181,20 @@ Half-leading = Leading / 2
 
 所以工程中通常优先使用无单位行高，避免子元素字号变化后继承不合适的固定长度
 
+关键在于**继承机制**的不同：
+
+- **纯数字（2）**：最推荐。子元素继承时直接继承这个**比例**（不是计算后的 px）。子元素 line-height = 自身 font-size * 2
+- **em（2em）**：基于当前元素的 font-size 计算出一个 px 值，子元素**继承计算后的 px 值**（固定值），不管自身 font-size 多大
+- **百分比（200%）**：行为与 em 完全一样，基于当前元素的 font-size 计算 px，子元素继承固定的 px 值
+
+**结论**：用纯数字（推荐），可保证子元素 line-height 与自身 font-size 保持比例。
+
+设 html 的 font-size = 16px：
+- fontSize: 2rem = 32px（2 × 16px）
+- lineHeight: 1.5em = 1.5 × 32px = **48px**
+
+因为 em 基于**当前元素自身的 font-size**（这里是 32px）。
+
 ---
 ## 工程中的常见问题
 ### 为什么 span 设置 height 不生效？

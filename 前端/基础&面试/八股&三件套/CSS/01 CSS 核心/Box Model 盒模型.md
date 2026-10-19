@@ -7,7 +7,6 @@ CSS 的盒模型主要包括以下两种，可通过 [box-sizing](https://devel
 
 - `border-box`：IE盒模型（怪异盒模型）width 包含 (content、padding、border)
 
-
 ---
 ## CSS 布局的基本对象是 Box
 浏览器布局时，并不是直接对 DOM Element 进行布局，而是元素根据 CSS 生成 **Box（盒）**，真正参与布局的是这些 Box：
@@ -113,7 +112,6 @@ html {
 }
 ```
 
-
 #####  `width` 不等于最终视觉宽度
 更准确的理解：
 ```text
@@ -132,7 +130,6 @@ width: 50%;
 必须结合 containing block 的尺寸才能得到最终 used width，所以`width` 是尺寸计算过程的输入，不一定等于元素最终实际占据的宽度。
 
 ### Padding 与 Margin
-
 `padding`：
 
 - 属于元素自身 Box
@@ -146,8 +143,7 @@ width: 50%;
 - 不属于 border box
 - 在普通流中可能发生 margin collapsing
 
-Margin Collapse 后面结合 **Normal Flow / Formatting Context** 再系统学习。
-
+Margin Collapse 后面结合 **Normal Flow / Formatting Context** 再系统学习
 ```text
 Element
 ↓

@@ -48,3 +48,18 @@
 - 应根据内容在什么宽度下==无法保持合理布局==来选择断点
 
 - 常用[[Mobile First⌚️]]策略：先定义适用于窄视口的基础样式，再使用 `min-width` 或范围查询逐步增强
+
+**CSS 媒体查询**：根据设备特征（视口宽度、分辨率、方向、配色方案等）应用 CSS 规则：
+```css
+@media (max-width: 768px) { /* 移动端样式 */ }
+```
+
+**JS 监听媒体查询**：
+```javascript
+const mq = window.matchMedia('(max-width: 768px)');
+mq.addEventListener('change', (e) => {
+  if (e.matches) { /* 匹配到了 */ }
+});
+// 或一次性检查
+if (mq.matches) { /* ... */ }
+```
