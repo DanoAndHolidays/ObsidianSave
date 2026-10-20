@@ -1,4 +1,4 @@
-# 07 约束
+# 07 Constraints 约束
 > Last Format Time：10/6/2026 02:27:25
 
 对表中的数据进行限定，保证数据的正确性、有效性、完整性
@@ -225,3 +225,104 @@ ADD CONSTRAINT 外键名 FOREIGN KEY (本表外键列名) REFERENCES 主表名(�
 ON UPDATE CASCADE 
 ON DELETE CASCADE;
   ```
+
+---
+## 检查约束💡
+基本语法：
+```
+CONSTRAINT 约束名称 CHECK (条件表达式)
+```
+
+其中：
+
+- `CONSTRAINT`：声明一个约束。
+- `约束名称`：给约束起名字，方便定位错误。
+- `CHECK`：指定校验条件。
+- `(条件表达式)`：数据必须满足的条件。
+
+当执行 `INSERT` 或 `UPDATE` 时，MySQL 会检查最终数据是否满足条件。如果条件为 `FALSE`，就会拒绝此次违规写入。
+
+```mysql
+CREATE TABLE activity (  
+    -- 非空自增主键  
+    id BIGINT NOT NULL AUTO_INCREMENT,  
+    creator_id BIGINT NOT NULL,  
+  
+    title VARCHAR(120) NOT NULL,  
+    description TEXT NOT NULL,  
+    category VARCHAR(40) NOT NULL,  
+    city VARCHAR(80) NOT NULL,  
+    location_name VARCHAR(160) NOT NULL,  
+    location_address VARCHAR(255) NULL,  
+  
+    cover_url VARCHAR(500) NULL,  
+    start_at DATETIME(6) NOT NULL,  
+    end_at DATETIME(6) NOT NULL,  
+    registration_deadline DATETIME(6) NOT NULL,  
+  
+    capacity INT UNSIGNED NOT NULL,  
+    participant_count INT UNSIGNED NOT NULL DEFAULT 0,  
+  
+    status VARCHAR(20) NOT NULL DEFAULT 'DRAFT',  
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),  
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),  
+  
+    PRIMARY KEY (id),  
+  
+    CONSTRAINT fk_activity_creator FOREIGN KEY (creator_id) REFERENCES app_user (id),  
+    CONSTRAINT chk_activity_capacity CHECK (capacity > 0),  
+    CONSTRAINT chk_activity_participant_count CHECK (participant_count <= capacity),  
+    CONSTRAINT chk_activity_time CHECK (end_at > start_at),  
+    CONSTRAINT chk_activity_deadline CHECK (registration_deadline <= start_at),  
+    CONSTRAINT chk_activity_status CHECK (status IN ('DRAFT', 'PUBLISHED', 'CANCELLED', 'FINISHED')),  
+  
+    INDEX idx_activity_city_status_start (city, status, start_at),  
+    INDEX idx_activity_creator_created (creator_id, created_at)  
+  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+表中的五个 `CHECK`
+
+人数上限必须大于 0
+```MySQL
+CONSTRAINT chk_activity_capacity CHECK (capacity > 0)
+```
+
+已报名人数不能超过人数上限
+```MySQL
+CONSTRAINT chk_activity_participant_count
+CHECK (participant_count <= capacity)
+```
+
+活动结束时间必须晚于开始时间
+```MySQL
+CONSTRAINT chk_activity_time
+CHECK (end_at > start_at)
+```
+
+报名截止时间不能晚于活动开始时间
+```MySQL
+CONSTRAINT chk_activity_deadline
+CHECK (registration_deadline <= start_at)
+```
+
+注意这里使用 `<=`，所以报名截止时间可以等于活动开始时间。
+
+活动状态必须属于指定集合
+```MySQL
+CONSTRAINT chk_activity_status
+CHECK (
+  status IN ('DRAFT', 'PUBLISHED', 'CANCELLED', 'FINISHED')
+)
+```
+
+`IN` 就是判断一个值是否属于指定集合。
+```MySQL
+'DRAFT' IN ('DRAFT', 'PUBLISHED')  -- TRUE
+'UNKNOWN' IN ('DRAFT', 'PUBLISHED') -- FALSE
+```
+
+这相当于限制 `status` 只能使用预先定义好的状态
+
+MySQL 8.0.16 开始才真正执行 `CHECK` 约束。之前的版本虽然能够解析部分 `CHECK` 语法，但会忽略约束
